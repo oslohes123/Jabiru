@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Music School management system</title>
+</head>
+<body>
+<h1>Login to your user account</h1>
+
+<form action="{%url 'login' %}" method = "post">
+    {%csrf_token%}
+    {{LogInForm.as_p}}
+    <input type = "submit" value = "login">
+
+</form>
+
+
+</body>
+</html>
