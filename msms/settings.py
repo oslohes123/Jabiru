@@ -123,3 +123,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Lesson user for authenticating
+AUTH_USER_MODEL = 'lessons.User'
