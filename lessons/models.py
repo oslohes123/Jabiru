@@ -5,9 +5,9 @@ from .managers import CustomUserManager
 # Create your models here.
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=10)
-    last_name = models.CharField(max_length=10)
-    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=20, blank=False)
+    last_name = models.CharField(max_length=20, blank=False)
+    email = models.EmailField(unique=True, max_length=30, blank=False)
     role = models.CharField(default='Student', max_length=10)
 
     is_active = models.BooleanField(default=True)
