@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -20,7 +21,7 @@ def login_user(request):
                 login(request, user)
                 redirect_url = nextItem or 'feed'
                 return redirect(redirect_url)
-        messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
+        messages.add_message(request, messages.ERROR, "Invalid credentials try again")
     else:
         nextItem = request.GET.get('nextItem') or ''
     form = LogInForm()
