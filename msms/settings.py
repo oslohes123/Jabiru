@@ -126,5 +126,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # User model for authentication purposes
 AUTH_USER_MODEL = 'lessons.User'
-
-
