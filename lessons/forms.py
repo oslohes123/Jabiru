@@ -1,6 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 from .models import User
+
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
@@ -23,3 +24,13 @@ class SignUpForm(forms.ModelForm):
         confirm_password = self.cleaned_data.get('confirm_password')
         if password != confirm_password:
             self.add_error('confirm_password', 'Passwords do not match.')
+
+class LogInForm(forms.Form):
+    """Form enabling registered users to log in."""
+    class Meta:
+        model = User
+        fields = ['email']
+        
+    password = forms.CharField(label="Password", widget=forms.PasswordInput())
+
+
