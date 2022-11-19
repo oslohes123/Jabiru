@@ -6,12 +6,11 @@
 </head>
 <body>
 <h1>Login to your user account</h1>
-
-<form action="{%url 'login' %}" method = "post">
+{%  include "partials/messages.html" %}
+<form action="{%url 'login_user' %}" method = "post">
     {%csrf_token%}
-    {{LogInForm.as_p}}
-    <input type = "submit" value = "login">
-
+    {{form.as_p}}
+    <input type = "submit" value = "login_user">
 </form>
 
 
