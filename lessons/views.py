@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import LogInForm
 from .forms import SignUpForm
+from .forms import RequestForm
+
 
 def sign_up(request):
     form = SignUpForm()
@@ -10,6 +12,10 @@ def sign_up(request):
 def login(request):
     form = LogInForm()
     return render(request, 'login.html',{'LogInForm':form})
+
+def make_request(request):
+    form = RequestForm()
+    return render(request, 'make_request.html', {'RequestForm':form})
 
 def home(request):
     return render(request, 'home.html')

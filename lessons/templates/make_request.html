@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang = en>
+    <head>
+        <meta charset="UTF-8">
+        <title>Music School Management System</title>
+    </head>
+
+    <body>
+        <h1>Make a request for lessons</h1>
+        <form action="{% url 'make_request' %}" method="post">
+            {% csrf_token %}
+            {{ RequestForm.as_p }}
+            <input type="submit" value="Make a request">
+        </form>
+    </body>
+</html>
