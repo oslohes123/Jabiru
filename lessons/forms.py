@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User
+from .models import User, Lesson
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -32,5 +32,11 @@ class LogInForm(forms.Form):
         fields = ['email']
         
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
+
+class RequestForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
+        widgets = { 'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
 
 
