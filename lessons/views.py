@@ -18,7 +18,11 @@ def login_user(request):
                 login(request, user)
                 redirect_url = "" # Upcoming landingPage name needs to be insertedHere
                 return redirect(redirect_url)
-    messages.add_message(request, messages.ERROR, "Invalid credentials try again")
+            else:
+                messages.add_message(request, messages.ERROR, "Invalid credentials try again")
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid credentials try again")
+
     form = LogInForm()
     return render(request, 'log_in.html', {'form': form})
 
