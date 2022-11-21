@@ -34,7 +34,12 @@ def tempLandingPage(request):
     return render(request,"tempLandingPage.html")
 
 def sign_up(request):
-    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('LANDINGPAGE')
+    else:
+        form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
-
-
