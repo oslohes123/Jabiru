@@ -6,11 +6,12 @@
 </head>
 <body>
 <h1>Login to your user account</h1>
-
-<form action="{%url 'login' %}" method = "post">
+{%  include "partials/messages.html" %}
+<form action="{%url 'login_user' %}" method = "post">
     {%csrf_token%}
-    {{LogInForm.as_p}}
+    {{form.as_p}}
     <input type = "submit" value = "login">
+    <button type="button"> <a href = {% url 'sign_up' %}>Sign up instead!</a></button>
 
 </form>
 
