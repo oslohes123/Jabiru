@@ -27,10 +27,7 @@ class SignUpForm(forms.ModelForm):
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
-    class Meta:
-        model = User
-        fields = ['email']
-        
+    email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
 
