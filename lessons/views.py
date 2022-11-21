@@ -10,6 +10,7 @@ from lessons.forms import LogInForm
 
 # TODO: For landing page put the name of the view(from urls.py) as the redirect_url
 def login_user(request):
+
     if request.method == 'POST':
         form = LogInForm(request.POST)
         if form.is_valid():
@@ -19,16 +20,11 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 redirect_url = "" # Upcoming landingPage name needs to be insertedHere
-                print(redirect_url)
                 return redirect(redirect_url)
-            else:
-                print("Wrong login ")
-                messages.add_message(request, messages.ERROR, "Invalid credentials try again")
-                return render(request, 'log_in.html', {'form': form, 'next': "landingPage"})
-    else:
-        print("GET REQUEST here")
-        form = LogInForm()
-        return render(request, 'log_in.html', {'form': form})
+
+    messages.add_message(request, messages.ERROR, "Invalid credentials try again")
+    form = LogInForm()
+    return render(request, 'log_in.html', {'form': form})
 
 
 def home(request):
