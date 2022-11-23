@@ -25,6 +25,16 @@ class SignUpForm(forms.ModelForm):
         if password != confirm_password:
             self.add_error('confirm_password', 'Passwords do not match.')
 
+    def save(self):
+        super().save(commit=False)
+        user = User.objects.create_user(
+            first_name=self.cleaned_data.get('first_name'),
+            last_name=self.cleaned_data.get('last_name'),
+            email=self.cleaned_data.get('email'),
+            password=self.cleaned_data.get('password'),
+        )
+        return user
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
     email = forms.EmailField(label="Email")
