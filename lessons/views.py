@@ -2,8 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from lessons.forms import LogInForm
+from .forms import LogInForm
 from .forms import SignUpForm
+from .forms import RequestForm
 
 
 # TODO: For landing page put the name of the view(from urls.py) as the redirect_url
@@ -32,6 +33,10 @@ def home(request):
 
 def tempLandingPage(request):
     return render(request,"tempLandingPage.html")
+    
+def make_request(request):
+    form = RequestForm()
+    return render(request, 'make_request.html', {'RequestForm':form})
 
 def sign_up(request):
     if request.method == 'POST':
