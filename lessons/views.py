@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from lessons.forms import LogInForm
+from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
 
@@ -39,6 +39,12 @@ def make_request(request):
     return render(request, 'make_request.html', {'RequestForm':form})
 
 def sign_up(request):
-    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('LANDINGPAGE')
+    else:
+        form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
-
