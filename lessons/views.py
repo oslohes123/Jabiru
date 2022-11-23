@@ -5,9 +5,12 @@ from django.http import HttpResponse
 from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
+from .models import User
 
 
-# TODO: For landing page put the name of the view(from urls.py) as the redirect_url
+# Session parameters
+# Access a users email from useremail session parameter
+# To access the user object utilise User.objects.filer(email = request.session['useremail']) which gets you the User object.
 def login_user(request):
     if request.method == 'POST':
         form = LogInForm(request.POST)
@@ -17,8 +20,8 @@ def login_user(request):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                redirect_url = "" # Upcoming landingPage name needs to be insertedHere
-                return redirect(redirect_url)
+                request.session['useremail'] = request.user.email
+                return redirect("dashboard")
             else:
                 messages.add_message(request, messages.ERROR, "Invalid credentials try again")
         else:
@@ -31,8 +34,8 @@ def login_user(request):
 def home(request):
     return render(request, 'home.html')
 
-def tempLandingPage(request):
-    return render(request,"tempLandingPage.html")
+def dashboard(request):
+    return render(request,"dashboard.html")
     
 def make_request(request):
     form = RequestForm()
@@ -44,7 +47,8 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('LANDINGPAGE')
+            request.session['useremail'] = request.user.email
+            return redirect("dashboard")
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
