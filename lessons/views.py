@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.template.defaultfilters import lower
+
 from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
@@ -36,8 +38,30 @@ def login_user(request):
 def home(request):
     return render(request, 'home.html')
 
+
+def outputStudentDashboard(request):
+    return render(request,"Dashboards/student_dashboard.html")
+
+def outputAdminDashboard(request):
+    return render(request, "Dashboards/admin_dashboard.html")
+
+def outputDirectorDashboard(request):
+    return render(request, "Dashboards/director_dashboard.html")
+
+# Each method should return a render
 def dashboard(request):
-    return render(request,"dashboard.html")
+    ourUser = getUser(request)
+    if lower(ourUser.role) == "student":
+        print("ReturningStudent")
+        return outputStudentDashboard(request)
+    elif lower(ourUser.role) == "admin":
+        print("ReturningAdmin")
+        return outputAdminDashboard(request)
+    elif lower(ourUser.role) == "director":
+        print("ReturningDirector")
+        return outputDirectorDashboard(request)
+    else:
+        print(f"Failed to find a user that fits the role:{ourUser.role}")
     
 def make_request(request):
     form = RequestForm()
