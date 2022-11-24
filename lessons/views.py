@@ -52,13 +52,10 @@ def outputDirectorDashboard(request):
 def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
-        print("ReturningStudent")
         return outputStudentDashboard(request)
     elif lower(ourUser.role) == "admin":
-        print("ReturningAdmin")
         return outputAdminDashboard(request)
     elif lower(ourUser.role) == "director":
-        print("ReturningDirector")
         return outputDirectorDashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
