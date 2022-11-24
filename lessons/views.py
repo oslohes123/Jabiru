@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import LogInForm
@@ -8,9 +9,10 @@ from .forms import RequestForm
 from .models import User
 
 
-# Session parameters
-# Access a users email from useremail session parameter
-# To access the user object utilise User.objects.filer(email = request.session['useremail']) which gets you the User object.
+# Session parameter: useremail
+# Gets you the email of the user that signed up or logged in
+# To get user object call the getUser(request) and use .field_name to get your data
+
 def login_user(request):
     if request.method == 'POST':
         form = LogInForm(request.POST)
@@ -52,3 +54,15 @@ def sign_up(request):
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
+
+
+def getUser(request):
+    try:
+        return User.objects.get(email = request.session['useremail'])
+    except User.DoesNotExist:
+        emailRequest = request.session['useremail']
+        return f'No user with this email {emailRequest}'
+    except MultipleObjectsReturned:
+        return "Multiple objects were returned"
+
+
