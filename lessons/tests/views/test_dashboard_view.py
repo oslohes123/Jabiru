@@ -45,11 +45,9 @@ class DashbaordCase(TestCase):
         response = self.client.post(self.url,self.studentForm,follow=True)
         self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html')
 
-
     def test_admin_returned_student_dashboard(self):
         response = self.client.post(self.url,self.adminForm,follow=True)
         self.assertTemplateUsed(response, 'Dashboards/admin_dashboard.html')
-
 
     def test_director_returned_student_dashboard(self):
         response = self.client.post(self.url,self.directorForm,follow=True)
