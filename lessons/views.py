@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
+from django.contrib.auth.decorators import login_required
 
 from .forms import LogInForm
 from .forms import SignUpForm
@@ -49,8 +50,10 @@ def outputDirectorDashboard(request):
     return render(request, "Dashboards/director_dashboard.html")
 
 # Each method should return a render
+@login_required
 def dashboard(request):
     ourUser = getUser(request)
+    print(ourUser)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
     elif lower(ourUser.role) == "admin":
@@ -59,7 +62,8 @@ def dashboard(request):
         return outputDirectorDashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
-    
+
+@login_required
 def make_request(request):
     form = RequestForm()
     return render(request, 'make_request.html', {'RequestForm':form})
