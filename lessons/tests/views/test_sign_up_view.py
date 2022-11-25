@@ -49,7 +49,7 @@ class SignUpViewTestCase(TestCase):
         self.assertEqual(after_count, before_count+1)
         response_url = reverse('dashboard')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'dashboard.html')
+        self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html')
         user = User.objects.get(email='namelastname@example.org')
         self.assertEqual(user.first_name, 'Name')
         self.assertEqual(user.last_name, 'Lastname')
