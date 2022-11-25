@@ -7,6 +7,7 @@ from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
 from .models import User
+from .models import Lesson
 
 
 # Session parameter: useremail
@@ -37,7 +38,11 @@ def home(request):
     return render(request, 'home.html')
 
 def dashboard(request):
-    return render(request,"dashboard.html")
+    user = getUser(request)
+    lesson = Lesson.objects.filter(student = user)
+    return render(request,"dashboard.html",{
+        'lesson':lesson , 'user':user
+    })
     
 def make_request(request):
     form = RequestForm()

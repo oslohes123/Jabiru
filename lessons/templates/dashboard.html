@@ -6,7 +6,13 @@
 </head>
 <body>
     <h1>This is the dashboard</h1>
-
+    <div>
+        <table class="table">
+            {% for lessons in lesson %}
+            <tr><td>{{lessons.availability}}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
 
 </body>
 </html>
