@@ -38,11 +38,7 @@ def home(request):
     return render(request, 'home.html')
 
 def dashboard(request):
-    user = getUser(request)
-    lesson = Lesson.objects.filter(student = user)
-    return render(request,"dashboard.html",{
-        'lesson':lesson , 'user':user
-    })
+    return render(request,"dashboard.html")
     
 def make_request(request):
     form = RequestForm()

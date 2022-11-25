@@ -7,8 +7,12 @@
 <body>
     <h1>This is the dashboard</h1>
     <div>
+        <button type="button"> <a href = {% url 'make_request' %}>Make Lesson Request</a></button>
+    </div>
+    <div>
         <table class="table">
             {% for lessons in lesson %}
+            <!--Change the lessons later this is for testing-->
             <tr><td>{{lessons.availability}}</td></tr>
             {% endfor %}
         </table>
