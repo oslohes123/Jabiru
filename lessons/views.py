@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -87,3 +87,6 @@ def getUser(request):
         return "Multiple objects were returned"
 
 
+def log_out(request):
+    logout(request)
+    return redirect('home')
