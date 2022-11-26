@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
@@ -54,7 +54,7 @@ def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
-    elif lower(ourUser.role) == "admin":
+    elif lower(ourUser.role) == "administrator":
         return outputAdminDashboard(request)
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
@@ -86,5 +86,20 @@ def getUser(request):
         return f'No user with this email {emailRequest}'
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
+
+def get_requests(request,student_email):
+    try:
+        ourUser = User.objects.get(email = student_email)
+        if ourUser.role == "Student":
+            lessons = Lesson.objects.filter(student = ourUser)
+        else:
+            return "Not a student email"
+        #if lower(ourUser.role) == "student":
+    
+    except ObjectDoesNotExist:
+        return "Student email does not exist"
+    else:
+        return render(request, "Dashboards/admin_dashboard.html" , {'user':ourUser , 'lessons':lessons})
+
 
 
