@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
-from .models import User
+from .models import User, Lesson
 
 
 # Session parameter: useremail
@@ -61,17 +61,18 @@ def dashboard(request):
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
     else:
-        print(f"Failed to find a user that fits the role:{ourUser.role}")
+        messages.add_message(request,messages.ERROR,f"Failed to find a user that fits the role: {ourUser.role}")
+        return redirect("login_user")
 
 @login_required
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
+        print(form)
         if form.is_valid():
-            form.fields['student'] = getUser(request)
-            print(form)
-            form.save()
-            messages.add_message(request,messages.SUCCESS,"The lesson has been saved")
+            data = form.cleaned_data
+            Lesson.objects.create_lesson(getUser(request),data['availability'],data['lesson_numbers'],data['duration'],data['interval'],data['further_info'],False)
+            messages.add_message(request,messages.SUCCESS,"The lesson has been successfully saved")
 
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm':insertForm})
