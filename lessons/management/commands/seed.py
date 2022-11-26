@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
     
-        """ self.user = User.objects.create_user(
+        self.user = User.objects.create_user(
             'john.doe@example.org',
             first_name='John',
             last_name='Doe',
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 last_name = temp_profile.get("name").split()[-1],
                 password = self.fake.password(length = 12),
                 role = 'Student'
-            ) """
+            )
 
         #TODO Seeding for lessons for test student -- seed lessons
         self.lesson = Lesson.objects.create_lesson(
