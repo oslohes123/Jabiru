@@ -65,8 +65,16 @@ def dashboard(request):
 
 @login_required
 def make_request(request):
-    form = RequestForm()
-    return render(request, 'make_request.html', {'RequestForm':form})
+    if request.method == "POST":
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            form.fields['student'] = getUser(request)
+            print(form)
+            form.save()
+            messages.add_message(request,messages.SUCCESS,"The lesson has been saved")
+
+    insertForm = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm':insertForm})
 
 def sign_up(request):
     if request.method == 'POST':
