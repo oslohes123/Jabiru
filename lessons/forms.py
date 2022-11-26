@@ -44,7 +44,7 @@ class LogInForm(forms.Form):
 class RequestForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
-        widgets = { 'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
+        fields = ['student','availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
+        widgets = { 'student':forms.HiddenInput(),'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
 
 
