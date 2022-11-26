@@ -87,19 +87,15 @@ def getUser(request):
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
 
-def get_requests(request,student_email):
+def get_requests(request):
     try:
-        ourUser = User.objects.get(email = student_email)
-        if ourUser.role == "Student":
-            lessons = Lesson.objects.filter(student = ourUser)
-        else:
-            return "Not a student email"
-        #if lower(ourUser.role) == "student":
-    
+         
+        lessons = Lesson.objects.filter(email = request.POST.student_email)
+         
     except ObjectDoesNotExist:
         return "Student email does not exist"
     else:
-        return render(request, "Dashboards/admin_dashboard.html" , {'user':ourUser , 'lessons':lessons})
+        return redirect('dashboard' , {'lessons':lessons})
 
 
 

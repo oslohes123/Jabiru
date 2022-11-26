@@ -7,7 +7,7 @@
 </head>
 <div>
 
-    <form action="{% url 'get_requests' student_email=user.email % }" method="get">
+    <form action="{% url 'get_requests' % }" method="get">
         <label>Enter students email to see their requested lessons: </label>
         <input id="student_email" type="text" name="student_email">
         <input type="submit" value= "View students lessons">
