@@ -1,18 +1,25 @@
 from django.contrib.auth import login
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 
 from lessons.models import User,Lesson
 
 class MakeRequestTest(TestCase):
     def setUp(self):
+        self.url = reverse("make_request")
         self.studentUser = User.objects.create_user(
             'student@example.org',
             first_name='IamaStudent',
             last_name='Doe',
-            password='Password123',
+            password="",
             role='student'
         )
+        self.studentUser.set_password("Password123")
+        self.studentUser.save()
+        self.studentLogin = {
+            "email":"student@example.org",
+            "password":"Password123"
+        }
         self.studentLesson = {
             "student":self.studentUser,
             "availability":"availability",
@@ -24,9 +31,10 @@ class MakeRequestTest(TestCase):
         }
 
     def test_make_request_input(self):
-        self.client.login()
+        c = Client()
+        c.post(reverse("login_user"),self.studentLogin,follow=True)
         originalAmount = Lesson.objects.count()
-        response = self.client.post(reverse("make_request"),self.studentLesson,follow=True)
+        c.post(self.url,self.studentLesson,follow=True)
         newAmount = Lesson.objects.count()
         self.assertEqual(originalAmount + 1, newAmount)
 
