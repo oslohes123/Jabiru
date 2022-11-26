@@ -60,7 +60,7 @@ def dashboard(request):
         return outputDirectorDashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
-    
+ 
 def make_request(request):
     form = RequestForm()
     return render(request, 'make_request.html', {'RequestForm':form})

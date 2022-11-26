@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
     
-        self.user = User.objects.create_user(
+        """ self.user = User.objects.create_user(
             'john.doe@example.org',
             first_name='John',
             last_name='Doe',
@@ -43,17 +43,15 @@ class Command(BaseCommand):
                 last_name = temp_profile.get("name").split()[-1],
                 password = self.fake.password(length = 12),
                 role = 'Student'
-            )
+            ) """
 
-        #TODO Seeding for lessons for test student
+        #TODO Seeding for lessons for test student -- seed lessons
         self.lesson = Lesson.objects.create_lesson(
-            'Guitar_lessons',
-            student = User.objects.get(email = 'john.doe@example.org'),
+            student = User.objects.get(email = 'blah@gha.com'),
             availability = 'From 14:00 to 18:00',
             lesson_numbers = 3,
             duration = 100,
             interval = 2,
             further_info = 'Guitar lessons with Mr.Guitar',
             approve_status = True
-
         )
