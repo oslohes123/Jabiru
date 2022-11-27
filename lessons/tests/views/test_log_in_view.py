@@ -8,18 +8,11 @@ from lessons.models import User
 class LogInViewTestCase(TestCase):
     """Tests of the log in view."""
     
-    #fixtures = ['lessons/tests/fixtures/default_user.json']
+    fixtures = ['lessons/tests/fixtures/default_user.json']
 
     def setUp(self):
         self.url = reverse('login_user')
-        #self.user = User.objects.get(email='student@example.org')
-        self.user = User.objects.create_user(
-            'student@example.org',
-            first_name='IamaStudent',
-            last_name='Doe',
-            password='Password123%',
-            role='student'
-        )
+        self.user = User.objects.get(email='dillyparker@example.org')
 
     def reverse_with_next(self, url_name, next_url):
         url = reverse(url_name)
@@ -66,7 +59,7 @@ class LogInViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html') """
 
     def test_unsuccesful_log_in(self):
-        form_input = { 'email': 'student@example.org', 'password': 'WrongPassword123%' }
+        form_input = { 'email': 'dillyparker@example.org@example.org', 'password': 'WrongPassword123%' }
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
@@ -92,7 +85,7 @@ class LogInViewTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_log_in_with_blank_password(self):
-        form_input = { 'email': 'student@example.org', 'password': '' }
+        form_input = { 'email': 'dillyparker@example.org@example.org', 'password': '' }
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
@@ -105,7 +98,7 @@ class LogInViewTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_succesful_log_in(self):
-        form_input = { 'email': 'student@example.org', 'password': 'Password123%' }
+        form_input = { 'email': 'dillyparker@example.org', 'password': 'Password123%' }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
         response_url = reverse('dashboard')
@@ -116,7 +109,7 @@ class LogInViewTestCase(TestCase):
 
     def test_succesful_log_in_with_redirect(self):
         redirect_url = reverse('dashboard')
-        form_input = { 'email': 'student@example.org', 'password': 'Password123%', 'next': redirect_url }
+        form_input = { 'email': 'dillyparker@example.org', 'password': 'Password123%', 'next': redirect_url }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
@@ -135,7 +128,7 @@ class LogInViewTestCase(TestCase):
     def test_valid_log_in_by_inactive_user(self):
         self.user.is_active = False
         self.user.save()
-        form_input = { 'email': 'student@example.org', 'password': 'Password123%' }
+        form_input = { 'email': 'dillyparker@example.org', 'password': 'Password123%' }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
@@ -149,7 +142,7 @@ class LogInViewTestCase(TestCase):
 
     """ def test_post_log_in_with_incorrect_credentials_and_redirect(self):
         redirect_url = reverse('dashboard')
-        form_input = { 'email': 'student@example.org', 'password': 'WrongPassword123%', 'next':redirect_url }
+        form_input = { 'email': 'dillyparker@example.org', 'password': 'WrongPassword123%', 'next':redirect_url }
         response = self.client.post(self.url, form_input)
         next = response.context['next']
         self.assertEqual(next, redirect_url) """

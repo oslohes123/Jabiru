@@ -5,40 +5,29 @@ from lessons.models import User
 
 
 class DashbaordCase(TestCase):
+    """Tests of the dashboard view"""
+
+    fixtures = [
+        'lessons/tests/fixtures/default_user.json',
+        'lessons/tests/fixtures/other_users.json'
+        ]
+
     def setUp(self):
         self.url = reverse("login_user")
-        self.studentUser = User.objects.create_user(
-            'student@example.org',
-            first_name='IamaStudent',
-            last_name='Doe',
-            password='Password123',
-            role='student'
-        )
+        self.studentUser = User.objects.get(email='dillyparker@example.org')
         self.studentForm = {
-            "email":"student@example.org",
-            "password":"Password123",
+            "email": "dillyparker@example.org",
+            "password": "Password123%",
         }
-        self.adminUser = User.objects.create_user(
-            'admin@example.org',
-            first_name='Iamaadmin',
-            last_name='Doe',
-            password='Password123',
-            role='admin'
-        )
+        self.adminUser = User.objects.get(email='janedoe@example.org')
         self.adminForm = {
-            "email": "admin@example.org",
-            "password": "Password123",
+            "email": "janedoe@example.org",
+            "password": "Password123%"
         }
-        self.directorUser = User.objects.create_user(
-            'director@example.org',
-            first_name='Iamadirector',
-            last_name='Doe',
-            password='Password123',
-            role='director'
-        )
+        self.directorUser = User.objects.get(email='petrapickles@example.org')
         self.directorForm = {
-            "email": "director@example.org",
-            "password": "Password123",
+            "email": "petrapickles@example.org",
+            "password": "Password123%",
         }
 
     def test_student_returned_student_dashboard(self):
