@@ -53,7 +53,6 @@ def outputDirectorDashboard(request):
 @login_required
 def dashboard(request):
     ourUser = getUser(request)
-    print(ourUser)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
     elif lower(ourUser.role) == "admin":
@@ -68,7 +67,6 @@ def dashboard(request):
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
-        print(form)
         if form.is_valid():
             data = form.cleaned_data
             Lesson.objects.create_lesson(getUser(request),data['availability'],data['lesson_numbers'],data['duration'],data['interval'],data['further_info'],False)
@@ -89,7 +87,7 @@ def sign_up(request):
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
 
-
+@login_required
 def getUser(request):
     try:
         return User.objects.get(email = request.session['useremail'])
