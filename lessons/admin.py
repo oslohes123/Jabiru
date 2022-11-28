@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import User,Lesson
+from .models import User, Lesson
+
 
 # Register your models here.
 
@@ -11,9 +12,17 @@ class UserAdmin(admin.ModelAdmin):
         'email', 'first_name', 'last_name', 'role', 'is_active'
     ]
 
+
 @admin.register(Lesson)
-class LessonAdmin(admin.ModelAdmin):
-    list_display =[
-        'further_info','student','availability','lesson_numbers','duration',
-        'interval','approve_status'
+class LessonsAdmin(admin.ModelAdmin):
+    """Configuration of the admin interface for users"""
+
+    list_display = [
+        'student',
+        'availability',
+        'lesson_numbers',
+        'duration',
+        'interval',
+        'further_info',
+        'approve_status'
     ]

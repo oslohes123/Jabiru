@@ -20,9 +20,11 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+
 class CustomLessonManager(BaseUserManager):
     def create_lesson(self, student, availability, lesson_numbers, duration, interval, further_info, approve_status):
-        
+
         lesson = self.model(
             student=student,
             availability=availability,

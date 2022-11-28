@@ -42,9 +42,12 @@ class LogInForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
 class RequestForm(forms.ModelForm):
+    interval = forms.IntegerField(label="Interval (0-8)",max_value=8,min_value=0)
+    duration = forms.IntegerField(label = "Duration(0-240)",max_value=240,min_value=0)
+    lesson_numbers = forms.IntegerField(label="Number of lessons")
     class Meta:
         model = Lesson
-        fields = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
-        widgets = { 'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
+        fields = ['availability','further_info']
+        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
 
-
+    field_order = ['availability','lesson_numbers','duration','interval','further_info']

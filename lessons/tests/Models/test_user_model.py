@@ -1,18 +1,18 @@
+"""Tests of the user model."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from lessons.models import User
 
 # Create your tests here.
 class UserModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
-            'johndoe@example.org',
-            first_name='John',
-            last_name='Doe',
-            password='Password123',
-            role='Student'
-        )
+    """Tests of the user model."""
 
+    fixtures = [
+        'lessons/fixtures/user.json',
+    ]
+
+    def setUp(self):
+        self.user = User.objects.get(email='dillyparker@example.org')
 
     def test_valid_user(self):
         self._assert_user_is_valid()
@@ -30,34 +30,28 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_email_must_be_unique(self):
-        User.objects.create_user(
-            'janedoe@example.org',
-            first_name='Jane',
-            last_name='Doe',
-            password='Password123',
-            role='Student'
-        )
-        self.user.email = 'janedoe@example.org'
+        second_user = User.objects.get(email='janedoe@example.org')
+        self.user.email = second_user.email
         self._assert_user_is_invalid()
 
     def test_email_may_contain_numbers(self):
-        self.user.email = 'johndoe21@example.org'
+        self.user.email = 'dillyparker21@example.org'
         self._assert_user_is_valid()
 
     def test_email_must_contain_only_one_at_symbol(self):
-        self.user.email = 'johnd@oe@example.org'
+        self.user.email = 'dillypark@er@example.org'
         self._assert_user_is_invalid()
 
     def test_email_must_contain_at_least_one_dot(self):
-        self.user.email = 'johndoe@exampleorg'
+        self.user.email = 'dillyparker@exampleorg'
         self._assert_user_is_invalid()
 
     def test_email_must_contain_domain_after_dot(self):
-        self.user.email = 'johndoe@example.'
+        self.user.email = 'dillyparker@example.'
         self._assert_user_is_invalid()
 
     def test_email_must_contain_domain_before_dot(self):
-        self.user.email = 'johndoe@.org'
+        self.user.email = 'dillyparker@.org'
         self._assert_user_is_invalid()
 
 
@@ -66,14 +60,8 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_first_name_need_not_be_unique(self):
-        User.objects.create_user(
-            'janedoe@example.org',
-            first_name='Jane',
-            last_name='Doe',
-            password='Password123',
-            role='Student'
-        )
-        self.user.first_name = 'Jane'
+        second_user = User.objects.get(email='janedoe@example.org')
+        self.user.first_name = 'Dilly'
         self._assert_user_is_valid()
 
     def test_first_name_may_contain_20_characters(self):
@@ -90,14 +78,8 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_last_name_need_not_be_unique(self):
-        User.objects.create_user(
-            'janedoe@example.org',
-            first_name='Jane',
-            last_name='Doe',
-            password='Password123',
-            role='Student'
-        )
-        self.user.last_name = 'Jane'
+        second_user = User.objects.get(email='janedoe@example.org')
+        self.user.second_name = 'Parker'
         self._assert_user_is_valid()
 
     def test_last_name_may_contain_20_characters(self):

@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 class Lesson(models.Model):
-    student = models.ForeignKey('User', on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.')
     lesson_numbers = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, validators=[MaxValueValidator(240,message='Duration can not be bigger than 240')])
