@@ -104,10 +104,10 @@ def getUser(request):
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
 
-def get_requests(request):
+def get_requests(request, student_email):
     try:
          
-        lessons = Lesson.objects.filter(student = User.objects.get(email = request.POST.student_email))
+        lessons = Lesson.objects.filter(student = User.objects.get(email = student_email))
     except ObjectDoesNotExist:
         return "Student email does not exist"
     else:
