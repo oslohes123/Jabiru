@@ -7,8 +7,7 @@ from lessons.models import User
 class DashboardCase(TestCase):
     """Tests of the dashboard view"""
     fixtures = [
-        'lessons/tests/fixtures/default_user.json',
-        'lessons/tests/fixtures/other_users.json'
+        'lessons/fixtures/user.json',
         ]
     def setUp(self):
         self.url = reverse("login_user")

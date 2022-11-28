@@ -8,7 +8,7 @@ from lessons.models import User
 class LogInViewTestCase(TestCase):
     """Tests of the log in view."""
     
-    fixtures = ['lessons/tests/fixtures/default_user.json']
+    fixtures = ['lessons/fixtures/user.json']
 
     def setUp(self):
         self.url = reverse('login_user')
