@@ -1,0 +1,80 @@
+[
+  {
+    "model": "lessons.lesson",
+    "pk": 1,
+    "fields": {
+      "student": 2,
+      "availability": "The availability",
+      "lesson_numbers": 1,
+      "duration": 1,
+      "interval": 1,
+      "further_info": "Some further info",
+      "approve_status": false
+    }
+  },
+  {
+    "model": "lessons.lesson",
+    "pk": 2,
+    "fields": {
+      "student": 2,
+      "availability": "Availability",
+      "lesson_numbers": 1,
+      "duration": 1,
+      "interval": 1,
+      "further_info": "Further info",
+      "approve_status": false
+    }
+  },
+  {
+    "model": "lessons.lesson",
+    "pk": 3,
+    "fields": {
+      "student": 3,
+      "availability": "Availability",
+      "lesson_numbers": 1,
+      "duration": 1,
+      "interval": 1,
+      "further_info": "Further Info",
+      "approve_status": false
+    }
+  },
+  {
+    "model": "lessons.lesson",
+    "pk": 4,
+    "fields": {
+      "student": 3,
+      "availability": "a",
+      "lesson_numbers": 123,
+      "duration": 123,
+      "interval": 1,
+      "further_info": "afasf",
+      "approve_status": false
+    }
+  },
+  {
+    "model": "lessons.lesson",
+    "pk": 5,
+    "fields": {
+      "student": 3,
+      "availability": "asf",
+      "lesson_numbers": 1,
+      "duration": 1,
+      "interval": 1,
+      "further_info": "a",
+      "approve_status": false
+    }
+  },
+  {
+    "model": "lessons.lesson",
+    "pk": 6,
+    "fields": {
+      "student": 3,
+      "availability": "asf",
+      "lesson_numbers": 123,
+      "duration": 1,
+      "interval": 1,
+      "further_info": "asdfasdf",
+      "approve_status": false
+    }
+  }
+]
