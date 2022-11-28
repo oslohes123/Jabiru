@@ -33,7 +33,7 @@ class DashboardCase(TestCase):
 
     def test_admin_returned_student_dashboard(self):
         response = self.client.post(self.url,self.adminForm,follow=True)
-        self.assertTemplateUsed(response, 'Dashboards/admin_dashboard.html')
+        self.assertTemplateUsed(response, 'Dashboards/administrator_dashboard.html')
 
     def test_director_returned_student_dashboard(self):
         response = self.client.post(self.url,self.directorForm,follow=True)
