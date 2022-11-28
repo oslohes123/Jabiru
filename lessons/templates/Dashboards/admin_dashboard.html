@@ -9,10 +9,16 @@
     <h1>Administrator Dashboard</h1>
     
 
+<<<<<<< HEAD
     <form action="{% url 'get_requests' %}" method="post">
         {% csrf_token %}
         <label for = "email">Enter students email to see their requested lessons: </label>
         <input id="email" type="text" name="email">
+=======
+    <form action='/dashboard/search_student_lessons' method='get'>
+        <label>Enter students email to see their requested lessons: </label>
+        <input id="student_email" type="text" name="student_email_input">
+>>>>>>> 19ea574 (admin can see students requested lessons)
         <input type="submit" value= "View students lessons">
         <!--Add in function of having table rows to show the students lessons-->
         <table class="table">

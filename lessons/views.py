@@ -102,14 +102,12 @@ def getUser(request):
         return "Multiple objects were returned"
 
 def get_requests(request):
-    student_email = request.POST.get("email")
-    try:
-         
-        lessons = Lesson.objects.filter(student = User.objects.get(email = student_email))
-    except ObjectDoesNotExist:
-        return "Student email does not exist"
-    else:
-        return redirect('dashboard' , {'lessons':lessons})
+    query_dict = request.GET
+    query = query_dict.get("student_email_input")
+    userObject = User.objects.get(email = query)
+    lessons = Lesson.objects.filter(student = userObject) 
+    context = { "lessons":lessons }
+    return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
 
 
 

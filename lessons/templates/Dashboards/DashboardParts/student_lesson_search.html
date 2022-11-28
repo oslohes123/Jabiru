@@ -1,0 +1,16 @@
+{% extends "Dashboards/admin_dashboard.html" %}
+
+{% block content %}
+
+<table class="table">
+    {% for lesson in lessons %}
+        <tr> 
+            <td>{{ lesson.further_info }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<p>
+    adssaddsa
+</p>
+
+{% endblock %}
