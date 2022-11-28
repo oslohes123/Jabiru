@@ -5,9 +5,9 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>This is the dashboard</h1>
+    <h1>Welcome to the student dashboard</h1>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
+    <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
-
 </body>
 </html>
