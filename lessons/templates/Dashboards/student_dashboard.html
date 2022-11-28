@@ -8,9 +8,6 @@
     <h1>Welcome to the student dashboard</h1>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
     <div>
-        <button type="button"> <a href = {% url 'make_request' %}>Make Lesson Request</a></button>
-    </div>
-    <div>
         <table class="table">
             {% for lessons in lesson %}
             <!--Change the lessons later this is for testing-->
