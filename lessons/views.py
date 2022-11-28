@@ -98,3 +98,6 @@ def getUser(request):
         return "Multiple objects were returned"
 
 
+def log_out(request):
+    logout(request)
+    return redirect('home')
