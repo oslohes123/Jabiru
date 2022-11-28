@@ -41,7 +41,9 @@ def home(request):
 
 
 def outputStudentDashboard(request):
-    return render(request,"Dashboards/student_dashboard.html")
+    theUser = getUser(request)
+    lessonsdata = Lesson.objects.filter(student=theUser)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
 
 def outputAdministratorDashboard(request):
     return render(request, "Dashboards/administrator_dashboard.html")

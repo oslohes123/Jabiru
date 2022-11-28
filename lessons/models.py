@@ -35,3 +35,10 @@ class Lesson(models.Model):
     further_info = models.CharField(max_length=500, blank=False, help_text='Please provide further information such as what you want to learn or your preferred teacher.')
     approve_status = models.BooleanField(default=False)
     objects = CustomLessonManager()
+    def price(self):
+        return self.duration/60 * 15
+    def status_string(self):
+        if not self.approve_status:
+            return "Not approved"
+        else:
+            return "Approved"
