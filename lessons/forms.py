@@ -45,6 +45,6 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
-        widgets = { 'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
+        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
 
 

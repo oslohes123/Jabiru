@@ -6,12 +6,10 @@ from lessons.models import User
 
 class DashboardCase(TestCase):
     """Tests of the dashboard view"""
-
     fixtures = [
         'lessons/tests/fixtures/default_user.json',
         'lessons/tests/fixtures/other_users.json'
         ]
-
     def setUp(self):
         self.url = reverse("login_user")
         self.studentUser = User.objects.get(email='dillyparker@example.org')
