@@ -24,7 +24,7 @@ class Command(BaseCommand):
             first_name='Petra',
             last_name='Pickles',
             password='Password123',
-            role='Administrator'
+            role='admin'
         )
 
         self.user = User.objects.create_user(
