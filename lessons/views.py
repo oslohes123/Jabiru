@@ -107,8 +107,7 @@ def getUser(request):
 def get_requests(request):
     try:
          
-        lessons = Lesson.objects.filter(email = request.POST.student_email)
-         
+        lessons = Lesson.objects.filter(student = User.objects.get(email = request.POST.student_email))
     except ObjectDoesNotExist:
         return "Student email does not exist"
     else:
