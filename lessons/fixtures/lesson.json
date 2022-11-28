@@ -29,7 +29,7 @@
     "model": "lessons.lesson",
     "pk": 3,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "Availability",
       "lesson_numbers": 1,
       "duration": 1,
@@ -42,7 +42,7 @@
     "model": "lessons.lesson",
     "pk": 4,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "a",
       "lesson_numbers": 123,
       "duration": 123,
@@ -55,7 +55,7 @@
     "model": "lessons.lesson",
     "pk": 5,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "asf",
       "lesson_numbers": 1,
       "duration": 1,
@@ -68,7 +68,7 @@
     "model": "lessons.lesson",
     "pk": 6,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "asf",
       "lesson_numbers": 123,
       "duration": 1,
