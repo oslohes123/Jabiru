@@ -6,8 +6,8 @@
     <title>AdminDashboard</title>
 </head>
 <div>
-
-    <form action="{% url 'get_requests' % }" method="get">
+    <h1>Administrator Dashboard</h1>
+    <form action="{% url 'get_requests' %}" method="get">
         <label>Enter students email to see their requested lessons: </label>
         <input id="student_email" type="text" name="student_email">
         <input type="submit" value= "View students lessons">
