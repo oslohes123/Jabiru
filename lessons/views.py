@@ -43,8 +43,8 @@ def home(request):
 def outputStudentDashboard(request):
     return render(request,"Dashboards/student_dashboard.html")
 
-def outputAdminDashboard(request):
-    return render(request, "Dashboards/admin_dashboard.html")
+def outputAdministratorDashboard(request):
+    return render(request, "Dashboards/administrator_dashboard.html")
 
 def outputDirectorDashboard(request):
     return render(request, "Dashboards/director_dashboard.html")
@@ -55,8 +55,8 @@ def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
-    elif lower(ourUser.role) == "admin":
-        return outputAdminDashboard(request)
+    elif lower(ourUser.role) == "administrator":
+        return outputAdministratorDashboard(request)
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
     else:
