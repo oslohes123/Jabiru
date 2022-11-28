@@ -4,7 +4,7 @@ from django.urls import reverse
 from lessons.models import User
 
 
-class DashbaordCase(TestCase):
+class DashboardCase(TestCase):
     """Tests of the dashboard view"""
 
     fixtures = [
