@@ -123,6 +123,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = 'login_user'
 
 # User model for authentication purposes
 AUTH_USER_MODEL = 'lessons.User'
