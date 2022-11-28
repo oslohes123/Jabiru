@@ -4,11 +4,11 @@
     "pk": 1,
     "fields": {
       "student": 2,
-      "availability": "The availability",
-      "lesson_numbers": 1,
+      "availability": "I am available from Monday to Friday at any time",
+      "lesson_numbers": 7,
       "duration": 1,
-      "interval": 1,
-      "further_info": "Some further info",
+      "interval": 5,
+      "further_info": "Requesting piano lessons",
       "approve_status": false
     }
   },
@@ -17,11 +17,11 @@
     "pk": 2,
     "fields": {
       "student": 2,
-      "availability": "Availability",
-      "lesson_numbers": 1,
-      "duration": 1,
-      "interval": 1,
-      "further_info": "Further info",
+      "availability": "I am available on Tuesday afternoons",
+      "lesson_numbers": 5,
+      "duration": 1.5,
+      "interval": 3,
+      "further_info": "Requesting singing lessons, I want to learn opera",
       "approve_status": false
     }
   },
@@ -30,11 +30,11 @@
     "pk": 3,
     "fields": {
       "student": 3,
-      "availability": "Availability",
-      "lesson_numbers": 1,
-      "duration": 1,
-      "interval": 1,
-      "further_info": "Further Info",
+      "availability": "I am available on the 5th and 21st of every month",
+      "lesson_numbers": 20,
+      "duration": 3,
+      "interval": 2,
+      "further_info": "I want to learn to play the guitar and learn my favourite songs!",
       "approve_status": false
     }
   },
@@ -43,11 +43,11 @@
     "pk": 4,
     "fields": {
       "student": 3,
-      "availability": "a",
-      "lesson_numbers": 123,
-      "duration": 123,
+      "availability": "Available whenever tbh",
+      "lesson_numbers": 99,
+      "duration": 2,
       "interval": 1,
-      "further_info": "afasf",
+      "further_info": "Teach me to play everything",
       "approve_status": false
     }
   },
@@ -56,11 +56,11 @@
     "pk": 5,
     "fields": {
       "student": 3,
-      "availability": "asf",
-      "lesson_numbers": 1,
-      "duration": 1,
-      "interval": 1,
-      "further_info": "a",
+      "availability": "Between 4:30 - 7:00pm",
+      "lesson_numbers": 10,
+      "duration": 2,
+      "interval": 7,
+      "further_info": "Am willing to learn to play anything with strings",
       "approve_status": false
     }
   },
@@ -69,11 +69,11 @@
     "pk": 6,
     "fields": {
       "student": 3,
-      "availability": "asf",
+      "availability": "From March to June",
       "lesson_numbers": 123,
       "duration": 1,
       "interval": 1,
-      "further_info": "asdfasdf",
+      "further_info": "I need to learn how to fully play drums before July",
       "approve_status": false
     }
   }
