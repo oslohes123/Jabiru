@@ -7,10 +7,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
-
-from .forms import LogInForm
-from .forms import SignUpForm
-from .forms import RequestForm
+from .forms import LogInForm,SignUpForm,RequestForm
 from .models import User
 from .models import Lesson
 
@@ -104,7 +101,8 @@ def getUser(request):
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
 
-def get_requests(request, student_email):
+def get_requests(request):
+    student_email = request.POST.get("email")
     try:
          
         lessons = Lesson.objects.filter(student = User.objects.get(email = student_email))
