@@ -4,7 +4,7 @@ from django.urls import reverse
 from lessons.models import User
 
 
-class DashbaordCase(TestCase):
+class DashboardCase(TestCase):
     def setUp(self):
         self.url = reverse("login_user")
         self.studentUser = User.objects.create_user(

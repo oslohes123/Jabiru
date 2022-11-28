@@ -4,11 +4,12 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
+from django.contrib.auth.decorators import login_required
 
 from .forms import LogInForm
 from .forms import SignUpForm
 from .forms import RequestForm
-from .models import User
+from .models import User, Lesson
 
 
 # Session parameter: useremail
@@ -49,6 +50,7 @@ def outputDirectorDashboard(request):
     return render(request, "Dashboards/director_dashboard.html")
 
 # Each method should return a render
+@login_required
 def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
@@ -58,11 +60,20 @@ def dashboard(request):
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
     else:
-        print(f"Failed to find a user that fits the role:{ourUser.role}")
-    
+        messages.add_message(request,messages.ERROR,f"Failed to find a user that fits the role: {ourUser.role}")
+        return redirect("login_user")
+
+@login_required
 def make_request(request):
-    form = RequestForm()
-    return render(request, 'make_request.html', {'RequestForm':form})
+    if request.method == "POST":
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            Lesson.objects.create_lesson(getUser(request),data['availability'],data['lesson_numbers'],data['duration'],data['interval'],data['further_info'],False)
+            messages.add_message(request,messages.SUCCESS,"The lesson has been successfully saved")
+
+    insertForm = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm':insertForm})
 
 def sign_up(request):
     if request.method == 'POST':
@@ -76,7 +87,7 @@ def sign_up(request):
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
 
-
+@login_required
 def getUser(request):
     try:
         return User.objects.get(email = request.session['useremail'])
