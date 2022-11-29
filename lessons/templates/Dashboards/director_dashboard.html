@@ -1,12 +1,25 @@
 <!DOCTYPE html>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class ="{{ message.tags }}"{% endif %}> {{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Director dashboard</title>
 </head>
 <body>
-    <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Welcome, Director {{ user.first_name }} {{ user.last_name }}</p>
+    <p>You have super-admin level privileges!</p>
+    <p>Perform actions on administrator accounts below</p>
     <button type="button"> <a href = {% url 'sign_up_administrator' %}>Create a new Administrator account</a></button>
+    <button type="button"> <a href = {% url 'view_all_administrators' %}>View all the Administrator accounts</a></button>
+    <p>Other actions</p>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
 </body>
 </html>

@@ -35,7 +35,7 @@ class Command(BaseCommand):
             role='Director',
         )
 
-        for i in range(0, 100):
+        for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
             self.user = User.objects.create_user(
                 temp_profile.get("mail"),
@@ -43,4 +43,14 @@ class Command(BaseCommand):
                 last_name = temp_profile.get("name").split()[-1],
                 password = self.fake.password(length = 12),
                 role = 'Student'
+            )
+
+        for i in range(0, 25):
+            temp_profile = self.fake.simple_profile()
+            self.user = User.objects.create_user(
+                temp_profile.get("mail"),
+                first_name = temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
+                last_name = temp_profile.get("name").split()[-1],
+                password = self.fake.password(length = 12),
+                role = 'Administrator'
             )

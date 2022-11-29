@@ -93,12 +93,26 @@ def sign_up_administrator(request):
         form = AdministratorSignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            request.session['useremail'] = request.user.email
+            # login(request, user)
+            # request.session['useremail'] = request.user.email
+            messages.info(request, 'Administrator account successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
     return render(request, 'sign_up_administrator.html', {'form': form})
+
+@login_required
+def delete_administrator(request, email):
+    adminToDelete = User.objects.get(email=email)
+    b = User.objects.filter(email=adminToDelete)
+    b.delete()
+    adminToDelete.delete()
+    return redirect('view_all_administrators')
+
+@login_required
+def view_all_administrators(request):
+    administrators = User.objects.filter(role="Administrator")
+    return render(request, 'view_all_administrators.html', {'administrators': administrators})
 
 @login_required
 def getUser(request):

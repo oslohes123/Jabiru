@@ -9,7 +9,8 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
     path('make_request/', views.make_request, name = 'make_request'),
     path('', views.home, name='home'),
-    path('dashboard/',views.dashboard,name = "dashboard"),
-    path('sign_up_administrator/', views.sign_up_administrator, name='sign_up_administrator')
+    path('dashboard/',views.dashboard,name = 'dashboard'),
+    path('sign_up_administrator/', views.sign_up_administrator, name='sign_up_administrator'),
+    path('view_all_administrators/', views.view_all_administrators, name='view_all_administrators'),
+    path('delete_administrator/(?P<email>\d+)', views.delete_administrator, name='delete_administrator')
 ]
-

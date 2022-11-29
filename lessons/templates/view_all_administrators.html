@@ -1,0 +1,20 @@
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>List of Administrators</h1>
+      <table class="table">
+        {% for administrator in administrators %}
+          <tr>
+            <td>{{ administrator.email }}</td>
+            <td>{{ administrator.first_name }}</td>
+            <td>{{ administrator.last_name }}</td>
+            <td><button type="button"> <a href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></button></td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button type="button"> <a href = {% url 'dashboard' %}>Return to dashboard</a></button>
+    </div>
+  </div>
+</div>
+{% endblock %}
