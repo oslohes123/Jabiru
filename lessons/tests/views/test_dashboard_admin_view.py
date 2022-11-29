@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-
+from lessons.constants import *
 from lessons.models import User,Lesson
 
 class DashbaordCase(TestCase):
@@ -11,7 +11,7 @@ class DashbaordCase(TestCase):
             first_name='IamaStudent',
             last_name='Doe',
             password='Password123',
-            role='student'
+            role=student
         )
         self.studentForm = {
             "email":"student@example.org",
@@ -22,7 +22,7 @@ class DashbaordCase(TestCase):
             first_name='Iamaadmin',
             last_name='Doe',
             password='Password123',
-            role='admin'
+            role=administrator
         )
         self.adminForm = {
             "email": "admin@example.org",

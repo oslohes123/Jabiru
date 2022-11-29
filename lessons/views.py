@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import LogInForm,SignUpForm,RequestForm
 from .models import User
 from .models import Lesson
+from .constants import *
 
 
 
@@ -53,11 +54,11 @@ def outputDirectorDashboard(request):
 @login_required
 def dashboard(request):
     ourUser = getUser(request)
-    if lower(ourUser.role) == "student":
+    if ourUser.role == student:
         return outputStudentDashboard(request)
-    elif lower(ourUser.role) == "admin":
+    elif ourUser.role == administrator:
         return outputAdministratorDashboard(request)
-    elif lower(ourUser.role) == "director":
+    elif ourUser.role == director:
         return outputDirectorDashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
@@ -109,7 +110,7 @@ def get_requests(request): #so far only works if a student email is inputted cor
         return messages.add_message(request,messages.ERROR," Please insert email")
     if userObject is not None:
         print(userObject.email)
-        if userObject.role != "Student":
+        if userObject.role != student:
             return "This email is not attached to a student"
         else:
             lessons = Lesson.objects.filter(student = userObject) 
