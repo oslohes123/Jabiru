@@ -1,15 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
+from .forms import LogInForm,SignUpForm,RequestForm
+from .models import User
+from .models import Lesson
 
-from .forms import LogInForm
-from .forms import SignUpForm
-from .forms import RequestForm
-from .models import User, Lesson
+
 
 
 # Session parameter: useremail
@@ -55,13 +55,14 @@ def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
-    elif lower(ourUser.role) == "administrator":
+    elif lower(ourUser.role) == "admin":
         return outputAdministratorDashboard(request)
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
     else:
-        messages.add_message(request,messages.ERROR,f"Failed to find a user that fits the role: {ourUser.role}")
-        return redirect("login_user")
+        print(f"Failed to find a user that fits the role:{ourUser.role}")
+    messages.add_message(request,messages.ERROR,f"Failed to find a user that fits the role: {ourUser.role}")
+    return redirect("login_user")
 
 @login_required
 def make_request(request):
@@ -96,6 +97,31 @@ def getUser(request):
         return f'No user with this email {emailRequest}'
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
+
+def get_requests(request): #so far only works if a student email is inputted correctly
+    print(request.GET) #for testing
+    student_lesson = request.GET
+    student_email_query = student_lesson.get("student_email_input")
+    print(student_email_query) #for testing
+    try:
+        userObject = User.objects.get(email = student_email_query)
+    except:
+        return messages.add_message(request,messages.ERROR," Please insert email")
+    if userObject is not None:
+        print(userObject.email)
+        if userObject.role != "Student":
+            return "This email is not attached to a student"
+        else:
+            lessons = Lesson.objects.filter(student = userObject) 
+            context = { "lessons":lessons }
+            return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
+    
+    else:
+        dashboard(request)
+
+    
+
+
 
 
 def log_out(request):

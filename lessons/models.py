@@ -34,4 +34,5 @@ class Lesson(models.Model):
     interval = models.PositiveIntegerField(blank=False, validators=[MaxValueValidator(8,message='Interval can not be bigger than 8')])
     further_info = models.CharField(max_length=500, blank=False, help_text='Please provide further information such as what you want to learn or your preferred teacher.')
     approve_status = models.BooleanField(default=False)
+
     objects = CustomLessonManager()

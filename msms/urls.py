@@ -10,5 +10,6 @@ urlpatterns = [
     path('make_request/', views.make_request, name = 'make_request'),
     path('', views.home, name='home'),
     path('dashboard/',views.dashboard,name = "dashboard"),
+    path('dashboard/search_student_lessons', views.get_requests, name='get_requests')
 ]
 

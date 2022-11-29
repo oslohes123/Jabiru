@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 import random
-from lessons.models import User
+from lessons.models import User, Lesson
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -24,7 +24,7 @@ class Command(BaseCommand):
             first_name='Petra',
             last_name='Pickles',
             password='Password123',
-            role='Administrator'
+            role='admin'
         )
 
         self.user = User.objects.create_user(
@@ -44,3 +44,14 @@ class Command(BaseCommand):
                 password = self.fake.password(length = 12),
                 role = 'Student'
             )
+
+        #TODO Seeding for lessons for test student -- seed lessons
+        self.lesson = Lesson.objects.create_lesson(
+            student = User.objects.get(email = 'blah@gha.com'),
+            availability = 'From 14:00 to 18:00',
+            lesson_numbers = 3,
+            duration = 100,
+            interval = 2,
+            further_info = 'Guitar lessons with Mr.Guitar',
+            approve_status = True
+        )

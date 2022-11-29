@@ -7,6 +7,15 @@
 <body>
     <h1>Welcome to the student dashboard</h1>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
+    <div>
+        <table class="table">
+            {% for lessons in lesson %}
+            <!--Change the lessons later this is for testing-->
+            <tr><td>{{lessons.availability}}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
     <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
 </body>

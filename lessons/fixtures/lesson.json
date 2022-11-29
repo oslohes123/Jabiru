@@ -29,7 +29,7 @@
     "model": "lessons.lesson",
     "pk": 3,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "I am available on the 5th and 21st of every month",
       "lesson_numbers": 20,
       "duration": 3,
@@ -42,10 +42,10 @@
     "model": "lessons.lesson",
     "pk": 4,
     "fields": {
-      "student": 3,
-      "availability": "Available whenever tbh",
-      "lesson_numbers": 99,
-      "duration": 2,
+      "student": 2,
+      "availability": "a",
+      "lesson_numbers": 123,
+      "duration": 123,
       "interval": 1,
       "further_info": "Teach me to play everything",
       "approve_status": false
@@ -55,7 +55,7 @@
     "model": "lessons.lesson",
     "pk": 5,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "Between 4:30 - 7:00pm",
       "lesson_numbers": 10,
       "duration": 2,
@@ -68,7 +68,7 @@
     "model": "lessons.lesson",
     "pk": 6,
     "fields": {
-      "student": 3,
+      "student": 2,
       "availability": "From March to June",
       "lesson_numbers": 123,
       "duration": 1,
