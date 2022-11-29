@@ -115,7 +115,6 @@ def get_requests(request):  # so far only works if a student email is inputted c
             messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {userObject.role}")
             return output_admin_dashboard(request)
         else:
-            print("We are here")
             lessons = Lesson.objects.filter(student=userObject)
             context = {"lessons": lessons}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
