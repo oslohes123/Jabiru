@@ -109,17 +109,40 @@ def get_user(request, email):
 def get_requests(request):  # so far only works if a student email is inputted correctly
     student_lesson = request.GET
     student_email_query = student_lesson.get("student_email_input")
+<<<<<<< HEAD
     try:
         userObject = get_user(request, student_email_query)
         if lower(userObject.role) != "student":
             messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {userObject.role}")
             return output_admin_dashboard(request)
+=======
+    print(student_email_query) #for testing
+    try:
+        userObject = User.objects.get(email = student_email_query)
+    except:
+        return messages.add_message(request,messages.ERROR," Please insert email")
+    if userObject is not None:
+        print(userObject.email)
+        if userObject.role != "Student":
+            return "This email is not attached to a student"
+>>>>>>> c27f7fe (admin dashboard nearly completed)
         else:
             lessons = Lesson.objects.filter(student=userObject)
             context = {"lessons": lessons}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
+<<<<<<< HEAD
     except:
         return output_admin_dashboard(request)
+=======
+    
+    else:
+        dashboard(request)
+
+    
+
+
+
+>>>>>>> c27f7fe (admin dashboard nearly completed)
 
 def log_out(request):
     logout(request)
