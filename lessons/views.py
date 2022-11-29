@@ -54,13 +54,13 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-    ourUser = getUser(request)
+    ourUser = get_user(request,request.session["user_email"])
     if ourUser.role == student:
-        return outputStudentDashboard(request)
+        return output_student_dashboard(request)
     elif ourUser.role == administrator:
-        return outputAdministratorDashboard(request)
+        return output_admin_dashboard(request)
     elif ourUser.role == director:
-        return outputDirectorDashboard(request)
+        return output_director_dashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
     messages.add_message(request, messages.ERROR, f"Failed to find a user that fits the role: {ourUser.role}")
