@@ -11,17 +11,16 @@ class DashboardCase(TestCase):
         ]
     def setUp(self):
         self.url = reverse("login_user")
-        self.studentUser = User.objects.get(email='dillyparker@example.org')
         self.studentForm = {
             "email": "dillyparker@example.org",
             "password": "Password123%",
         }
-        self.adminUser = User.objects.get(email='janedoe@example.org')
+
         self.adminForm = {
             "email": "janedoe@example.org",
             "password": "Password123%"
         }
-        self.directorUser = User.objects.get(email='petrapickles@example.org')
+
         self.directorForm = {
             "email": "petrapickles@example.org",
             "password": "Password123%",
