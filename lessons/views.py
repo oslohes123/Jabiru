@@ -7,7 +7,7 @@ from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
 
 from .forms import LogInForm
-from .forms import SignUpForm
+from .forms import SignUpForm, AdministratorSignUpForm
 from .forms import RequestForm
 from .models import User, Lesson
 
@@ -88,6 +88,19 @@ def sign_up(request):
     return render(request, 'sign_up.html', {'form': form})
 
 @login_required
+def sign_up_administrator(request):
+    if request.method == 'POST':
+        form = AdministratorSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            request.session['useremail'] = request.user.email
+            return redirect("dashboard")
+    else:
+        form = AdministratorSignUpForm()
+    return render(request, 'sign_up_administrator.html', {'form': form})
+
+@login_required
 def getUser(request):
     try:
         return User.objects.get(email = request.session['useremail'])
@@ -96,6 +109,12 @@ def getUser(request):
         return f'No user with this email {emailRequest}'
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
+
+
+@login_required
+def getLessons(request):
+    lessons = Lesson.objects.all()
+    return lessons
 
 
 def log_out(request):

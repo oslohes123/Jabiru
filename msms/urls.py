@@ -10,5 +10,6 @@ urlpatterns = [
     path('make_request/', views.make_request, name = 'make_request'),
     path('', views.home, name='home'),
     path('dashboard/',views.dashboard,name = "dashboard"),
+    path('sign_up_administrator/', views.sign_up_administrator, name='sign_up_administrator')
 ]
 

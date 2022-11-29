@@ -6,6 +6,7 @@
 </head>
 <body>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
+    <button type="button"> <a href = {% url 'sign_up_administrator' %}>Create a new Administrator account</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
 </body>
 </html>
