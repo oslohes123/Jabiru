@@ -25,7 +25,7 @@ class DashboardCase(TestCase):
             "email": "petrapickles@example.org",
             "password": "Password123%",
         }
-    # Test commit
+
     def test_student_returned_student_dashboard(self):
         response = self.client.post(self.url,self.studentForm,follow=True)
         self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html')
