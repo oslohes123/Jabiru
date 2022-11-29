@@ -55,7 +55,7 @@ def dashboard(request):
     ourUser = getUser(request)
     if lower(ourUser.role) == "student":
         return outputStudentDashboard(request)
-    elif lower(ourUser.role) == "administrator":
+    elif lower(ourUser.role) == "admin":
         return outputAdministratorDashboard(request)
     elif lower(ourUser.role) == "director":
         return outputDirectorDashboard(request)
