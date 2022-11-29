@@ -1,8 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import lower
@@ -11,7 +9,6 @@ from .forms import LogInForm,SignUpForm,RequestForm
 from .models import User
 from .models import Lesson
 
-from .models import User, Lesson
 
 
 
@@ -101,13 +98,24 @@ def getUser(request):
     except MultipleObjectsReturned:
         return "Multiple objects were returned"
 
-def get_requests(request):
-    query_dict = request.GET
-    query = query_dict.get("student_email_input")
-    userObject = User.objects.get(email = query)
-    lessons = Lesson.objects.filter(student = userObject) 
-    context = { "lessons":lessons }
-    return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
+def get_requests(request): #so far only works if a student email is inputted correctly
+    print(request.GET) #for testing
+    student_lesson = request.GET
+    student_email_query = student_lesson.get("student_email_input")
+    print(student_email_query) #for testing
+    try: #AttributeError: 'str' object has no attribute 'get' still gives this no matter what
+        userObject = User.objects.get(email = student_email_query)
+        if userObject.role != "Student":
+            return "This email is not attached to a student"
+        else:
+            lessons = Lesson.objects.filter(student = userObject) 
+            context = { "lessons":lessons }
+            return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
+    except:
+        return 'No user with this email'
+
+    
+
 
 
 

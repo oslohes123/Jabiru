@@ -7,34 +7,66 @@
 </head>
 <div>
     <h1>Administrator Dashboard</h1>
-    
 
-<<<<<<< HEAD
-    <form action="{% url 'get_requests' %}" method="post">
-        {% csrf_token %}
-        <label for = "email">Enter students email to see their requested lessons: </label>
-        <input id="email" type="text" name="email">
-=======
+
+
     <form action='/dashboard/search_student_lessons' method='get'>
         <label>Enter students email to see their requested lessons: </label>
         <input id="student_email" type="text" name="student_email_input">
->>>>>>> 19ea574 (admin can see students requested lessons)
-        <input type="submit" value= "View students lessons">
+        <input type="submit" value="View students lessons">
         <!--Add in function of having table rows to show the students lessons-->
-        <table class="table">
-            {% for lesson in lessons %}
-                <tr> 
+        <div>
+            <table class="table">
+                <thead>
+                    <th> Student </th>
+                    <th> Availability </th>
+                    <th> Lesson numbers </th>
+                    <th> Duration </th>
+                    <th> Interval </th>
+                    <th> Further Information </th>
+                    <th> Approve Status </th>
+                </thead>
+                {% for lesson in lessons %}
+                <tr>
+                    <td>{{ lesson.student }}</td>
+                    <td>{{ lesson.availability }}</td>
+                    <td>{{ lesson.lesson_numbers }}</td>
+                    <td>{{ lesson.duration }}</td>
+                    <td>{{ lesson.interval }}</td>
                     <td>{{ lesson.further_info }}</td>
+                    <td>{{ lesson.approve_status }}</td>
                 </tr>
-            {% endfor %}
-        </table>
+                {% endfor %}
+            </table>
+        </div>
+
     </form>
 
 </div>
 
 <body>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
-    <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
+    <button type="button"><a href={% url 'log_out' %}>Log out</a></button>
 </body>
+
+<!--Add in own CSS File later-->
+<style>
+    table {
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    th,tr {
+        border-radius: 10px;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+
+    }
+
+    th {
+        border: 1px solid black;
+    }
+</style>
 
 </html>
