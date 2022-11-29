@@ -15,17 +15,14 @@ class DashboardCase(TestCase):
             "email": "dillyparker@example.org",
             "password": "Password123%",
         }
-
         self.adminForm = {
             "email": "janedoe@example.org",
             "password": "Password123%"
         }
-
         self.directorForm = {
             "email": "petrapickles@example.org",
             "password": "Password123%",
         }
-    # Testing finally
     def test_student_returned_student_dashboard(self):
         response = self.client.post(self.url,self.studentForm,follow=True)
         self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html')
