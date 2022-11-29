@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import LogInForm, SignUpForm, RequestForm
 from .models import User
 from .models import Lesson
+from .constants import *
 
 
 # Session parameter: _
@@ -53,13 +54,13 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-    ourUser = get_user(request, request.session["user_email"])
-    if lower(ourUser.role) == "student":
-        return output_student_dashboard(request)
-    elif lower(ourUser.role) == "administrator":
-        return output_admin_dashboard(request)
-    elif lower(ourUser.role) == "director":
-        return output_director_dashboard(request)
+    ourUser = getUser(request)
+    if ourUser.role == student:
+        return outputStudentDashboard(request)
+    elif ourUser.role == administrator:
+        return outputAdministratorDashboard(request)
+    elif ourUser.role == director:
+        return outputDirectorDashboard(request)
     else:
         print(f"Failed to find a user that fits the role:{ourUser.role}")
     messages.add_message(request, messages.ERROR, f"Failed to find a user that fits the role: {ourUser.role}")
@@ -111,7 +112,7 @@ def get_requests(request):  # so far only works if a student email is inputted c
     student_email_query = student_lesson.get("student_email_input")
     try:
         userObject = get_user(request, student_email_query)
-        if lower(userObject.role) != "student":
+        if lower(userObject.role) != student:
             messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {userObject.role}")
             return output_admin_dashboard(request)
         else:

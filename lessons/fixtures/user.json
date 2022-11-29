@@ -8,7 +8,7 @@
       "first_name": "Super",
       "last_name": "Super",
       "email": "super@super.com",
-      "role": "admin",
+      "role": "Administrator",
       "is_active": true,
       "is_admin": true,
       "is_superuser": true,

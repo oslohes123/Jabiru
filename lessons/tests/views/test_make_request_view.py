@@ -12,7 +12,7 @@ class MakeRequestTest(TestCase):
             first_name='IamaStudent',
             last_name='Doe',
             password="",
-            role='student'
+            role='Student'
         )
         self.studentUser.set_password("Password123")
         self.studentUser.save()
