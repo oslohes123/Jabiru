@@ -11,7 +11,7 @@ class DashbaordCase(TestCase):
             first_name='IamaStudent',
             last_name='Doe',
             password='Password123',
-            role=student
+            role='Student'
         )
         self.studentForm = {
             "email":"student@example.org",
