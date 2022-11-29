@@ -3,7 +3,6 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
 from .forms import LogInForm, SignUpForm, RequestForm
 from .models import User
@@ -111,12 +110,12 @@ def get_requests(request):  # so far only works if a student email is inputted c
     student_lesson = request.GET
     student_email_query = student_lesson.get("student_email_input")
     try:
-        userObject = get_user(request, student_email_query)
-        if lower(userObject.role) != student:
-            messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {userObject.role}")
+        user_object = get_user(request, student_email_query)
+        if user_object.role != student:
+            messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {user_object.role}")
             return output_admin_dashboard(request)
         else:
-            lessons = Lesson.objects.filter(student=userObject)
+            lessons = Lesson.objects.filter(student=user_object)
             context = {"lessons": lessons}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
