@@ -1,0 +1,28 @@
+{% extends "Dashboards/admin_dashboard.html" %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <th> Student </th>
+        <th> Availability </th>
+        <th> Lesson numbers </th>
+        <th> Duration </th>
+        <th> Interval </th>
+        <th> Further Information </th>
+        <th> Approve Status </th>
+    </thead>
+    {% for lesson in lessons %}
+        <tr> 
+            <td>{{ lesson.student }}</td>
+            <td>{{ lesson.availability }}</td>
+            <td>{{ lesson.lesson_numbers }}</td>
+            <td>{{ lesson.duration }}</td>
+            <td>{{ lesson.interval }}</td>
+            <td>{{ lesson.further_info }}</td>
+            <td>{{ lesson.approve_status }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
