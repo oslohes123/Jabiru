@@ -39,7 +39,7 @@ def home(request):
 
 
 def output_student_dashboard(request):
-    theUser = getUser(request)
+    theUser = get_user(request,request.session["user_email"])
     lessonsdata = Lesson.objects.filter(student=theUser)
     return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
     
