@@ -31,6 +31,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_director(self):
         return self.role == director
 
+    @property
+    def is_director_or_administrator(self):
+        return self.role == director or self.role == administrator
+
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.') #for students availability
