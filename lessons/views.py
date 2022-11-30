@@ -153,7 +153,7 @@ def get_user(request, email):
         messages.add_message(request, messages.ERROR, "Multiple objects were returned")
         return MultipleObjectsReturned
 
-
+@user_passes_test(lambda u: u.is_director_or_administrator,login_url='/dashboard/')
 def get_requests(request):  # so far only works if a student email is inputted correctly
     student_lesson = request.GET
     student_email_query = student_lesson.get("student_email_input")
