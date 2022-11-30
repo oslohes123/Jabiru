@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import check_password
 from django.test import TestCase
 from django.urls import reverse
-from lessons.forms import AdministratorSignUpForm, SignUpForm
+from lessons.forms import AdministratorSignUpForm
 from lessons.models import User
 
 class SignUpAdministratorViewTestCase(TestCase):

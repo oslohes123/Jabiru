@@ -7,9 +7,10 @@ from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
 
 from .forms import LogInForm
-from .forms import SignUpForm, AdministratorSignUpForm
+from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
 from .forms import RequestForm
 from .models import User, Lesson
+from django.views import generic
 
 
 # Session parameter: useremail
@@ -107,7 +108,22 @@ def delete_administrator(request, email):
     b = User.objects.filter(email=adminToDelete)
     b.delete()
     adminToDelete.delete()
+    messages.info(request, 'Administrator account successfully deleted!')
     return redirect('view_all_administrators')
+
+@login_required
+def edit_administrator(request, email):
+    adminToEdit = User.objects.get(email=email)
+    if request.method == 'POST':
+        form = AdministratorEditForm(request.POST, instance=adminToEdit)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'The Administrator account has been successfully edited!')
+            return redirect('view_all_administrators')
+    else:
+        form = AdministratorEditForm(instance=adminToEdit)
+    return render(request, 'edit_administrator.html', {'form': form})
+        
 
 @login_required
 def view_all_administrators(request):

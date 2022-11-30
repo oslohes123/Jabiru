@@ -1,0 +1,15 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Administrator</title>
+</head>
+<body>
+    <h1>Edit Administrator details</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit changes">
+        <button type="button"> <a href = {% url 'view_all_administrators' %}>Return to administrator list</a></button>
+    </form>
+</body>
+</html>
