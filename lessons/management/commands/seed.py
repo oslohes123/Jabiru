@@ -13,8 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        fake = Faker()
-        fake.add_provider(Provider)
+        
     
         self.user = User.objects.create_user(
             'john.doe@example.org',
@@ -40,6 +39,9 @@ class Command(BaseCommand):
             role=director,
         )
 
+        fake_lesson = Faker()
+        fake_lesson.add_provider(Provider)
+
         for i in range(0, 100):
             temp_profile = self.fake.simple_profile()
             self.user = User.objects.create_user(
@@ -51,13 +53,13 @@ class Command(BaseCommand):
             )
             #For lessons
             if bool(random.getrandbits(1)):
-                instrument = fake.lesson_instrument()
-                teacher = fake.teacher_name()
+                instrument = fake_lesson.lesson_instrument()
+                teacher = fake_lesson.teacher_name()
                 info = instrument +' lesson with '+ teacher
 
                 self.lesson = Lesson.objects.create_lesson(
                 student = User.objects.get(email = temp_profile.get("mail")), #work on this to be of the students emails
-                availability = fake.available_time(),
+                availability = fake_lesson.available_time(),
                 lesson_numbers = random.randint(1,200),
                 duration = random.randint(1,240),
                 interval = random.randint(1,8),
@@ -65,16 +67,7 @@ class Command(BaseCommand):
                 approve_status = False
             )
 
-        #TODO Seeding for lessons for test student -- seed lessons
-        self.lesson = Lesson.objects.create_lesson(
-            student = User.objects.get(email = 'blah@gha.com'),
-            availability = 'From 14:00 to 18:00',
-            lesson_numbers = 3,
-            duration = 100,
-            interval = 2,
-            further_info = 'Guitar lessons with Mr.Guitar',
-            approve_status = True
-        )
+        
         
 
 #Lists 
