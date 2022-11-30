@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MaxValueValidator
 from .managers import CustomUserManager,CustomLessonManager
+from .constants import *
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
@@ -25,6 +26,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
+
+    @property
+    def is_director(self):
+        return self.role == director
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)

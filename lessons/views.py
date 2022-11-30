@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.decorators import user_passes_test
 
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
@@ -100,8 +100,7 @@ def sign_up(request):
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
 
-
-@login_required
+@user_passes_test(lambda u: u.is_director)
 def sign_up_administrator(request):
     if request.method == 'POST':
         form = AdministratorSignUpForm(request.POST)
@@ -115,7 +114,7 @@ def sign_up_administrator(request):
         form = AdministratorSignUpForm()
     return render(request, 'sign_up_administrator.html', {'form': form})
 
-@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def delete_administrator(request, email):
     adminToDelete = User.objects.get(email=email)
     b = User.objects.filter(email=adminToDelete)
@@ -124,7 +123,7 @@ def delete_administrator(request, email):
     messages.info(request, 'Administrator account successfully deleted!')
     return redirect('view_all_administrators')
 
-@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def edit_administrator(request, email):
     adminToEdit = User.objects.get(email=email)
     if request.method == 'POST':
@@ -138,7 +137,7 @@ def edit_administrator(request, email):
     return render(request, 'edit_administrator.html', {'form': form})
         
 
-@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
     return render(request, 'view_all_administrators.html', {'administrators': administrators})
@@ -175,7 +174,7 @@ def getLessons(request):
     lessons = Lesson.objects.all()
     return lessons
 
-
+@login_required
 def log_out(request):
     logout(request)
     return redirect('home')
