@@ -75,61 +75,41 @@ class Command(BaseCommand):
             further_info = 'Guitar lessons with Mr.Guitar',
             approve_status = True
         )
-        #TODO seed for lessons ->import random as well
-
-        
-
-        """ for _ in range (0,50):
-
-            #To create the further_info that the user might input 
-            instrument = fake.lesson_instrument()
-            teacher = fake.teacher_name()
-            info = instrument +' lesson with '+ teacher
-
-            self.lesson = Lesson.objects.create_lesson(
-            student = User.objects.get(email = 'blah@gha.com'), #work on this to be of the students emails
-            availability = fake.available_time(),
-            lesson_numbers = random.randint(1,200),
-            duration = random.randint(1,240),
-            interval = random.randint(1,8),
-            further_info = info,
-            approve_status = False
-        ) """
         
 
 #Lists 
 
 TEACHER_NAME = [
-    "Mr. Guitar"
-    "Mrs. Doe"
-    "Mr. Smiths"
-    "Mr. Octo"
-    "Mrs. Waer"
-    "Mr. Funk"
-    "Mrs. Jazz"
-    "Mr. Disco"
+    "Mr. Guitar",
+    "Mrs. Doe",
+    "Mr. Smiths",
+    "Mr. Octo",
+    "Mrs. Waer",
+    "Mr. Funk",
+    "Mrs. Jazz",
+    "Mr. Disco",
     "Mrs. Emo"
 ]
 
 INSTRUMENT = [
-    "Guitar"
-    "Piano"
-    "Drums"
-    "Banjo"
-    "Harp"
-    "Electric Guitar"
-    "Bass Guitar"
-    "Singing"
+    "Guitar",
+    "Piano",
+    "Drums",
+    "Banjo",
+    "Harp",
+    "Electric Guitar",
+    "Bass Guitar",
+    "Singing",
     "Flute"
 ]
 
 AVAILABILITY = [
-    "From 10:00 to 18:00"
-    "From 14:00 to 18:00"
-    "From 10:00 to 12:00"
-    "From 10:00 to 15:00"
-    "From 11:00 to 18:00"
-    "From 09:00 to 16:00"
+    "From 10:00 to 18:00",
+    "From 14:00 to 18:00",
+    "From 10:00 to 12:00",
+    "From 10:00 to 15:00",
+    "From 11:00 to 18:00",
+    "From 09:00 to 16:00",
     "From 12:00 to 17:00"
 ]
 
