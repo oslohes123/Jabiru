@@ -5,6 +5,23 @@
     "fields": {
       "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
       "last_login": null,
+      "first_name": "Super",
+      "last_name": "Super",
+      "email": "super@super.com",
+      "role": "Administrator",
+      "is_active": true,
+      "is_admin": true,
+      "is_superuser": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "lessons.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
+      "last_login": null,
       "first_name": "Dilly",
       "last_name": "Parker",
       "email": "dillyparker@example.org",
@@ -18,7 +35,7 @@
   },
   {
     "model": "lessons.user",
-    "pk": 2,
+    "pk": 3,
     "fields": {
       "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
       "last_login": null,
@@ -35,7 +52,7 @@
   },
   {
     "model": "lessons.user",
-    "pk": 3,
+    "pk": 4,
     "fields": {
       "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
       "last_login": null,
@@ -46,23 +63,6 @@
       "is_active": true,
       "is_admin": false,
       "is_superuser": false,
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "lessons.user",
-    "pk": 4,
-    "fields": {
-      "password": "pbkdf2_sha256$390000$ZYJbO4e8f63mCFb4lxnO8H$bqGU7wWIaVvNG+MIQBXKXfTbih5UdaYFDKi46E5IGDg=",
-      "last_login": "2022-11-28T11:07:09.420Z",
-      "first_name": "SuperUser",
-      "last_name": "SuperUser",
-      "email": "super@super.com",
-      "role": "Director",
-      "is_active": true,
-      "is_admin": true,
-      "is_superuser": true,
       "groups": [],
       "user_permissions": []
     }

@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 import random
-from lessons.models import User
+from lessons.models import User, Lesson
+from lessons.constants import *
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -16,7 +17,7 @@ class Command(BaseCommand):
             first_name='John',
             last_name='Doe',
             password='Password123',
-            role='Student'
+            role=student
         )
 
         self.user = User.objects.create_user(
@@ -24,7 +25,7 @@ class Command(BaseCommand):
             first_name='Petra',
             last_name='Pickles',
             password='Password123',
-            role='Administrator'
+            role=administrator
         )
 
         self.user = User.objects.create_user(
@@ -32,7 +33,7 @@ class Command(BaseCommand):
             first_name='Marty',
             last_name='Major',
             password='Password123',
-            role='Director',
+            role=director,
         )
 
         for i in range(0, 75):
@@ -42,7 +43,7 @@ class Command(BaseCommand):
                 first_name = temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name = temp_profile.get("name").split()[-1],
                 password = self.fake.password(length = 12),
-                role = 'Student'
+                role = student
             )
 
         for i in range(0, 25):
@@ -52,5 +53,17 @@ class Command(BaseCommand):
                 first_name = temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name = temp_profile.get("name").split()[-1],
                 password = self.fake.password(length = 12),
-                role = 'Administrator'
+                role = administrator
             )
+            
+        #TODO Seeding for lessons for test student -- seed lessons
+        self.lesson = Lesson.objects.create_lesson(
+            student = User.objects.get(email = 'blah@gha.com'),
+            availability = 'From 14:00 to 18:00',
+            lesson_numbers = 3,
+            duration = 100,
+            interval = 2,
+            further_info = 'Guitar lessons with Mr.Guitar',
+            approve_status = True
+        )
+

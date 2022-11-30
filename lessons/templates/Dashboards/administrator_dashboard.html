@@ -1,11 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Administrator Dashboard</title>
 </head>
+<div>
+    <h1>Administrator Dashboard</h1>
+
+
+
+    <form action='/dashboard/search_student_lessons' method='get'>
+        <label for ="student_email">Enter students email to see their requested lessons: </label>
+        <input id="student_email" type="text" name="student_email_input">
+        <input type="submit" value="View students lessons">
+        <!--Add in function of having table rows to show the students lessons-->
+    </form>
+    {% block content %}
+    {% endblock %}
+    {% include "partials/messages.html" %}
+
+</div>
+
 <body>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
-    <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
+    <button type="button"><a href={% url 'log_out' %}>Log out</a></button>
 </body>
+
+<!--Add in own CSS File later-->
+<style>
+    table {
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    th,tr {
+        border-radius: 10px;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+
+    }
+
+    th {
+        border: 1px solid black;
+    }
+</style>
+
 </html>
