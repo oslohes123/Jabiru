@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-    availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.')
+    availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.') #for students availability
     lesson_numbers = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, validators=[MaxValueValidator(240,message='Duration can not be bigger than 240')])
     interval = models.PositiveIntegerField(blank=False, validators=[MaxValueValidator(8,message='Interval can not be bigger than 8')])
