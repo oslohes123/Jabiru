@@ -4,10 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import LogInForm, SignUpForm, RequestForm
-from .models import User
-from .models import Lesson
+
+
+from .forms import LogInForm
+from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
+from .forms import RequestForm
+from .models import User, Lesson
+from django.views import generic
 from .constants import *
+
 
 
 # Session parameter: _
@@ -39,8 +44,10 @@ def home(request):
 
 
 def output_student_dashboard(request):
-    return render(request, "Dashboards/student_dashboard.html")
-
+    theUser = get_user(request,request.session["user_email"])
+    lessonsdata = Lesson.objects.filter(student=theUser)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
+    
 
 def output_admin_dashboard(request):
     return render(request, "Dashboards/administrator_dashboard.html")
@@ -95,6 +102,48 @@ def sign_up(request):
 
 
 @login_required
+def sign_up_administrator(request):
+    if request.method == 'POST':
+        form = AdministratorSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # login(request, user)
+            # request.session['useremail'] = request.user.email
+            messages.info(request, 'Administrator account successfully created!')
+            return redirect("dashboard")
+    else:
+        form = AdministratorSignUpForm()
+    return render(request, 'sign_up_administrator.html', {'form': form})
+
+@login_required
+def delete_administrator(request, email):
+    adminToDelete = User.objects.get(email=email)
+    b = User.objects.filter(email=adminToDelete)
+    b.delete()
+    adminToDelete.delete()
+    messages.info(request, 'Administrator account successfully deleted!')
+    return redirect('view_all_administrators')
+
+@login_required
+def edit_administrator(request, email):
+    adminToEdit = User.objects.get(email=email)
+    if request.method == 'POST':
+        form = AdministratorEditForm(request.POST, instance=adminToEdit)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'The Administrator account has been successfully edited!')
+            return redirect('view_all_administrators')
+    else:
+        form = AdministratorEditForm(instance=adminToEdit)
+    return render(request, 'edit_administrator.html', {'form': form})
+        
+
+@login_required
+def view_all_administrators(request):
+    administrators = User.objects.filter(role="Administrator")
+    return render(request, 'view_all_administrators.html', {'administrators': administrators})
+
+@login_required
 def get_user(request, email):
     try:
         return User.objects.get(email=email)
@@ -120,6 +169,12 @@ def get_requests(request):  # so far only works if a student email is inputted c
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
+
+@login_required
+def getLessons(request):
+    lessons = Lesson.objects.all()
+    return lessons
+
 
 def log_out(request):
     logout(request)

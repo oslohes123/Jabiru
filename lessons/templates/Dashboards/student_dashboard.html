@@ -5,7 +5,10 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to the student dashboard</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Welcome to the student dashboard</h1>
     <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
     <div>
         <table class="table">
@@ -18,5 +21,18 @@
 
     <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
+            </div>
+            <div class="col-6">
+                <h1>Your requested lessons</h1>
+                {% for lesson in lessonsdata %}
+                    <p>Lesson: {{ lesson.further_info }}, Duration: {{ lesson.duration }} minutes,
+                        Price: ${{ lesson.price }} (Base rate: $15/hr), Status: {{ lesson.status_string }}</p>
+                    {% empty %}
+                        You do not have any requested lessons
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -1,0 +1,15 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new administrator</title>
+</head>
+<body>
+    <h1>Create a new administrator account</h1>
+    <form action="{% url 'sign_up_administrator' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Create new administrator">
+        <button type="button"> <a href = {% url 'dashboard' %}>Return to dashboard</a></button>
+    </form>
+</body>
+</html>

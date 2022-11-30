@@ -41,8 +41,8 @@ class Command(BaseCommand):
 
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
-
-        for i in range(0, 100):
+        
+        for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
             self.user = User.objects.create_user(
                 temp_profile.get("mail"),
@@ -67,7 +67,15 @@ class Command(BaseCommand):
                 approve_status = False
             )
 
-        
+        for i in range(0, 25):
+            temp_profile = self.fake.simple_profile()
+            self.user = User.objects.create_user(
+                temp_profile.get("mail"),
+                first_name = temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
+                last_name = temp_profile.get("name").split()[-1],
+                password = self.fake.password(length = 12),
+                role = administrator
+            )
         
 
 #Lists 
@@ -115,3 +123,4 @@ class Provider(faker.providers.BaseProvider):
     
     def available_time(self):
         return self.random_element(AVAILABILITY) #AVAILABILITY being a list of all available times the student can do 
+
