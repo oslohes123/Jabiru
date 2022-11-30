@@ -74,6 +74,7 @@ def dashboard(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
@@ -100,7 +101,8 @@ def sign_up(request):
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
 
-@user_passes_test(lambda u: u.is_director)
+@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def sign_up_administrator(request):
     if request.method == 'POST':
         form = AdministratorSignUpForm(request.POST)
@@ -114,6 +116,7 @@ def sign_up_administrator(request):
         form = AdministratorSignUpForm()
     return render(request, 'sign_up_administrator.html', {'form': form})
 
+@login_required
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def delete_administrator(request, email):
     adminToDelete = User.objects.get(email=email)
@@ -123,6 +126,7 @@ def delete_administrator(request, email):
     messages.info(request, 'Administrator account successfully deleted!')
     return redirect('view_all_administrators')
 
+@login_required
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def edit_administrator(request, email):
     adminToEdit = User.objects.get(email=email)
@@ -136,7 +140,7 @@ def edit_administrator(request, email):
         form = AdministratorEditForm(instance=adminToEdit)
     return render(request, 'edit_administrator.html', {'form': form})
         
-
+@login_required
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
@@ -153,6 +157,7 @@ def get_user(request, email):
         messages.add_message(request, messages.ERROR, "Multiple objects were returned")
         return MultipleObjectsReturned
 
+@login_required
 @user_passes_test(lambda u: u.is_director_or_administrator,login_url='/dashboard/')
 def get_requests(request):  # so far only works if a student email is inputted correctly
     student_lesson = request.GET
