@@ -1,20 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Music School management system</title>
-</head>
-<body>
-<h1>Login to your user account</h1>
-{%  include "partials/messages.html" %}
-<form action="{%url 'login_user' %}" method = "post">
-    {%csrf_token%}
-    {{form.as_p}}
-    <input type = "submit" value = "login">
-    <button type="button"> <a href = {% url 'sign_up' %}>Sign up instead!</a></button>
+{% extends 'base.html' %}
 
-</form>
+{% block title %}
+    <title>Login</title>
+{% endblock title %}
 
+{% block content %}
+    <h1>Login to your user account</h1>
+    {% include "partials/messages.html" %}
 
-</body>
-</html>
+    <form action="{% url 'login_user' %}" method="post">
+
+        <div>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" value="login">Log in</button>
+            <a class="btn btn-primary" href= {% url 'sign_up' %}>Sign up instead!</a>
+        </div>
+
+    </form>
+{% endblock content %}
