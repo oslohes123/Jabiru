@@ -72,20 +72,17 @@ def dashboard(request):
     messages.add_message(request, messages.ERROR, f"Failed to find a user that fits the role: {ourUser.role}")
     return redirect("login_user")
 
-
-@login_required
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['lesson_numbers'], data['duration'], data['interval'],
-                                         data['further_info'], False)
+            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]),data['availability'],data['lesson_numbers'],data['duration'],data['interval'],data['further_info'],False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
 
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+
 
 def approved_booking(request):
     if request.method == "POST":

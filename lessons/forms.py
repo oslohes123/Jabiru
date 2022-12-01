@@ -120,7 +120,7 @@ class RequestForm(forms.ModelForm):
 
 class ApprovedBookingForm(forms.ModelForm):
     start_date = forms.DateField(label="start date")
-    day_of_the_week = forms.DateField(label="day and time of the week")
+    day_of_the_week = forms.DateTimeField(label="day and time of the week")
     lesson_numbers = forms.IntegerField(label="number of lessons")
     class Meta:
         model = ApprovedBooking
