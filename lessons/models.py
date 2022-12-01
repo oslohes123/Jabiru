@@ -39,8 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.role == director or self.role == administrator
 
     @property
-    def is_student(self):
-        return self.role == student
+    def is_student_or_adult(self):
+        return self.role == student or self.role == adult
 
 
 class Lesson(models.Model):

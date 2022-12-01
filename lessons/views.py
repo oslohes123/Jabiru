@@ -81,7 +81,7 @@ def dashboard(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_student, login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_student_or_adult, login_url='/dashboard/')
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
@@ -195,7 +195,16 @@ def getLessons(request):
 
 
 def assign_child(request):
-    return render(request, "assign_child.html")
+    child = request.GET
+    child_email_query = child.get("student_email_input")
+    try:
+        user_object = get_user(request, child_email_query)
+        if user_object.role != student:
+            messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {user_object.role}")
+            return render(request, "assign_child.html")
+    except:
+        return render(request, "assign_child.html")
+
 
 def log_out(request):
     logout(request)
