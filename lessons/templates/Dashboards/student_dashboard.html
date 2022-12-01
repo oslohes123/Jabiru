@@ -20,16 +20,32 @@
     </div>
 
     <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
+    <button type="button">Edit lesson request</a></button>
+    <button type="button">Delete lesson request</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
+    
             </div>
             <div class="col-6">
                 <h1>Your requested lessons</h1>
-                {% for lesson in lessonsdata %}
-                    <p>Lesson: {{ lesson.further_info }}, Duration: {{ lesson.duration }} minutes,
-                        Price: ${{ lesson.price }} (Base rate: $15/hr), Status: {{ lesson.status_string }}</p>
-                    {% empty %}
-                        You do not have any requested lessons
+                <table class="table">
+                    <thead>
+                        <th> Further Information </th>
+                        <th> Duration </th>
+                        <th> Price </th>
+                        <th> Status </th>
+                    </thead>
+                    {% for lesson in lessonsdata %}
+                        <tr> 
+                            <td>{{ lesson.further_info }}</td> <!--Add buttons for each row -->
+                            <td>{{ lesson.duration }}</td>
+                            <td>{{ lesson.price }}</td>
+                            <td>{{ lesson.status_string }}</td>
+                        </tr>
+                </table>
+                {% empty %}
+                    You do not have any requested lessons
                 {% endfor %}
+                    
             </div>
         </div>
     </div>
