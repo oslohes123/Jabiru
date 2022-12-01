@@ -13,7 +13,11 @@ class LogOutViewTestCase(TestCase):
             first_name= 'Name',
             last_name= 'Lastname',
             password= 'Password123!',
+<<<<<<< HEAD
             role='student'
+=======
+            role='Student'
+>>>>>>> refs/remotes/origin/main
         )
 
     def test_log_out_url(self):

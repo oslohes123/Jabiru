@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinValueValidator
-from decimal import Decimal
-from .managers import CustomUserManager,CustomLessonManager,CustomApprovedBookingManager
+from .managers import CustomUserManager,CustomLessonManager, CustomApprovedBookingManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)

@@ -20,7 +20,6 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class CustomLessonManager(BaseUserManager):
     def create_lesson(self, student, availability, lesson_numbers, duration, interval, further_info, approve_status):
         lesson = self.model(
@@ -28,22 +27,25 @@ class CustomLessonManager(BaseUserManager):
             availability=availability,
             lesson_numbers=lesson_numbers,
             duration=duration,
-            interval=interval,
-            further_info=further_info,
-            approve_status=approve_status,
+            interval = interval,
+            further_info = further_info,
+            approve_status = approve_status,
         )
         lesson.save(using=self._db)
         return lesson
 
 class CustomApprovedBookingManager(BaseUserManager):
-    def create_approvedBooking(self, start_date, day_of_the_week, lesson_numbers, duration, interval, teacher):
+    def create_approvedBooking(self, student, start_date, day_of_the_week, lesson_numbers, duration, interval, teacher, price, approve_status):
         approvedBooking = self.model(
+            student=student,
             start_date=start_date,
             day_of_the_week = day_of_the_week,
             lesson_numbers=lesson_numbers,
             duration=duration,
             interval=interval,
             teacher=teacher,
+            price=price,
+            approve_status=approve_status,
         )
         approvedBooking.save(using=self._db)
         return approvedBooking
