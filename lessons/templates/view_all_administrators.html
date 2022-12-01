@@ -5,7 +5,9 @@
     <div class="col-12">
       <h1>List of Administrators</h1>
       <p>Here is a list of every administrator account.</p>
+      <p>By giving an Administrator super-administrator privileges, they will become a Director like yourself!</p>
       <p>Be warned, deleting any account is permanent and CANNOT BE REVERTED.</p>
+      <p>Likewise, giving any Administrator super-administraotor priveldges is permanent and CANNOT BE REVERTED.</p>
       <table class="table">
         {% for administrator in administrators %}
           <tr>
@@ -14,6 +16,7 @@
             <td>{{ administrator.last_name }}</td>
             <td><button type="button"> <a href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></button></td>
             <td><button type="button"> <a href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></button></td>
+            <td><button type="button"> <a href = {% url 'make_super_administrator' email=administrator.email %}>Make a super-administrator</a></button></td>
           </tr>
         {% endfor %}
       </table>

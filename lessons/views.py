@@ -110,7 +110,7 @@ def sign_up_administrator(request):
             user = form.save()
             # login(request, user)
             # request.session['useremail'] = request.user.email
-            messages.info(request, 'Administrator account successfully created!')
+            messages.info(request, f'Administrator account {user.email} successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
@@ -123,7 +123,7 @@ def delete_administrator(request, email):
     b = User.objects.filter(email=adminToDelete)
     b.delete()
     adminToDelete.delete()
-    messages.info(request, 'Administrator account successfully deleted!')
+    messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
     return redirect('view_all_administrators')
 
 @login_required
@@ -134,11 +134,21 @@ def edit_administrator(request, email):
         form = AdministratorEditForm(request.POST, instance=adminToEdit)
         if form.is_valid():
             form.save()
-            messages.info(request, 'The Administrator account has been successfully edited!')
+            messages.info(request, f'The Administrator account details of {adminToEdit.email} has been successfully edited!')
             return redirect('view_all_administrators')
     else:
         form = AdministratorEditForm(instance=adminToEdit)
     return render(request, 'edit_administrator.html', {'form': form})
+
+@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
+def make_super_administrator(request, email):
+    adminToPromote = User.objects.get(email=email)
+    adminToPromote.role = "Director"
+    adminToPromote.save()
+    messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
+    return redirect('view_all_administrators')
+    
         
 @login_required
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')

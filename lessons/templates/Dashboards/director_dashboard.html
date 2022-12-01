@@ -7,8 +7,8 @@
     <body>
         <p>Welcome, Director {{ user.first_name }} {{ user.last_name }}</p>
         <p>You have super-admin level privileges!</p>
-        <p>Perform actions on administrator accounts below.</p>
-        <p>From viewing all the administrator accounts, you can also edit and delete any said account.</p>
+        <p>This means that you can perform actions on administrator accounts below.</p>
+        <p>From viewing all the administrator accounts, you can edit, delete and assign super-administrator priveldges to any said account.</p>
         <button type="button"> <a href = {% url 'sign_up_administrator' %}>Create a new Administrator account</a></button>
         <button type="button"> <a href = {% url 'view_all_administrators' %}>View all the Administrator accounts</a></button>
         <p>Other actions</p>
