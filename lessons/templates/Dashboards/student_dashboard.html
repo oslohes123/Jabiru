@@ -1,38 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-<body>
+{% extends 'Dashboards/../base.html' %}
+
+{% block content %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <h1>Welcome to the student dashboard</h1>
-    <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
-    <div>
-        <table class="table">
-            {% for lessons in lesson %}
-            <!--Change the lessons later this is for testing-->
-            <tr><td>{{lessons.availability}}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
+                {% include 'Dashboards/DashboardParts/greeting_content.html' %}
+                <button><a href="{% url 'make_request' %}">Make a lesson request</a></button>
+                <button type="button"><a href= {% url 'log_out' %}>Log out</a></button>
+            </div>
 
-    <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
-    <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
-            </div>
-            <div class="col-6">
-                <h1>Your requested lessons</h1>
-                {% for lesson in lessonsdata %}
-                    <p>Lesson: {{ lesson.further_info }}, Duration: {{ lesson.duration }} minutes,
-                        Price: ${{ lesson.price }} (Base rate: $15/hr), Status: {{ lesson.status_string }}</p>
-                    {% empty %}
-                        You do not have any requested lessons
-                {% endfor %}
-            </div>
+            {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
         </div>
     </div>
+{% endblock content %}
 
-</body>
-</html>
+
