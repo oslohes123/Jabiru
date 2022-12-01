@@ -1,0 +1,7 @@
+<form action='/dashboard/assign_child' method='get'>
+    <label class = "form-label" for="student_email">Enter your child's email address:</label>
+    <input class = "form-control text-center" id="student_email" type="text" name="student_email_input">
+    <input class = "btn btn-primary my-3" type="submit" value="Add child">
+    <a class = "btn btn-secondary my-3" href={% url 'dashboard' %}>Back to dashboard</a>
+    <!--Add in function of having table rows to show the students lessons-->
+</form>
