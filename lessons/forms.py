@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
-from .models import User, Lesson, ApprovedBooking
+from .models import User, Lesson, ApprovedBooking, Invoice
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -141,6 +141,12 @@ class ApprovedBookingForm(forms.ModelForm):
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
-        model = Lesson
-        fields = ['invoice_num', 'total_price']
+        model = Invoice
+        fields = ['invoice_num', 'balance_due', 'transaction_paid']
+
+    def save(self):
+        invoice = super().save(commit=False)
+
+        return invoice
+
 
