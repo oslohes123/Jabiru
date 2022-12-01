@@ -1,0 +1,9 @@
+<div class="col-6">
+            <h1>Your requested lessons</h1>
+            {% for lesson in lessonsdata %}
+                <p>Lesson: {{ lesson.further_info }}, Duration: {{ lesson.duration }} minutes,
+                    Price: ${{ lesson.price }} (Base rate: $15/hr), Status: {{ lesson.status_string }}</p>
+            {% empty %}
+                You do not have any requested lessons
+            {% endfor %}
+</div>
