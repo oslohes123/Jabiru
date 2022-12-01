@@ -14,5 +14,8 @@ urlpatterns = [
     path('view_all_administrators/', views.view_all_administrators, name='view_all_administrators'),
     path('delete_administrator/(?P<email>\d+)', views.delete_administrator, name='delete_administrator'),
     path('edit_administrator/(?P<email>\d+)', views.edit_administrator, name='edit_administrator'),
-    path('dashboard/search_student_lessons', views.get_requests, name='get_requests')
+    path('dashboard/search_student_lessons', views.get_requests, name='get_requests'),
+    path('edit_unapproved_lessons/<str:info>/<int:lesson_numbers>', views.edit_unapproved_lessons, name='edit_unapproved_lessons'), #change the key in the str<>, to the actually key when made
+    path('dashboard/delete_lesson', views.delete_request, name='delete_request')
+
 ]

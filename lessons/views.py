@@ -183,3 +183,12 @@ def getLessons(request):
 def log_out(request):
     logout(request)
     return redirect('home')
+
+def edit_unapproved_lessons(request, info, lesson_numbers):
+    lesson = Lesson.objects.get(further_info = info)
+    lesson_form = RequestForm(instance = lesson)
+    context = {'RequestForm':lesson_form}
+    return render(request, 'Dashboards/DashboardParts/make_request.html', context = context )
+
+def delete_request(request):
+    pass

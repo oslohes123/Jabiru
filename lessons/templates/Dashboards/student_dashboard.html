@@ -20,8 +20,6 @@
     </div>
 
     <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
-    <button type="button">Edit lesson request</a></button>
-    <button type="button">Delete lesson request</a></button>
     <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
     
             </div>
@@ -36,10 +34,13 @@
                     </thead>
                     {% for lesson in lessonsdata %}
                         <tr> 
-                            <td>{{ lesson.further_info }}</td> <!--Add buttons for each row -->
+                            <td>{{ lesson.further_info }}</td> 
                             <td>{{ lesson.duration }}</td>
                             <td>{{ lesson.price }}</td>
                             <td>{{ lesson.status_string }}</td>
+                            {% if lesson.status_string == "Not approved" %}
+                            <td> <a href="{% url 'edit_unapproved_lessons' lesson.further_info  lesson.lesson_numbers %}"> Edit/ Delete lesson</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
+                            {% endif %}
                         </tr>
                 </table>
                 {% empty %}
