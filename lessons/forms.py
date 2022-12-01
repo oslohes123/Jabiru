@@ -99,6 +99,11 @@ class LogInForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(LogInForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+
 class RequestForm(forms.ModelForm):
     interval = forms.IntegerField(label="Interval (0-8)",max_value=8,min_value=0)
     duration = forms.IntegerField(label = "Duration(0-240)",max_value=240,min_value=0)
