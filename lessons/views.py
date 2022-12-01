@@ -6,10 +6,8 @@ from django.http import HttpResponse
 from django.template.defaultfilters import lower
 from django.contrib.auth.decorators import login_required
 
-from .forms import LogInForm
-from .forms import SignUpForm
-from .forms import RequestForm
-from .models import User, Lesson
+from .forms import LogInForm, SignUpForm, RequestForm, ApprovedBookingForm
+from .models import User, Lesson, ApprovedBooking
 
 
 # Session parameter: useremail
@@ -74,6 +72,17 @@ def make_request(request):
 
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm':insertForm})
+
+def approved_booking(request):
+    if request.method == "POST":
+        form = ApprovedBookingForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            ApprovedBooking.objects.create_approvedBooking(getUser(request),data['start_date'],data['day_of_the_week'],data['lesson_numbers'],data['duration'],data['interval'],data['teacher'],data['price'],True)
+            messages.add_message(request,messages.SUCCESS,"The lesson is successfully booked")
+
+    insertForm = ApprovedBookingForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'ApprovedBookingForm':insertForm})
 
 def sign_up(request):
     if request.method == 'POST':

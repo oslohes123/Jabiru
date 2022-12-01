@@ -34,3 +34,16 @@ class CustomLessonManager(BaseUserManager):
         )
         lesson.save(using=self._db)
         return lesson
+
+class CustomApprovedBookingManager(BaseUserManager):
+    def create_approvedBooking(self, start_date, day_of_the_week, lesson_numbers, duration, interval, teacher):
+        approvedBooking = self.model(
+            start_date=start_date,
+            day_of_the_week = day_of_the_week,
+            lesson_numbers=lesson_numbers,
+            duration=duration,
+            interval=interval,
+            teacher=teacher,
+        )
+        approvedBooking.save(using=self._db)
+        return approvedBooking

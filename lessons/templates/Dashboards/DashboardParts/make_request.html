@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<html lang = en>
+<html lang ="en">
     <head>
         <meta charset="UTF-8">
         <title>Music School Management System</title>
     </head>
 
     <body>
-        <h1>Make a request for lessons</h1>
-        <form action="{% url 'make_request' %}" method="post">
-            {% csrf_token %}
-            {{ RequestForm.as_p }}
-            <input type="submit" value="Make a request">
-        </form>
-        {%  include "partials/messages.html" %}
+        {% if {{lesson.approve_status}} == False %}
+            <h1  style="text-align:center">Make a request for lessons</h1>
+            <form action="{% url 'make_request' %}" method="post">
+                {% csrf_token %}
+                {{ RequestForm.as_p }}
+                <input type="submit" value="Make a request">
+            </form>
+            {%  include "partials/messages.html" %}
+        {% else %}
+            <h1  style="text-align:center">Your lesson request is approved!</h1>
+            <table class="student_requests_list">
+                <thead>
+                    <th>availability</th>
+                    <th>number of lessons</th>
+                    <th>duration</th>
+                    <th>interval</th>
+                    <th>further information</th>
+                </thead>
+                
+                {% for lesson in lessons %}
+                <tr>
+                    <td>{{lesson.availability}}</td>
+                    <td>{{lesson.lesson_numberes}}</td>
+                    <td>{{lesson.duration}}</td>
+                    <td>{{lesson.interval}}</td>
+                    <td>{{lesson.further_info}}</td>
+                {% endfor %}
+                </tr>
+            </table><br>>
+            <h2  style="text-align:center">Invoice</h2>
+            <p>Invoice number is: {{lesson.invoice_num}}</p>
+            <p>Invoice unique reference number is: {{lesson.invoice_num}}-{{student_ref_num}}</p>
+            <p>Total price is: {{lesson.total_price}}</p>
+            <p>Contact administrator if you wish to change bookings!<p>
+        {% endif %}
     </body>
 </html>

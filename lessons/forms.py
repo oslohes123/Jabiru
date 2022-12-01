@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Lesson
+from .models import User, Lesson, ApprovedBooking
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -42,12 +42,47 @@ class LogInForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
 class RequestForm(forms.ModelForm):
-    interval = forms.IntegerField(label="Interval (0-8)",max_value=8,min_value=0)
-    duration = forms.IntegerField(label = "Duration(0-240)",max_value=240,min_value=0)
-    lesson_numbers = forms.IntegerField(label="Number of lessons")
+    lesson_numbers = forms.IntegerField(label="number of lessons")
     class Meta:
         model = Lesson
-        fields = ['availability','further_info']
-        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
+        fields = ['availability','duration','interval','further_info']
+        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60, 'style':'resize:none;'}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60, 'style':'resize:none;'}) }
+        fields_order = ['availability','lesson_numbers','duration','interval','further_info']
 
-    field_order = ['availability','lesson_numbers','duration','interval','further_info']
+    def save(self):
+        super().save(commit=False)
+        lesson = Lesson.objects.create_lesson(
+            availability = self.cleaned_data.get('availability'),
+            lesson_numbers = self.cleaned_data.get('lesson_numbers'),
+            duration = self.cleaned_data.get('duration'),
+            interval = self.cleaned_data.get('interval'),
+            further_info = self.cleaned_data.get('further_info')
+        )
+        return lesson
+
+class ApprovedBookingForm(forms.ModelForm):
+    start_date = forms.DateField(label="start date")
+    day_of_the_week = forms.DateField(label="day and time of the week")
+    lesson_numbers = forms.IntegerField(label="number of lessons")
+    class Meta:
+        model = ApprovedBooking
+        fields = ['duration','interval','teacher']
+        fields_order = ['start_date','day_of_the_week','lesson_numbers','duration','interval','teacher']
+    
+    def save(self):
+        super().save(commit=False)
+        approvedBooking = ApprovedBooking.objects.create_approvedBooking(
+            start_date = self.cleaned_data.get('start_date'),
+            day_of_the_week = self.cleaned_data.get('day_of_the_week'),
+            lesson_numbers = self.cleaned_data.get('lesson_numbers'),
+            duration = self.cleaned_data.get('duration'),
+            interval = self.cleaned_data.get('interval'),
+            teacher = self.cleaned_data.get('teacher'),
+        )
+        return approvedBooking
+
+class InvoiceForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = ['invoice_num', 'total_price']
+
