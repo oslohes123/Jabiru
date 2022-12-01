@@ -1,9 +1,31 @@
-<div class="col-6">
-            <h1>Your requested lessons</h1>
-            {% for lesson in lessonsdata %}
-                <p>Lesson: {{ lesson.further_info }}, Duration: {{ lesson.duration }} minutes,
-                    Price: ${{ lesson.price }} (Base rate: $15/hr), Status: {{ lesson.status_string }}</p>
-            {% empty %}
-                You do not have any requested lessons
-            {% endfor %}
+<div>
+    <h1>Your requested lessons</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Lesson</th>
+            <th>Duration</th>
+            <th>Minutes</th>
+            <th>Price (Base rate:$15/hr)</th>
+            <th>Status</th>
+            <th>Lesson</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for lesson in lessonsdata %}
+            <tr>
+                <th>{{ lesson.further_info }}</th>
+                <th>{{ lesson.duration }}</th>
+                <th>${{ lesson.price }}</th>
+                <th>{{ lesson.further_info }}</th>
+                <th>{{ lesson.further_info }}</th>
+                <th>{{ lesson.status_string }}</th>
+            </tr>
+        {% empty %}
+            You do not have any requested lessons
+        {% endfor %}
+        </tbody>
+    </table>
+
+
 </div>
