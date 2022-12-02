@@ -142,7 +142,7 @@ class ApprovedBookingForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['invoice_num', 'balance_due', 'transaction_paid']
+        fields = ['invoice_num', 'balance_due', 'payment_paid']
 
     def save(self):
         invoice = super().save(commit=False)
@@ -150,3 +150,10 @@ class InvoiceForm(forms.ModelForm):
         return invoice
 
 
+class EditRequestForm(forms.ModelForm):
+    lesson_numbers = forms.IntegerField(label="number of lessons")
+    class Meta:
+        model = Lesson
+        fields = ['availability','duration','interval','further_info']
+        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60, 'style':'resize:none;'}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60, 'style':'resize:none;'}) }
+        fields_order = ['availability','lesson_numbers','duration','interval','further_info']

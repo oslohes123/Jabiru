@@ -66,7 +66,7 @@ class Invoice(models.Model):
     lesson_in_invoice = models.OneToOneField(Lesson,on_delete=models.CASCADE,blank=False)
     invoice_num = models.AutoField(primary_key=True)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    transaction_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    payment_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
 
     def invoice_ref_num(self):
         return f'{self.lesson_in_invoice.student.student_ref_num}-{self.invoice_num}'
