@@ -16,10 +16,10 @@
             <tr>
                 <th>{{ lesson.start_date }}</th>
                 <th>{{ lesson.day_of_the_week }}</th>
-                <th>${{ lesson.duration }}</th>
+                <th>{{ lesson.duration }}</th>
                 <th>{{ lesson.interval }}</th>
                 <th>{{ lesson.teacher }}</th>
-                <th>{{ lesson.price }}</th>
+                <th>${{ lesson.price }}</th>
             </tr>
         {% empty %}
             No lessons approved yet
