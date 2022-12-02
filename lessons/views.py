@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
 from .forms import RequestForm
-from .models import User, Lesson
+from .models import User, Lesson, ApprovedBooking
 from django.views import generic
 from .constants import *
 
@@ -46,7 +46,8 @@ def home(request):
 def output_student_dashboard(request):
     theUser = get_user(request,request.session["user_email"])
     lessonsdata = Lesson.objects.filter(student=theUser)
-    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
+    approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData})
     
 
 def output_admin_dashboard(request):
