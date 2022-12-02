@@ -23,6 +23,21 @@ class Command(BaseCommand):
             role=student
         )
 
+        for i in range (0, 2):
+            instrument = fake_lesson.lesson_instrument()
+            teacher = fake_lesson.teacher_name()
+            info = instrument +' lesson with '+ teacher
+
+            self.lesson = Lesson.objects.create_lesson(
+            student = User.objects.get(email = 'johndoe@example.org'), #work on this to be of the students emails
+            availability = fake_lesson.available_time(),
+            lesson_numbers = random.randint(1,200),
+            duration = random.randint(1,240),
+            interval = random.randint(1,8),
+            further_info = info,
+            approve_status = True
+            )
+
         self.user = User.objects.create_user(
             'petra.pickles@example.org',
             first_name='Petra',

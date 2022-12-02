@@ -1,3 +1,4 @@
+"""Tests of the sign up view."""
 from django.contrib.auth.hashers import check_password
 from django.test import TestCase
 from django.urls import reverse
@@ -5,6 +6,8 @@ from lessons.forms import SignUpForm
 from lessons.models import User
 
 class SignUpViewTestCase(TestCase):
+    """Tests of the sign up view."""
+
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 

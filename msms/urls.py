@@ -14,5 +14,6 @@ urlpatterns = [
     path('view_all_administrators/', views.view_all_administrators, name='view_all_administrators'),
     path('delete_administrator/(?P<email>\d+)', views.delete_administrator, name='delete_administrator'),
     path('edit_administrator/(?P<email>\d+)', views.edit_administrator, name='edit_administrator'),
+    path('make_super_administrator/(?P<email>\d+)', views.make_super_administrator, name='make_super_administrator'),
     path('dashboard/search_student_lessons', views.get_requests, name='get_requests')
 ]

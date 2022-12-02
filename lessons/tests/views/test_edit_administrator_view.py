@@ -1,3 +1,4 @@
+"""Tests of the editing administrator view."""
 from django.contrib.auth.hashers import check_password
 from django.test import TestCase
 from django.urls import reverse
@@ -5,6 +6,7 @@ from lessons.forms import AdministratorEditForm
 from lessons.models import User
 
 class EditAdministratorViewTestCase(TestCase):
+    """Tests of the editing administrator view."""
 
     fixtures = ['lessons/fixtures/user.json',]
 
