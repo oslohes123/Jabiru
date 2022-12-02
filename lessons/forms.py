@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 from .models import User, Lesson, ApprovedBooking, Invoice
-from constants import *
+from lessons.constants import *
 
 
 class SignUpForm(forms.ModelForm):
