@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Director dashboard</title>
-    </head>
-    <body>
-        <p>Welcome, Director {{ user.first_name }} {{ user.last_name }}</p>
-        <p>You have super-admin level privileges!</p>
-        <p>This means that you can perform actions on administrator accounts below.</p>
-        <p>From viewing all the administrator accounts, you can edit, delete and assign super-administrator priveldges to any said account.</p>
-        <button type="button"> <a href = {% url 'sign_up_administrator' %}>Create a new Administrator account</a></button>
-        <button type="button"> <a href = {% url 'view_all_administrators' %}>View all the Administrator accounts</a></button>
-        <p>Other actions</p>
-        <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
-    </body>
+{% extends 'Dashboards/../base.html' %}
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class ="{{ message.tags }}"{% endif %}> {{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</html>
+
+{% block content %}
+
+    {% include 'Dashboards/DashboardParts/greeting_content.html' %}
+    <p>You have super-admin level privileges!</p>
+    <p>Perform actions on administrator accounts below.</p>
+    <p>From viewing all the administrator accounts, you can also edit and delete any said account.</p>
+    <a class = "btn btn-primary" href={% url 'sign_up_administrator' %}>Create a new Administrator account</a>
+    <a class = "btn btn-primary" href={% url 'view_all_administrators' %}>View all the Administrator accounts</a>
+    <p>Other actions</p>
+    {% include 'Dashboards/DashboardParts/student_search_form.html' %}
+    <a class = "btn btn-secondary" href={% url 'log_out' %}>Log out</a>
+
+    {% include 'partials/messages.html' %}
+
+
+
+
+{% endblock content %}

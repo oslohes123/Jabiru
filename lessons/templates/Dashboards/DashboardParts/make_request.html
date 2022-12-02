@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html lang = en>
-    <head>
-        <meta charset="UTF-8">
-        <title>Music School Management System</title>
-    </head>
+{% extends 'base.html' %}
 
-    <body>
-        <h1>Make a request for lessons</h1>
-        <form action="{% url 'make_request' %}" method="post">
-            {% csrf_token %}
-            {{ RequestForm.as_p }}
-            <input type="submit" value="Make a request">
-        </form>
-        {%  include "partials/messages.html" %}
-    </body>
-</html>
+{% block title %}
+   <title>Request your lesson</title>
+{% endblock title %}
+
+
+{% block content %}
+    <h1 class="my-3">Make a request for lessons</h1>
+    <form action="{% url 'make_request' %}" method="post">
+        {% csrf_token %}
+        {{ RequestForm.as_p }}
+        <input class = "btn btn-primary mb-4" type="submit" value="Make a request">
+        <a class = "btn btn-secondary mb-4" href="{% url 'dashboard' %}">Back to dashboard</a>
+    </form>
+    {% include "partials/messages.html" %}
+{% endblock content %}
+
+
