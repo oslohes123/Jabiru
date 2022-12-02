@@ -72,12 +72,10 @@ def dashboard(request):
     messages.add_message(request, messages.ERROR, f"Failed to find a user that fits the role: {ourUser.role}")
     return redirect("login_user")
 
-<<<<<<< HEAD
-=======
+
 
 @login_required
 @user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
->>>>>>> origin/main
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
