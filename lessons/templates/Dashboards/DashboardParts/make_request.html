@@ -10,7 +10,7 @@
         <form action="" method="post">
             {% csrf_token %}
             {{ RequestForm.as_p }}
-            <input type="submit" value="Make a request">
+            <input type="submit" value="Submit">
         </form>
         <button type="button"> <a href = {% url 'dashboard' %}>Return to dashboard</a></button>
         {%  include "partials/messages.html" %}

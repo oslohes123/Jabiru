@@ -184,8 +184,8 @@ def log_out(request):
     logout(request) 
     return redirect('home')
 
-def edit_unapproved_lessons(request, pk): #Change info with primary key
-    lesson = Lesson.objects.get(id = pk)
+def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
+    lesson = Lesson.objects.get(id = lesson_key)
     lesson_form = RequestForm(instance = lesson)
 
     if request.method == "POST":
@@ -200,5 +200,7 @@ def edit_unapproved_lessons(request, pk): #Change info with primary key
     context = {'RequestForm':lesson_form}
     return render(request, 'Dashboards/DashboardParts/make_request.html', context = context )
 
-def delete_request(request):
-    pass
+def delete_request(request, lesson_key):
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson.delete()
+    return redirect('/dashboard/')
