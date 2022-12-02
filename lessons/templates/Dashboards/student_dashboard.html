@@ -1,56 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <h1>Welcome to the student dashboard</h1>
-    <p>Hello, {{ user.first_name }} {{ user.last_name }}</p>
-    <div>
-        <table class="table">
-            {% for lessons in lesson %}
-            <!--Change the lessons later this is for testing-->
-            <tr><td>{{lessons.availability}}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
+{% extends 'Dashboards/../base.html' %}
 
-    <button> <a href="{% url 'make_request' %}">Make a lesson request</a></button>
-    <button type="button"><a href = {% url 'log_out' %}>Log out</a></button>
-    
-            </div>
-            <div class="col-6">
-                <h1>Your requested lessons</h1>
-                <table class="table">
-                    <thead>
-                        <th> Further Information </th>
-                        <th> Duration </th>
-                        <th> Price </th>
-                        <th> Status </th>
-                    </thead>
-                    {% for lesson in lessonsdata %}
-                        <tr> 
-                            <td>{{ lesson.further_info }}</td> 
-                            <td>{{ lesson.duration }}</td>
-                            <td>{{ lesson.price }}</td>
-                            <td>{{ lesson.status_string }}</td>
-                            {% if lesson.status_string == "Not approved" %}
-                            <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
-                            <td> <a href="{% url 'delete_request' lesson.id %}"> Delete</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
-                            {% endif %}
-                        </tr>
-                </table>
-                {% empty %}
-                    You do not have any requested lessons
-                {% endfor %}
-                    
-            </div>
+{% block content %}
+
+    <div class="row p-3">
+        <div class="col-sm-3 card">
+            {% include 'Dashboards/DashboardParts/greeting_content.html' %}
+            <a class="btn btn-secondary my-1" href="{% url 'make_request' %}">Make a lesson request</a>
+            <a class="btn btn-primary mb-3" href= {% url 'log_out' %}>Log out</a>
         </div>
+
+        <div class="col-sm-9 card">
+            {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
+        </div>
+
     </div>
 
-</body>
-</html>
+{% endblock content %}
+
+
