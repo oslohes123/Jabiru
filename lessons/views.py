@@ -144,7 +144,7 @@ def edit_administrator(request, email):
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def make_super_administrator(request, email):
     adminToPromote = User.objects.get(email=email)
-    adminToPromote.role = "Director"
+    adminToPromote.role = director
     adminToPromote.save()
     messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
     return redirect('view_all_administrators')
