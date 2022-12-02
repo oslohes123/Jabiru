@@ -20,6 +20,14 @@ class SignUpForm(forms.ModelForm):
     )
     confirm_password = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['class'] = 'form-control mt-2'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control mt-2'
+        self.fields['email'].widget.attrs['class'] = 'form-control mt-2'
+        self.fields['password'].widget.attrs['class'] = 'form-control mt-2'
+        self.fields['confirm_password'].widget.attrs['class'] = 'form-control mt-2'
+
     def clean(self):
         super().clean()
         password = self.cleaned_data.get('password')
@@ -39,31 +47,9 @@ class SignUpForm(forms.ModelForm):
         return user
 
 
-class AdministratorSignUpForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email']
-
-    password = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput(),
-        validators=[
-            RegexValidator(
-                regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$&+,:;=?@#|<>.^*()%!-]).*$',
-                message='Password must contain an uppercase character, a lowercase character, a number and a special character.')
-        ]
-    )
-    confirm_password = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
-
-    def clean(self):
-        super().clean()
-        password = self.cleaned_data.get('password')
-        confirm_password = self.cleaned_data.get('confirm_password')
-        if password != confirm_password:
-            self.add_error('confirm_password', 'Passwords do not match.')
-
+class AdministratorSignUpForm(SignUpForm):
     def save(self):
-        super().save(commit=False)
+        forms.ModelForm.save(self, commit=False)
         user = User.objects.create_user(
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
@@ -103,6 +89,11 @@ class LogInForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(LogInForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+
 
 class RequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="number of lessons")
@@ -124,6 +115,16 @@ class RequestForm(forms.ModelForm):
             further_info=self.cleaned_data.get('further_info')
         )
         return lesson
+
+    field_order = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
+
+    def __init__(self, *args, **kwargs):
+        super(RequestForm, self).__init__(*args, **kwargs)
+        self.fields['availability'].widget.attrs['class'] = 'form-control'
+        self.fields['lesson_numbers'].widget.attrs['class'] = 'form-control'
+        self.fields['duration'].widget.attrs['class'] = 'form-control'
+        self.fields['interval'].widget.attrs['class'] = 'form-control'
+        self.fields['further_info'].widget.attrs['class'] = 'form-control'
 
 
 class ApprovedBookingForm(forms.ModelForm):
@@ -185,3 +186,4 @@ class EditRequestForm(forms.ModelForm):
                     further_info=self.cleaned_data.get('further_info')
                 )
                 return edited_lesson
+

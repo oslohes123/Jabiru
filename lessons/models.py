@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator,MaxValueValidator
 from decimal import Decimal
 from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager
+from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60")]
 interval_choices = [(1, "1"), (2, "2")]
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
@@ -31,6 +31,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    @property
+    def is_director(self):
+        return self.role == director
+
+    @property
+    def is_director_or_administrator(self):
+        return self.role == director or self.role == administrator
+
+    @property
+    def is_student(self):
+        return self.role == student
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

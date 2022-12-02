@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.decorators import user_passes_test
 
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
@@ -72,6 +72,12 @@ def dashboard(request):
     messages.add_message(request, messages.ERROR, f"Failed to find a user that fits the role: {ourUser.role}")
     return redirect("login_user")
 
+<<<<<<< HEAD
+=======
+
+@login_required
+@user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
+>>>>>>> origin/main
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
@@ -129,8 +135,8 @@ def sign_up(request):
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
 
-
 @login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def sign_up_administrator(request):
     if request.method == 'POST':
         form = AdministratorSignUpForm(request.POST)
@@ -138,36 +144,48 @@ def sign_up_administrator(request):
             user = form.save()
             # login(request, user)
             # request.session['useremail'] = request.user.email
-            messages.info(request, 'Administrator account successfully created!')
+            messages.info(request, f'Administrator account {user.email} successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
     return render(request, 'sign_up_administrator.html', {'form': form})
 
 @login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def delete_administrator(request, email):
     adminToDelete = User.objects.get(email=email)
     b = User.objects.filter(email=adminToDelete)
     b.delete()
     adminToDelete.delete()
-    messages.info(request, 'Administrator account successfully deleted!')
+    messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
     return redirect('view_all_administrators')
 
 @login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def edit_administrator(request, email):
     adminToEdit = User.objects.get(email=email)
     if request.method == 'POST':
         form = AdministratorEditForm(request.POST, instance=adminToEdit)
         if form.is_valid():
             form.save()
-            messages.info(request, 'The Administrator account has been successfully edited!')
+            messages.info(request, f'The Administrator account details of {adminToEdit.email} has been successfully edited!')
             return redirect('view_all_administrators')
     else:
         form = AdministratorEditForm(instance=adminToEdit)
     return render(request, 'edit_administrator.html', {'form': form})
-        
 
 @login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
+def make_super_administrator(request, email):
+    adminToPromote = User.objects.get(email=email)
+    adminToPromote.role = director
+    adminToPromote.save()
+    messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
+    return redirect('view_all_administrators')
+    
+        
+@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
     return render(request, 'view_all_administrators.html', {'administrators': administrators})
@@ -183,7 +201,8 @@ def get_user(request, email):
         messages.add_message(request, messages.ERROR, "Multiple objects were returned")
         return MultipleObjectsReturned
 
-
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator,login_url='/dashboard/')
 def get_requests(request):  # so far only works if a student email is inputted correctly
     student_lesson = request.GET
     student_email_query = student_lesson.get("student_email_input")
