@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinValueValidator
 from decimal import Decimal
-from .managers import CustomUserManager,CustomLessonManager, CustomApprovedBookingManager
+from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager
+
+duration_choices = [(30, "30"), (45, "45"), (60, "60")]
+interval_choices = [(1, "1"), (2, "2")]
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
@@ -27,43 +31,39 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+
 class Lesson(models.Model):
-
-    duration_choices = [(30,"30"),(45,"45"),(60,"60")]
-    interval_choices = [(1,"1"),(2,"2")]
-
-    student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-    availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.')
+    student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    availability = models.CharField(max_length=500, blank=False,
+                                    help_text='Please specify your available time for taking the lessons.')
     lesson_numbers = models.PositiveIntegerField(blank=False)
-    duration = models.PositiveIntegerField(blank=False, choices=duration_choices,default=30)
-    interval = models.PositiveIntegerField(blank=False, choices=interval_choices,default=1)
-    further_info = models.CharField(max_length=500, blank=False, help_text='Please provide further information such as what you want to learn or your preferred teacher.')
+    duration = models.PositiveIntegerField(blank=False, choices=duration_choices, default=30)
+    interval = models.PositiveIntegerField(blank=False, choices=interval_choices, default=1)
+    further_info = models.CharField(max_length=500, blank=False,
+                                    help_text='Please provide further information such as what you want to learn or your preferred teacher.')
     approve_status = models.BooleanField(default=False)
-
     objects = CustomLessonManager()
 
+
 class ApprovedBooking(models.Model):
-
-    duration_choices = [(30,"30"),(45,"45"),(60,"60")]
-    interval_choices = [(1,"1"),(2,"2")]
-
-    student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=False)
     day_of_the_week = models.DateTimeField(blank=False)
-    lesson_numbers = models.PositiveIntegerField(blank=False)
+    total_lesson_count = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
-    teacher = models.CharField(max_length=50,blank=False)
-    price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    teacher = models.CharField(max_length=50, blank=False)
+    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     approve_status = models.BooleanField(default=True)
-    
+
     objects = CustomApprovedBookingManager()
 
     def total_price(self):
-        return self.lesson_numbers * self.price
+        return self.total_lesson_count * self.hourly_rate * self.duration/60
+
 
 class Invoice(models.Model):
-    lesson_in_invoice = models.OneToOneField(Lesson,on_delete=models.CASCADE,blank=False)
+    lesson_in_invoice = models.OneToOneField(ApprovedBooking, on_delete=models.CASCADE,blank=False)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     payment_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
 
