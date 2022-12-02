@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users"""
 
     list_display = [
-        'email', 'first_name', 'last_name', 'role', 'is_active'
+        'email', 'first_name', 'last_name', 'role', 'is_active','id'
     ]
 
 
@@ -24,5 +24,6 @@ class LessonsAdmin(admin.ModelAdmin):
         'duration',
         'interval',
         'further_info',
-        'approve_status'
+        'approve_status',
+        'id'
     ]

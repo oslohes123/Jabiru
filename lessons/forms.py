@@ -97,7 +97,7 @@ class RequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="Number of lessons")
     class Meta:
         model = Lesson
-        fields = ['availability','further_info']
+        fields = ['availability', 'lesson_numbers','duration','interval', 'further_info']
         widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60}) }
 
     field_order = ['availability','lesson_numbers','duration','interval','further_info']
