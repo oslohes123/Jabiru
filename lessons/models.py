@@ -29,13 +29,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Lesson(models.Model):
 
-    duration_choices = [(1,"30"),(2,"45"),(3,"60")]
+    duration_choices = [(30,"30"),(45,"45"),(60,"60")]
     interval_choices = [(1,"1"),(2,"2")]
 
     student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     availability = models.CharField(max_length=500, blank=False, help_text='Please specify your available time for taking the lessons.')
     lesson_numbers = models.PositiveIntegerField(blank=False)
-    duration = models.PositiveIntegerField(blank=False, choices=duration_choices,default=1)
+    duration = models.PositiveIntegerField(blank=False, choices=duration_choices,default=30)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices,default=1)
     further_info = models.CharField(max_length=500, blank=False, help_text='Please provide further information such as what you want to learn or your preferred teacher.')
     approve_status = models.BooleanField(default=False)
@@ -44,7 +44,7 @@ class Lesson(models.Model):
 
 class ApprovedBooking(models.Model):
 
-    duration_choices = [(1,"30"),(2,"45"),(3,"60")]
+    duration_choices = [(30,"30"),(45,"45"),(60,"60")]
     interval_choices = [(1,"1"),(2,"2")]
 
     student = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
@@ -64,9 +64,8 @@ class ApprovedBooking(models.Model):
 
 class Invoice(models.Model):
     lesson_in_invoice = models.OneToOneField(Lesson,on_delete=models.CASCADE,blank=False)
-    invoice_num = models.AutoField(primary_key=True)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     payment_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
 
     def invoice_ref_num(self):
-        return f'{self.lesson_in_invoice.student.student_ref_num}-{self.invoice_num}'
+        return f'{self.lesson_in_invoice.student.id}-{self.id}'

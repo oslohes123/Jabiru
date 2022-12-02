@@ -157,3 +157,19 @@ class EditRequestForm(forms.ModelForm):
         fields = ['availability','duration','interval','further_info']
         widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60, 'style':'resize:none;'}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60, 'style':'resize:none;'}) }
         fields_order = ['availability','lesson_numbers','duration','interval','further_info']
+
+    def save(self):
+        if self.is_valid():
+            lesson_requested = super().save()
+            if self.cleaned_data.get('approve_status') == True:
+                #Delete a lesson request if it is identical to another existing lesson request
+                Lesson.objects.filter(lesson_requested==lesson_requested).delete()
+
+                edited_lesson = Lesson.objects.create(
+                    availability = self.cleaned_data.get('availability'),
+                    lesson_numbers = self.cleaned_data.get('lesson_numbers'),
+                    duration = self.cleaned_data.get('duration'),
+                    interval = self.cleaned_data.get('interval'),
+                    further_info = self.cleaned_data.get('further_info')
+                )
+                return edited_lesson
