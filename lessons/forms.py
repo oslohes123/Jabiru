@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 from .models import User, Lesson, ApprovedBooking, Invoice
+from constants import *
 
 
 class SignUpForm(forms.ModelForm):
@@ -42,7 +43,7 @@ class SignUpForm(forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('password'),
-            role="Student",
+            role=student,
         )
         return user
 
@@ -55,7 +56,7 @@ class AdministratorSignUpForm(SignUpForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('password'),
-            role="Administrator",
+            role=administrator,
         )
         return user
 
@@ -153,7 +154,7 @@ class ApprovedBookingForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['invoice_num', 'balance_due', 'payment_paid']
+        fields = ['lesson_in_invoice', 'balance_due', 'payment_paid']
 
     def save(self):
         invoice = super().save(commit=False)

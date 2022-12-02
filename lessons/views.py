@@ -223,7 +223,26 @@ def getLessons(request):
 
 
 def log_out(request):
-    logout(request)
+    logout(request) 
     return redirect('home')
 
+def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson_form = RequestForm(instance = lesson)
 
+    if request.method == "POST":
+        lesson_form = RequestForm(request.POST, instance= lesson)
+        if lesson_form.is_valid():
+            lesson_form.save()
+            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+                                         data['lesson_numbers'], data['duration'], data['interval'],
+                                         data['further_info'], False) """
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+
+    context = {'RequestForm':lesson_form}
+    return render(request, 'Dashboards/DashboardParts/make_request.html', context = context )
+
+def delete_request(request, lesson_key):
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson.delete()
+    return redirect('/dashboard/')
