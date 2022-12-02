@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 from .models import User, Lesson, ApprovedBooking, Invoice
 
+
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
@@ -33,9 +34,10 @@ class SignUpForm(forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('password'),
-            role = "Student",
+            role="Student",
         )
         return user
+
 
 class AdministratorSignUpForm(forms.ModelForm):
     class Meta:
@@ -67,9 +69,10 @@ class AdministratorSignUpForm(forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('password'),
-            role = "Administrator",
+            role="Administrator",
         )
         return user
+
 
 class AdministratorEditForm(UserChangeForm):
     class Meta:
@@ -94,50 +97,57 @@ class AdministratorEditForm(UserChangeForm):
         if password != confirm_password:
             self.add_error('confirm_password', 'Passwords do not match.')
 
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
     email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
+
 class RequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="number of lessons")
+
     class Meta:
         model = Lesson
-        fields = ['availability','duration','interval','further_info']
-        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60, 'style':'resize:none;'}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60, 'style':'resize:none;'}) }
-        fields_order = ['availability','lesson_numbers','duration','interval','further_info']
+        fields = ['availability', 'duration', 'interval', 'further_info']
+        widgets = {'availability': forms.Textarea(attrs={'rows': 6, 'cols': 60, 'style': 'resize:none;'}),
+                   'further_info': forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'})}
+        fields_order = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
 
     def save(self):
         super().save(commit=False)
         lesson = Lesson.objects.create_lesson(
-            availability = self.cleaned_data.get('availability'),
-            lesson_numbers = self.cleaned_data.get('lesson_numbers'),
-            duration = self.cleaned_data.get('duration'),
-            interval = self.cleaned_data.get('interval'),
-            further_info = self.cleaned_data.get('further_info')
+            availability=self.cleaned_data.get('availability'),
+            lesson_numbers=self.cleaned_data.get('lesson_numbers'),
+            duration=self.cleaned_data.get('duration'),
+            interval=self.cleaned_data.get('interval'),
+            further_info=self.cleaned_data.get('further_info')
         )
         return lesson
+
 
 class ApprovedBookingForm(forms.ModelForm):
     start_date = forms.DateField(label="start date")
     day_of_the_week = forms.DateTimeField(label="day and time of the week")
     lesson_numbers = forms.IntegerField(label="number of lessons")
+
     class Meta:
         model = ApprovedBooking
-        fields = ['duration','interval','teacher']
-        fields_order = ['start_date','day_of_the_week','lesson_numbers','duration','interval','teacher']
-    
+        fields = ['duration', 'interval', 'teacher']
+        fields_order = ['start_date', 'day_of_the_week', 'lesson_numbers', 'duration', 'interval', 'teacher']
+
     def save(self):
         super().save(commit=False)
         approvedBooking = ApprovedBooking.objects.create_approvedBooking(
-            start_date = self.cleaned_data.get('start_date'),
-            day_of_the_week = self.cleaned_data.get('day_of_the_week'),
-            lesson_numbers = self.cleaned_data.get('lesson_numbers'),
-            duration = self.cleaned_data.get('duration'),
-            interval = self.cleaned_data.get('interval'),
-            teacher = self.cleaned_data.get('teacher'),
+            start_date=self.cleaned_data.get('start_date'),
+            day_of_the_week=self.cleaned_data.get('day_of_the_week'),
+            lesson_numbers=self.cleaned_data.get('lesson_numbers'),
+            duration=self.cleaned_data.get('duration'),
+            interval=self.cleaned_data.get('interval'),
+            teacher=self.cleaned_data.get('teacher'),
         )
         return approvedBooking
+
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -152,24 +162,26 @@ class InvoiceForm(forms.ModelForm):
 
 class EditRequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="number of lessons")
+
     class Meta:
         model = Lesson
-        fields = ['availability','duration','interval','further_info']
-        widgets = {'availability': forms.Textarea(attrs={'rows':6, 'cols':60, 'style':'resize:none;'}), 'further_info':forms.Textarea(attrs={'rows':10, 'cols':60, 'style':'resize:none;'}) }
-        fields_order = ['availability','lesson_numbers','duration','interval','further_info']
+        fields = ['availability', 'duration', 'interval', 'further_info']
+        widgets = {'availability': forms.Textarea(attrs={'rows': 6, 'cols': 60, 'style': 'resize:none;'}),
+                   'further_info': forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'})}
+        fields_order = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
 
     def save(self):
         if self.is_valid():
             lesson_requested = super().save()
             if self.cleaned_data.get('approve_status') == True:
-                #Delete a lesson request if it is identical to another existing lesson request
-                Lesson.objects.filter(lesson_requested==lesson_requested).delete()
+                # Delete a lesson request if it is identical to another existing lesson request
+                Lesson.objects.filter(lesson_requested == lesson_requested).delete()
 
                 edited_lesson = Lesson.objects.create(
-                    availability = self.cleaned_data.get('availability'),
-                    lesson_numbers = self.cleaned_data.get('lesson_numbers'),
-                    duration = self.cleaned_data.get('duration'),
-                    interval = self.cleaned_data.get('interval'),
-                    further_info = self.cleaned_data.get('further_info')
+                    availability=self.cleaned_data.get('availability'),
+                    lesson_numbers=self.cleaned_data.get('lesson_numbers'),
+                    duration=self.cleaned_data.get('duration'),
+                    interval=self.cleaned_data.get('interval'),
+                    further_info=self.cleaned_data.get('further_info')
                 )
                 return edited_lesson
