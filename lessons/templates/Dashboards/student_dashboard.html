@@ -39,7 +39,7 @@
                             <td>{{ lesson.price }}</td>
                             <td>{{ lesson.status_string }}</td>
                             {% if lesson.status_string == "Not approved" %}
-                            <td> <a href="{% url 'edit_unapproved_lessons' lesson.further_info  lesson.lesson_numbers %}"> Edit/ Delete lesson</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
+                            <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit/ Delete lesson</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
                             {% endif %}
                         </tr>
                 </table>

@@ -7,11 +7,12 @@
 
     <body>
         <h1>Make a request for lessons</h1>
-        <form action="{% url 'make_request' %}" method="post">
+        <form action="" method="post">
             {% csrf_token %}
             {{ RequestForm.as_p }}
             <input type="submit" value="Make a request">
         </form>
+        <button type="button"> <a href = {% url 'dashboard' %}>Return to dashboard</a></button>
         {%  include "partials/messages.html" %}
     </body>
 </html>
