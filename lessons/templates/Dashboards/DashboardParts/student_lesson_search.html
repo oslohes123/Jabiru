@@ -22,7 +22,7 @@
                     <td>{{ lesson.duration }}</td>
                     <td>{{ lesson.interval }}</td>
                     <td>{{ lesson.further_info }}</td>
-                    <td>{{ lesson.approve_status }}</td>
+                    {% include 'Dashboards/DashboardParts/is_approved_output.html' %}
                 </tr>
             {% endfor %}
         </table>
