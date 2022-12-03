@@ -43,7 +43,7 @@ def home(request):
 
 
 def output_student_dashboard(request):
-    theUser = get_user(request, request.session["user_email"])
+    theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     return render(request, "Dashboards/student_dashboard.html", {'lessonsdata': lessonsdata})
 
@@ -89,7 +89,7 @@ def make_request(request):
         request.session["child_id"] = None
         print(f"Assigning child {user_to_assign.email}")
     else:
-        user_to_assign = get_user(request, request.session["user_email"])
+        user_to_assign = request.user
         print(f"Assigning parent {user_to_assign.email}")
 
     if request.method == "POST":
@@ -133,6 +133,7 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            request.session["child_id"] = None
             return redirect("dashboard")
     else:
         form = SignUpForm()
