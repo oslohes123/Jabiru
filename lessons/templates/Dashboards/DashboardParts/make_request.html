@@ -5,9 +5,9 @@
 
 
 {% block content %}
-    {% if lesson.approve_status == False %}
-        {% include "Dashboards/DashboardParts/make_requests_non_approved.html" %}
+    {% if lesson.approve_status == True%}
+        {% include "Dashboards/DashboardParts/Invoice.html" %}
     {% else %}
-        {% include "Dashboards/DashboardParts/make_requests_already_approved.html" %}
+        {% include "Dashboards/DashboardParts/make_requests_non_approved.html" %}
     {% endif %}
 {% endblock content %}
