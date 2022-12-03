@@ -20,7 +20,7 @@ class LessonsAdmin(admin.ModelAdmin):
     list_display = [
         'student',
         'availability',
-        'lesson_numbers',
+        'total_lessons_count',
         'duration',
         'interval',
         'further_info',

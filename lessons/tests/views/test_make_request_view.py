@@ -27,7 +27,7 @@ class MakeRequestTest(TestCase):
             "id":1,
             "student":self.studentUser,
             "availability":"I am available on Tuesdays",
-            "lesson_numbers":2,
+            "total_lessons_count":2,
             "duration":2,
             "interval":3,
             "further_info":"I will need extra help!",
