@@ -92,8 +92,7 @@ def approved_booking(request):
     if request.method == "POST":
         form = ApprovedBookingForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            ApprovedBooking.objects.create_approvedBooking(get_user(request, request.session["user_email"]),data['start_date'],data['day_of_the_week'],data['lesson_numbers'],data['duration'],data['interval'],data['teacher'],data['price'],True)
+            form.save()
             messages.add_message(request,messages.SUCCESS,"The lesson is successfully booked")
 
     form = ApprovedBookingForm()
