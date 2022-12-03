@@ -87,10 +87,8 @@ def make_request(request):
     if request.session["child_id"] is not None:
         user_to_assign = User.objects.get(id=request.session["child_id"])
         request.session["child_id"] = None
-        print(f"Assigning child {user_to_assign.email}")
     else:
         user_to_assign = request.user
-        print(f"Assigning parent {user_to_assign.email}")
 
     if request.method == "POST":
         form = RequestForm(request.POST)
