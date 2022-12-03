@@ -100,7 +100,6 @@ class RequestForm(forms.ModelForm):
     # total_lessons_count = forms.IntegerField(label="Number of lessons")
     # interval = forms.IntegerField(label="Interval (0-8)", max_value=8, min_value=0)
     # duration = forms.IntegerField(label="Duration(0-240)", max_value=240, min_value=0)
-    student = forms.HiddenInput()
     class Meta:
         model = Lesson
         fields = ['availability', 'total_lessons_count', 'duration', 'interval', 'further_info']
