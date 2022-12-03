@@ -88,7 +88,7 @@ def make_request(request):
         form = RequestForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+            Lesson.objects.create_lesson(user_to_assign, data['availability'],
                                          data['lesson_numbers'], data['duration'], data['interval'],
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
@@ -96,21 +96,23 @@ def make_request(request):
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
 
+child_id_global = None
 
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
 def make_request_for_child(request, child_id):
-    child = User.objects.get(id=child_id)
-    print(child.email)
-    if request.method == "POST":
-        form = RequestForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            Lesson.objects.create_lesson(child, data['availability'],
-                                         data['lesson_numbers'], data['duration'], data['interval'],
-                                         data['further_info'], False)
-            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
-
+    # child = User.objects.get(id=child_id)
+    # print(child.email)
+    # if request.method == "POST":
+    #     form = RequestForm(request.POST)
+    #     if form.is_valid():
+    #         data = form.cleaned_data
+    #         Lesson.objects.create_lesson(child, data['availability'],
+    #                                      data['lesson_numbers'], data['duration'], data['interval'],
+    #                                      data['further_info'], False)
+    #         messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
+    global child_id_global
+    child_id_global = child_id
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
 
