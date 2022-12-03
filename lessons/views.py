@@ -27,7 +27,7 @@ def login_user(request):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                request.session['user_email'] = request.user.email
+                request.session["child_id"] = None
                 return redirect("dashboard")
             else:
                 messages.add_message(request, messages.ERROR, "Invalid credentials try again")
@@ -49,7 +49,7 @@ def output_student_dashboard(request):
 
 
 def output_adult_dashboard(request):
-    theUser = get_user(request, request.session["user_email"])
+    theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     childdata = theUser.children.all()
     return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata, 'childdata': childdata})
@@ -66,7 +66,7 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-    ourUser = get_user(request, request.session["user_email"])
+    ourUser: User = request.user
     if ourUser.role == student:
         return output_student_dashboard(request)
     if ourUser.role == adult:
@@ -84,10 +84,9 @@ def dashboard(request):
 @login_required
 @user_passes_test(lambda u: u.is_student_or_adult, login_url='/dashboard/')
 def make_request(request):
-    global child_id_global
-    if child_id_global is not None:
-        user_to_assign = User.objects.get(id=child_id_global)
-        child_id_global = None
+    if request.session["child_id"] is not None:
+        user_to_assign = User.objects.get(id=request.session["child_id"])
+        request.session["child_id"] = None
         print(f"Assigning child {user_to_assign.email}")
     else:
         user_to_assign = get_user(request, request.session["user_email"])
@@ -105,7 +104,8 @@ def make_request(request):
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
 
-child_id_global = None
+
+# child_id_global = None
 
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
@@ -120,8 +120,9 @@ def make_request_for_child(request, child_id):
     #                                      data['lesson_numbers'], data['duration'], data['interval'],
     #                                      data['further_info'], False)
     #         messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
-    global child_id_global
-    child_id_global = child_id
+    # global child_id_global
+    # child_id_global = child_id
+    request.session["child_id"] = child_id
     insertForm = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
 
@@ -132,7 +133,6 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            request.session['user_email'] = request.user.email
             return redirect("dashboard")
     else:
         form = SignUpForm()
@@ -227,7 +227,7 @@ def getLessons(request):
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
 def assign_child(request):
-    theUser = get_user(request, request.session["user_email"])
+    theUser = request.user
     if request.method == "POST":
         form_input_query_dict = request.POST
         child_email = form_input_query_dict.get("student_email_input")
