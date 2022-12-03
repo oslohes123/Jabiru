@@ -17,7 +17,7 @@
     </div>
 
     <div class="row px-3">
-        <div class="col-sm-5 card">
+        <div class="col-sm-12 card">
             <h1 class="my-3">Your children</h1>
             <table class="table table-bordered card-body">
                 <thead class="p-5">
@@ -25,6 +25,7 @@
                     <th>Name</th>
                     <th>Last name</th>
                     <th>Email</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -33,6 +34,7 @@
                         <th>{{ child.first_name }}</th>
                         <th>{{ child.last_name }}</th>
                         <th>{{ child.email }}</th>
+                        <th><a href="{% url 'make_request_for_child' child.id %}"> Make a lesson request</a></th>
                     </tr>
                 {% empty %}
                     You do not have any registered children
@@ -41,9 +43,6 @@
             </table>
         </div>
 
-        <div class="col-sm-7 card">
-            {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
-        </div>
 
     </div>
 

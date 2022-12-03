@@ -2,14 +2,16 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
 from .models import User, Lesson
+from .constants import *
 
+role_choices_signup = [(student, 'Student'), (adult, 'Adult student or parent')]
 
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'role']
-        labels = {'role': 'Select account type'}
+        fields = ['first_name', 'last_name', 'email']
 
+    role = forms.CharField(label='Select account type', widget=forms.Select(choices=role_choices_signup))
     password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(),
@@ -45,7 +47,6 @@ class SignUpForm(forms.ModelForm):
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('password'),
             role=self.cleaned_data.get('role'),
-            parent=self.cleaned_data.get('parent')
         )
         return user
 

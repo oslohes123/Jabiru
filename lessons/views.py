@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 
@@ -89,6 +89,24 @@ def make_request(request):
         if form.is_valid():
             data = form.cleaned_data
             Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+                                         data['lesson_numbers'], data['duration'], data['interval'],
+                                         data['further_info'], False)
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
+
+    insertForm = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
+def make_request_for_child(request, child_id):
+    child = User.objects.get(id=child_id)
+    print(child.email)
+    if request.method == "POST":
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            Lesson.objects.create_lesson(child, data['availability'],
                                          data['lesson_numbers'], data['duration'], data['interval'],
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
@@ -195,16 +213,18 @@ def getLessons(request):
     return lessons
 
 
+@login_required
+@user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
 def assign_child(request):
     theUser = get_user(request, request.session["user_email"])
-    if request.method == "GET":
-        form_input = request.GET
-        child_email = form_input.get("student_email_input")
-
+    if request.method == "POST":
+        form_input_query_dict = request.POST
+        child_email = form_input_query_dict.get("student_email_input")
         try:
             child_object = get_user(request, child_email)
             if child_object.role != student:
-                messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {child_object.role}")
+                messages.add_message(request, messages.ERROR,
+                                     f"Email was not of a student, it was of a {child_object.role}")
                 return render(request, "assign_child.html")
             else:
                 child_object.parent = theUser

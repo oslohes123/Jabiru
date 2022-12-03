@@ -4,14 +4,15 @@ from django.core.validators import MaxValueValidator
 from .managers import CustomUserManager, CustomLessonManager
 from .constants import *
 
-role_choices = ((student, 'Student'), (adult, 'Adult student or parent'))
+role_choices = ((student, 'Student'), (adult, 'Adult student or parent'),
+                (administrator, 'Administrator'), (director, 'Director'))
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
     last_name = models.CharField(max_length=20, blank=False)
     email = models.EmailField(unique=True, max_length=30, blank=False)
-    role = models.CharField(max_length=10, choices=role_choices, blank=False)
+    role = models.CharField(max_length=13, choices=role_choices, blank=False)
     parent = models.ForeignKey('self', default=None, blank=True, null=True,
                                related_name='children', on_delete=models.DO_NOTHING)
 
@@ -43,6 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_student_or_adult(self):
         return self.role == student or self.role == adult
+
+    @property
+    def is_adult(self):
+        return self.role == adult
 
 
 class Lesson(models.Model):

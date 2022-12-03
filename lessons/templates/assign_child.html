@@ -6,7 +6,7 @@
 
 {% block content %}
     <h1 class="my-3">Register your child</h1>
-    <form action="{% url 'assign_child' %}" method="get">
+    <form action="{% url 'assign_child' %}" method="post">
         {% csrf_token %}
         <label class = "form-label" for="student_email">Enter your child's email address:</label>
         <input class = "form-control text-center" id="student_email" type="text" name="student_email_input">

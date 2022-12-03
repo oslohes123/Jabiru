@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, role, password):
         email = self.normalize_email(email)
@@ -21,18 +22,16 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-
 class CustomLessonManager(BaseUserManager):
     def create_lesson(self, student, availability, lesson_numbers, duration, interval, further_info, approve_status):
-
         lesson = self.model(
             student=student,
             availability=availability,
             lesson_numbers=lesson_numbers,
             duration=duration,
-            interval = interval,
-            further_info = further_info,
-            approve_status = approve_status,
+            interval=interval,
+            further_info=further_info,
+            approve_status=approve_status,
         )
         lesson.save(using=self._db)
         return lesson
