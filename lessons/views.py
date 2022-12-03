@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import user_passes_test
 
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
-from .forms import RequestForm
-from .models import User, Lesson
+from .forms import RequestForm, ApprovedBookingForm, InvoiceForm
+from .models import User, Lesson, ApprovedBooking
 from django.views import generic
 from .constants import *
 
@@ -73,21 +73,53 @@ def dashboard(request):
     return redirect("login_user")
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['lesson_numbers'], data['duration'], data['interval'],
-                                         data['further_info'], False)
+            form.save(request)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
 
-    insertForm = RequestForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+    form = RequestForm()
 
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
+
+def approved_booking(request):
+    if request.method == "POST":
+        form = ApprovedBookingForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            ApprovedBooking.objects.create_approvedBooking(get_user(request, request.session["user_email"]),data['start_date'],data['day_of_the_week'],data['lesson_numbers'],data['duration'],data['interval'],data['teacher'],data['price'],True)
+            messages.add_message(request,messages.SUCCESS,"The lesson is successfully booked")
+
+    form = ApprovedBookingForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'ApprovedBookingForm':form})
+
+def make_invoice(request):
+    if request.method == "POST":
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS, "The invoice is successfully updated")
+
+    form = InvoiceForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
+# def edit_request(request, lesson_id):
+#     request_to_edit = Lesson.objects.get(lesson_id=lesson_id)
+#     if request.method == 'POST':
+#         form = EditRequestForm(request.POST, instance=request_to_edit)
+#         if form.is_valid():
+#             form.save()
+#             messages.add_message(request,messages.SUCCESS, "The request is successfully edited")
+#             return redirect('student_dashboard')
+#     else:
+#         form = EditRequestForm(instance=request_to_edit)
+#     return render(request, 'edit_request.html', {'form': form})
 
 def sign_up(request):
     if request.method == 'POST':
