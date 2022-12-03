@@ -15,13 +15,13 @@
             <td>{{ administrator.email }}</td>
             <td>{{ administrator.first_name }}</td>
             <td>{{ administrator.last_name }}</td>
-            <td><button type="button"> <a href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></button></td>
-            <td><button type="button"> <a href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></button></td>
-            <td><button type="button"> <a href = {% url 'make_super_administrator' email=administrator.email %}>Make a super-administrator</a></button></td>
+            <td><a class="btn btn-primary" href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></td>
+            <td><a class="btn btn-secondary" href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></td>
+            <td> <a class="btn btn-secondary" href = {% url 'make_super_administrator' email=administrator.email %}>Make a super-administrator</a></td>
           </tr>
         {% endfor %}
       </table>
-      <button type="button"> <a href = {% url 'dashboard' %}>Return to dashboard</a></button>
+        <a class = "btn btn-primary m-3" href = {% url 'dashboard' %}>Return to dashboard</a></button>
     </div>
   </div>
 </div>
