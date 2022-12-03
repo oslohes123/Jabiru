@@ -84,6 +84,15 @@ def dashboard(request):
 @login_required
 @user_passes_test(lambda u: u.is_student_or_adult, login_url='/dashboard/')
 def make_request(request):
+    global child_id_global
+    if child_id_global is not None:
+        user_to_assign = User.objects.get(id=child_id_global)
+        child_id_global = None
+        print(f"Assigning child {user_to_assign.email}")
+    else:
+        user_to_assign = get_user(request, request.session["user_email"])
+        print(f"Assigning parent {user_to_assign.email}")
+
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
