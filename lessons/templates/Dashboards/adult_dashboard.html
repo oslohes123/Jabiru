@@ -34,7 +34,12 @@
                         <th>{{ child.first_name }}</th>
                         <th>{{ child.last_name }}</th>
                         <th>{{ child.email }}</th>
-                        <th><a href="{% url 'make_request_for_child' child.id %}"> Make a lesson request</a></th>
+
+                        <th><form method="post" action='{% url 'make_request_for_child' %}'>
+                            {% csrf_token %}
+                            <input type="hidden" name="child_id" value={{ child.id }} />
+                            <input class = "btn btn-secondary" type="submit" value="Make a lesson request" />
+                        </form></th>
                     </tr>
                 {% empty %}
                     You do not have any registered children

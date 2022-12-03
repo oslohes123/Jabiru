@@ -16,5 +16,5 @@ urlpatterns = [
     path('edit_administrator/(?P<email>\d+)', views.edit_administrator, name='edit_administrator'),
     path('dashboard/search_student_lessons', views.get_requests, name='get_requests'),
     path('dashboard/assign_child', views.assign_child, name='assign_child'),
-    path('make_request_for_child/<str:child_id>/', views.make_request_for_child, name='make_request_for_child')
+    path('make_request_for_child/', views.make_request_for_child, name='make_request_for_child')
 ]

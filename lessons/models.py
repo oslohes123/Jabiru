@@ -65,7 +65,7 @@ class Lesson(models.Model):
     objects = CustomLessonManager()
 
     def price(self):
-        return self.duration / 60 * 15
+        return round(self.duration / 60 * 15, 2)
 
     def status_string(self):
         if not self.approve_status:
