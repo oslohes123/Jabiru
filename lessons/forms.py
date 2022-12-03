@@ -98,8 +98,8 @@ class LogInForm(forms.Form):
 
 class RequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="number of lessons")
-    interval = forms.IntegerField(label="Interval (0-8)", max_value=8, min_value=0)
-    duration = forms.IntegerField(label="Duration(0-240)", max_value=240, min_value=0)
+    interval = forms.IntegerField(label="Interval(0-8)", max_value=8, min_value=0)
+    duration = forms.IntegerField(label="Duration(0-120)", max_value=120, min_value=0)
 
     class Meta:
         model = Lesson
@@ -133,9 +133,9 @@ class RequestForm(forms.ModelForm):
 
 class ApprovedBookingForm(forms.ModelForm):
     start_date = forms.DateField(label="start date")
-    day_of_the_week = forms.DateField(label="day of the week")
+    day_of_the_week = forms.CharField(label="day of the week")
     time_of_the_week = forms.TimeField(label="time of the week")
-    total_lesson_count = forms.IntegerField(label="total number of lessons")
+    total_lesson_count = forms.IntegerField(label="total number of lessons", min_value=0)
 
     class Meta:
         model = ApprovedBooking

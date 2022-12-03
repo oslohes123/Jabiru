@@ -59,14 +59,14 @@ class Lesson(models.Model):
 class ApprovedBooking(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=False)
-    day_of_the_week = models.DateTimeField(blank=False)
-    total_lesson_count = models.PositiveIntegerField(blank=False)
+    day_of_the_week = models.CharField(max_length=50, blank=False)
+    time_of_the_week = models.TimeField(blank=False)
+    total_lesson_count = models.PositiveIntegerField(blank=False, label="")
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
     teacher = models.CharField(max_length=50, blank=False)
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     approve_status = models.BooleanField(default=True)
-
     objects = CustomApprovedBookingManager()
 
     def total_price(self):

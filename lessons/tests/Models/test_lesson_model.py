@@ -1,19 +1,20 @@
 """Tests of the Lesson model."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from lessons.constants import *
 from lessons.models import User, Lesson
 
 # Create your tests here.
 class LessonModelTestCase(TestCase):
     """Tests of the Lesson model."""
-    
+
     def setUp(self):
         self.student1 = User.objects.create_user(
             'student1@example.org',
             first_name='John',
             last_name='Smith',
             password="Password456$",
-            role ='student'
+            role ="Student"
         )
 
         self.student2 = User.objects.create_user(
@@ -21,7 +22,7 @@ class LessonModelTestCase(TestCase):
             first_name='Alice',
             last_name='Adams',
             password="Password789%",
-            role ='student'
+            role ="Student"
         )
 
         self.lessonRequest1 = Lesson.objects.create_lesson(
@@ -47,12 +48,13 @@ class LessonModelTestCase(TestCase):
 
     def test_valid_lesson_request(self):
         self._assert_lesson_request_is_valid()
+
     
     def test_student_cannot_be_blank(self):
         self.lessonRequest1.student = None
         self._assert_lesson_request_is_invalid()
 
-    def test_lesson_student_not_unique(self):
+    def test_student_not_unique(self):
         self.lessonRequest1.student = self.lessonRequest2.student
         self._assert_lesson_request_is_valid()
 
@@ -106,6 +108,14 @@ class LessonModelTestCase(TestCase):
     def test_duration_cannot_be_zero(self):
         self.lessonRequest1.duration = 0
         self._assert_lesson_request_is_invalid()
+    
+    def test_duration_can_equal_to_120(self):
+        self.lessonRequest1.duration = 120
+        self._assert_lesson_request_is_valid()
+
+    def test_duration_cannot_be_bigger_than_120(self):
+        self.lessonRequest1.duration = 121
+        self._assert_lesson_request_is_invalid()
 
     
     def test_interval_cannot_be_blank(self):
@@ -122,6 +132,14 @@ class LessonModelTestCase(TestCase):
     
     def test_interval_cannot_be_zero(self):
         self.lessonRequest1.interval = 0
+        self._assert_lesson_request_is_invalid()
+
+    def test_interval_can_equal_to_8(self):
+        self.lessonRequest1.duration = 8
+        self._assert_lesson_request_is_valid()
+    
+    def test_interval_cannot_be_bigger_than_8(self):
+        self.lessonRequest1.duration = 9
         self._assert_lesson_request_is_invalid()
 
     

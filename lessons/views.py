@@ -84,9 +84,7 @@ def make_request(request):
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
 
     form = RequestForm()
-
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
-
 
 def approved_booking(request):
     if request.method == "POST":
@@ -107,18 +105,6 @@ def make_invoice(request):
 
     form = InvoiceForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
-
-# def edit_request(request, lesson_id):
-#     request_to_edit = Lesson.objects.get(lesson_id=lesson_id)
-#     if request.method == 'POST':
-#         form = EditRequestForm(request.POST, instance=request_to_edit)
-#         if form.is_valid():
-#             form.save()
-#             messages.add_message(request,messages.SUCCESS, "The request is successfully edited")
-#             return redirect('student_dashboard')
-#     else:
-#         form = EditRequestForm(instance=request_to_edit)
-#     return render(request, 'edit_request.html', {'form': form})
 
 def sign_up(request):
     if request.method == 'POST':
