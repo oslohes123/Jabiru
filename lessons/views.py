@@ -233,7 +233,7 @@ def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
     if request.method == "POST":
         lesson_form = RequestForm(request.POST, instance= lesson)
         if lesson_form.is_valid():
-            lesson_form.save()
+            lesson_form.save(request)
             """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
                                          data['lesson_numbers'], data['duration'], data['interval'],
                                          data['further_info'], False) """
