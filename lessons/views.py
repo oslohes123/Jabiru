@@ -80,11 +80,11 @@ def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]),data['availability'],data['lesson_numbers'],data['duration'],data['interval'],data['further_info'],False)
+            form.save(request)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
 
     form = RequestForm()
+
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 
