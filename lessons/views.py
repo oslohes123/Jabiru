@@ -51,7 +51,8 @@ def output_student_dashboard(request):
 def output_adult_dashboard(request):
     theUser = get_user(request, request.session["user_email"])
     lessonsdata = Lesson.objects.filter(student=theUser)
-    return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata})
+    childdata = theUser.children.all()
+    return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata, 'childdata': childdata})
 
 
 def output_admin_dashboard(request):
@@ -195,14 +196,25 @@ def getLessons(request):
 
 
 def assign_child(request):
-    child = request.GET
-    child_email_query = child.get("student_email_input")
-    try:
-        user_object = get_user(request, child_email_query)
-        if user_object.role != student:
-            messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {user_object.role}")
+    theUser = get_user(request, request.session["user_email"])
+    if request.method == "GET":
+        form_input = request.GET
+        child_email = form_input.get("student_email_input")
+
+        try:
+            child_object = get_user(request, child_email)
+            if child_object.role != student:
+                messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {child_object.role}")
+                return render(request, "assign_child.html")
+            else:
+                child_object.parent = theUser
+                child_object.save()
+                messages.add_message(request, messages.SUCCESS,
+                                     f"Your child has been successfully assigned to you")
+                return render(request, "assign_child.html")
+        except:
             return render(request, "assign_child.html")
-    except:
+    else:
         return render(request, "assign_child.html")
 
 

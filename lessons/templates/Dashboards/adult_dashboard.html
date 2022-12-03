@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="row p-3">
+    <div class="row px-3 pt-3">
         <div class="col-sm-3 card">
             {% include 'Dashboards/DashboardParts/greeting_content.html' %}
             <a class="btn btn-secondary my-1" href="{% url 'make_request' %}">Make a lesson request</a>
@@ -11,6 +11,37 @@
         </div>
 
         <div class="col-sm-9 card">
+            {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
+        </div>
+
+    </div>
+
+    <div class="row px-3">
+        <div class="col-sm-5 card">
+            <h1 class="my-3">Your children</h1>
+            <table class="table table-bordered card-body">
+                <thead class="p-5">
+                <tr>
+                    <th>Name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                {% for child in childdata %}
+                    <tr>
+                        <th>{{ child.first_name }}</th>
+                        <th>{{ child.last_name }}</th>
+                        <th>{{ child.email }}</th>
+                    </tr>
+                {% empty %}
+                    You do not have any registered children
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-7 card">
             {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
         </div>
 

@@ -4,11 +4,10 @@
         <thead class="p-5">
         <tr>
             <th>Lesson</th>
-            <th>Duration</th>
-            <th>Minutes</th>
+            <th>Duration (minutes)</th>
+            <th>Lesson</th>
             <th>Price (Base rate:$15/hr)</th>
             <th>Status</th>
-            <th>Lesson</th>
         </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -16,9 +15,8 @@
             <tr>
                 <th>{{ lesson.further_info }}</th>
                 <th>{{ lesson.duration }}</th>
+                <th>{{ lesson.further_info }}</th>
                 <th>${{ lesson.price }}</th>
-                <th>{{ lesson.further_info }}</th>
-                <th>{{ lesson.further_info }}</th>
                 <th>{{ lesson.status_string }}</th>
             </tr>
         {% empty %}
