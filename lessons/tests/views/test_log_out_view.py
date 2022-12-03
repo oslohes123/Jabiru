@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from lessons.models import User
+from lessons.constants import *
 
 class LogOutViewTestCase(TestCase):
 
@@ -13,11 +14,7 @@ class LogOutViewTestCase(TestCase):
             first_name= 'Name',
             last_name= 'Lastname',
             password= 'Password123!',
-<<<<<<< HEAD
-            role='student'
-=======
-            role='Student'
->>>>>>> refs/remotes/origin/main
+            role = student
         )
 
     def test_log_out_url(self):
