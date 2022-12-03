@@ -98,22 +98,25 @@ class LogInForm(forms.Form):
 
 class RequestForm(forms.ModelForm):
     lesson_numbers = forms.IntegerField(label="number of lessons")
+    interval = forms.IntegerField(label="Interval (0-8)", max_value=8, min_value=0)
+    duration = forms.IntegerField(label="Duration(0-240)", max_value=240, min_value=0)
 
     class Meta:
         model = Lesson
-        fields = ['availability', 'duration', 'interval', 'further_info']
+        fields = ['availability','further_info']
         widgets = {'availability': forms.Textarea(attrs={'rows': 6, 'cols': 60, 'style': 'resize:none;'}),
                    'further_info': forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'})}
-        fields_order = ['availability', 'lesson_numbers', 'duration', 'interval', 'further_info']
 
-    def save(self):
+    def save(self,request):
         super().save(commit=False)
         lesson = Lesson.objects.create_lesson(
+            student = request.user,
             availability=self.cleaned_data.get('availability'),
             lesson_numbers=self.cleaned_data.get('lesson_numbers'),
             duration=self.cleaned_data.get('duration'),
             interval=self.cleaned_data.get('interval'),
-            further_info=self.cleaned_data.get('further_info')
+            further_info=self.cleaned_data.get('further_info'),
+            approve_status = False
         )
         return lesson
 
@@ -121,6 +124,7 @@ class RequestForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RequestForm, self).__init__(*args, **kwargs)
+        self.fields['lesson_numbers'].widget.attrs['class'] = 'form-control'
         self.fields['availability'].widget.attrs['class'] = 'form-control'
         self.fields['lesson_numbers'].widget.attrs['class'] = 'form-control'
         self.fields['duration'].widget.attrs['class'] = 'form-control'
