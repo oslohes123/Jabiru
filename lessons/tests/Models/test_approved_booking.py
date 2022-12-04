@@ -130,10 +130,6 @@ class ApprovedBookingModelTestCase(TestCase):
         self.approvedBooking1.duration = 120
         self._assert_approved_booking_is_valid()
 
-    def test_duration_cannot_be_bigger_than_120(self):
-        self.approvedBooking1.duration = 121
-        self._assert_approved_booking_is_invalid()
-
 
     def test_interval_cannot_be_blank(self):
         self.approvedBooking1.interval = None
@@ -154,10 +150,6 @@ class ApprovedBookingModelTestCase(TestCase):
     def test_interval_can_equal_to_8(self):
         self.approvedBooking1.interval = 8
         self._assert_approved_booking_is_valid()
-    
-    def test_interval_cannot_be_bigger_than_8(self):
-        self.approvedBooking1.interval = 9
-        self._assert_approved_booking_is_invalid()
 
 
     def test_assigned_teacher_can_not_be_blank(self):

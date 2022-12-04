@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django import forms
 from lessons.models import User, ApprovedBooking
-from lessons.forms import ApprovedBookingForm, RequestForm
+from lessons.forms import ApprovedBookingForm
 import datetime
 
 class RequestFormTestCase(TestCase):
@@ -16,8 +16,6 @@ class RequestFormTestCase(TestCase):
             email='john.smith@example.com',
             password='Password456!'
         )
-
-        self.user.save()
 
         self.form_input1 = {
             'start_date': datetime.date(2023,3,16),
@@ -80,7 +78,7 @@ class RequestFormTestCase(TestCase):
         self.assertEqual(request_of_lesson.hourly_rate, 22.50)
 
     def test_invalid_form_does_not_save(self):
-        form = RequestForm(user=self.user, data=self.form_input2)
+        form = ApprovedBookingForm(user=self.user, data=self.form_input2)
         object_num_after_save = ApprovedBooking.objects.count()
         form.save()
         object_num_after_save = ApprovedBooking.objects.count()

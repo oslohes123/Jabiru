@@ -113,10 +113,6 @@ class LessonModelTestCase(TestCase):
         self.lessonRequest1.duration = 120
         self._assert_lesson_request_is_valid()
 
-    def test_duration_cannot_be_bigger_than_120(self):
-        self.lessonRequest1.duration = 121
-        self._assert_lesson_request_is_invalid()
-
     
     def test_interval_cannot_be_blank(self):
         self.lessonRequest1.interval = None
@@ -137,10 +133,6 @@ class LessonModelTestCase(TestCase):
     def test_interval_can_equal_to_8(self):
         self.lessonRequest1.duration = 8
         self._assert_lesson_request_is_valid()
-    
-    def test_interval_cannot_be_bigger_than_8(self):
-        self.lessonRequest1.duration = 9
-        self._assert_lesson_request_is_invalid()
 
     
     def test_further_info_can_not_be_blank(self):
