@@ -21,7 +21,7 @@ class InvoiceModelTestCase(TestCase):
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Friday",
             time_of_the_week=datetime.time(20, 0, 0),
-            total_lesson_count=5,
+            total_lessons_count=5,
             duration=90,
             interval=2,
             assigned_teacher='Paul Anderson',
@@ -29,7 +29,7 @@ class InvoiceModelTestCase(TestCase):
             approve_status=True
         )
 
-        self.invoice1 = Invoice.objects.create_invoice(
+        self.invoice1 = Invoice.objects.create_approvedBooking(
             lesson_in_invoice=self.approvedBooking1,
             balance_due=self.approvedBooking1.total_price(),
             payment_paid=550.00
@@ -48,7 +48,7 @@ class InvoiceModelTestCase(TestCase):
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Monday",
             time_of_the_week=datetime.time(20, 0, 0),
-            total_lesson_count=4,
+            total_lessons_count=4,
             duration=120,
             interval = 4,
             assigned_teacher="Joe Miller",
@@ -56,7 +56,7 @@ class InvoiceModelTestCase(TestCase):
             approve_status = True
         )
 
-        self.invoice2 = Invoice.objects.create_invoice(
+        self.invoice2 = Invoice.objects.create_approvedBooking(
             lesson_in_invoice=self.approvedBooking2,
             balance_due=self.approvedBooking2.total_price(),
             payment_paid=0.00

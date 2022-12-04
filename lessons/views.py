@@ -44,9 +44,10 @@ def home(request):
 
 
 def output_student_dashboard(request):
-    theUser = get_user(request,request.session["user_email"])
+    theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
-    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
+    approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData})
     
 
 def output_admin_dashboard(request):
@@ -80,11 +81,29 @@ def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
-            form.save(request)
+            data = form.cleaned_data
+            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+                                         data['total_lessons_count'], data['duration'], data['interval'],
+                                         data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
-
     form = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
+def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson_form = RequestForm(instance = lesson)
+    if request.method == "POST":
+        lesson_form = RequestForm(request.POST, instance= lesson)
+        if lesson_form.is_valid():
+            lesson_form.save()
+            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+                                         data['total_lessons_count'], data['duration'], data['interval'],
+                                         data['further_info'], False) """
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+
+    context = {'RequestForm':lesson_form}
+    return render(request, 'Dashboards/DashboardParts/make_request.html',context=context)
+
 
 def approved_booking(request):
     if request.method == "POST":
@@ -211,21 +230,7 @@ def log_out(request):
     logout(request) 
     return redirect('home')
 
-def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
-    lesson = Lesson.objects.get(id = lesson_key)
-    lesson_form = RequestForm(instance = lesson)
 
-    if request.method == "POST":
-        lesson_form = RequestForm(request.POST, instance= lesson)
-        if lesson_form.is_valid():
-            lesson_form.save()
-            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['lesson_numbers'], data['duration'], data['interval'],
-                                         data['further_info'], False) """
-            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
-
-    context = {'RequestForm':lesson_form}
-    return render(request, 'Dashboards/DashboardParts/make_request.html', context = context )
 
 def delete_request(request, lesson_key):
     lesson = Lesson.objects.get(id = lesson_key)

@@ -21,7 +21,7 @@ class RequestFormTestCase(TestCase):
             'start_date': datetime.date(2023,3,16),
             'day_of_the_week': 'Wednesday',
             'time_of_the_week': datetime.time(16,30,0),
-            'total_lesson_count': 14,
+            'total_lessons_count': 14,
             'duration': 75,
             'interval': 3,
             'assigned_teacher': 'Allen Bowman',
@@ -47,7 +47,7 @@ class RequestFormTestCase(TestCase):
         self.assertIn('start_date', form.fields)
         self.assertIn('day_of_the_week', form.fields)
         self.assertIn('time_of_the_week', form.fields)
-        self.assertIn('total_lesson_count', form.fields)
+        self.assertIn('total_lessons_count', form.fields)
         self.assertIn('duration', form.fields)
         self.assertIn('interval', form.fields)
         self.assertIn('assigned_teacher', form.fields)
@@ -71,7 +71,7 @@ class RequestFormTestCase(TestCase):
         self.assertEqual(request_of_lesson.start_date, datetime.date(2023,3,16))
         self.assertEqual(request_of_lesson.day_of_the_week, 'Wednesday')
         self.assertEqual(request_of_lesson.time_of_the_week, datetime.time(16,30,0))
-        self.assertEqual(request_of_lesson.total_lesson_count, 14)
+        self.assertEqual(request_of_lesson.total_lessons_count, 14)
         self.assertEqual(request_of_lesson.duration, 75)
         self.assertEqual(request_of_lesson.interval, 3)
         self.assertEqual(request_of_lesson.assigned_teacher, 'Allen Bowman')

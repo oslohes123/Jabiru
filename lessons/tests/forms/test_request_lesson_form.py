@@ -18,7 +18,7 @@ class RequestFormTestCase(TestCase):
 
         self.form_input1 = {
             'availability': '6pm-8pm Sunday',
-            'lesson_numbers': 16,
+            'total_lessons_count': 16,
             'duration': 90,
             'interval': 1,
             'further_info': 'prefer to learn guitar'
@@ -38,7 +38,7 @@ class RequestFormTestCase(TestCase):
     def test_form_contains_required_fields(self):
         form = RequestForm(user=self.user, data=self.form_input1)
         self.assertIn('availability', form.fields)
-        self.assertIn('lesson_numbers', form.fields)
+        self.assertIn('total_lessons_count', form.fields)
         self.assertIn('duration', form.fields)
         self.assertIn('interval', form.fields)
         self.assertIn('further_info', form.fields)
@@ -59,7 +59,7 @@ class RequestFormTestCase(TestCase):
         self.assertEqual(object_num_after_save, object_num_before_save + 1)
         request_of_lesson = Lesson.objects.get(student=self.user)
         self.assertEqual(request_of_lesson.availability, '6pm-8pm Sunday')
-        self.assertEqual(request_of_lesson.lesson_numbers, 16)
+        self.assertEqual(request_of_lesson.total_lessons_count, 16)
         self.assertEqual(request_of_lesson.duration, 90)
         self.assertEqual(request_of_lesson.interval, 1)
         self.assertEqual(request_of_lesson.further_info, 'prefer to learn guitar')

@@ -35,6 +35,7 @@ class MakeRequestTest(TestCase):
         }
         self.c = Client()
         self.c.post(reverse("login_user"), self.studentLogin, follow=True)
+        
     def test_make_request_input(self):
         original_amount = Lesson.objects.count()
         self.c.post(self.url,self.studentLesson,follow=True)

@@ -21,7 +21,7 @@ class RequestFormTestCase(TestCase):
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Friday",
             time_of_the_week=datetime.time(20, 0, 0),
-            total_lesson_count=5,
+            total_lessons_count=5,
             duration=90,
             interval=2,
             assigned_teacher='Paul Anderson',
