@@ -24,14 +24,14 @@ class MakeRequestTest(TestCase):
             "password":"Password123"
         }
         self.studentLesson = {
-            "id":1,
-            "student":self.studentUser,
-            "availability":"I am available on Tuesdays",
-            "lesson_numbers":2,
-            "duration":2,
-            "interval":3,
-            "further_info":"I will need extra help!",
-            "approve_status":False
+            "id": 1,
+            "student": self.studentUser,
+            "availability": "I am available on Tuesdays",
+            "total_lessons_count": 2,
+            "duration": 30,
+            "interval": 1,
+            "further_info": "I will need extra help!",
+            "approve_status": False
         }
         self.c = Client()
         self.c.post(reverse("login_user"), self.studentLogin, follow=True)
@@ -47,4 +47,3 @@ class MakeRequestTest(TestCase):
         # Lessons.objects.get() returns the pk for the student.
         self.studentLesson['student'] = self.studentLesson['student'].pk
         self.assertDictEqual(inserted_lesson,self.studentLesson)
-

@@ -16,8 +16,6 @@ class RequestFormTestCase(TestCase):
             password='Password456!'
         )
 
-        self.user.save()
-        
         self.form_input1 = {
             'availability': '6pm-8pm Sunday',
             'lesson_numbers': 16,

@@ -35,7 +35,7 @@ class CustomLessonManager(BaseUserManager):
         return lesson
 
 class CustomApprovedBookingManager(BaseUserManager):
-    def create_approvedBooking(self, student, start_date, day_of_the_week, time_of_the_week, total_lesson_count, duration, interval, teacher, hourly_rate, approve_status):
+    def create_approvedBooking(self, student, start_date, day_of_the_week, time_of_the_week, total_lesson_count, duration, interval, assigned_teacher, hourly_rate, approve_status):
         approvedBooking = self.model(
             student=student,
             start_date=start_date,
@@ -44,9 +44,18 @@ class CustomApprovedBookingManager(BaseUserManager):
             total_lesson_count=total_lesson_count,
             duration=duration,
             interval=interval,
-            assigned_teacher=teacher,
+            assigned_teacher=assigned_teacher,
             hourly_rate=hourly_rate,
             approve_status=approve_status,
         )
         approvedBooking.save(using=self._db)
         return approvedBooking
+
+class CustomInvoiceManager(BaseUserManager):
+    def create_invoice(self, lesson_in_invoice, balance_due, payment_paid):
+        invoice = self.model(
+            lesson_in_invoice=lesson_in_invoice,
+            balance_due=balance_due,
+            payment_paid=payment_paid
+        )
+    

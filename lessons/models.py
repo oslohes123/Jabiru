@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinValueValidator,MaxValueValidator
 from decimal import Decimal
-from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager
+from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager, CustomInvoiceManager
 from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60"), (75, "75"), (90, "90"), (105, "105"), (120, "120")]
@@ -64,7 +64,7 @@ class ApprovedBooking(models.Model):
     total_lesson_count = models.PositiveIntegerField(blank=False, label="")
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
-    teacher = models.CharField(max_length=50, blank=False)
+    assigned_teacher = models.CharField(max_length=50, blank=False)
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     approve_status = models.BooleanField(default=True)
     objects = CustomApprovedBookingManager()
@@ -77,6 +77,7 @@ class Invoice(models.Model):
     lesson_in_invoice = models.OneToOneField(ApprovedBooking, on_delete=models.CASCADE,blank=False)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     payment_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    objects = CustomInvoiceManager()
 
     def invoice_ref_num(self):
         return f'{self.lesson_in_invoice.student.id}-{self.id}'
