@@ -44,9 +44,10 @@ def home(request):
 
 
 def output_student_dashboard(request):
-    theUser = get_user(request,request.session["user_email"])
+    theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
-    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata})
+    approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData})
     
 
 def output_admin_dashboard(request):
