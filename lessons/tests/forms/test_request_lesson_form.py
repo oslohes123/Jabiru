@@ -1,13 +1,11 @@
 """Tests of the LessonRequest form."""
 from django.test import TestCase
-from lessons.constants import *
+from django import forms
 from lessons.models import User, Lesson
 from lessons.forms import RequestForm
 
 class RequestFormTestCase(TestCase):
     """Tests of the request form."""
-
-    
 
     def setUp(self):
 
@@ -17,6 +15,9 @@ class RequestFormTestCase(TestCase):
             email='john.smith@example.com',
             password='Password456!'
         )
+
+        self.user.save()
+        
         self.form_input1 = {
             'availability': '6pm-8pm Sunday',
             'lesson_numbers': 16,

@@ -44,7 +44,7 @@ class CustomApprovedBookingManager(BaseUserManager):
             total_lesson_count=total_lesson_count,
             duration=duration,
             interval=interval,
-            teacher=teacher,
+            assigned_teacher=teacher,
             hourly_rate=hourly_rate,
             approve_status=approve_status,
         )

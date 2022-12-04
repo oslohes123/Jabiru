@@ -34,7 +34,7 @@ class ApprovedBookingModelTestCase(TestCase):
             total_lesson_count=5,
             duration=90,
             interval=2,
-            teacher='Paul Anderson',
+            assigned_teacher='Paul Anderson',
             hourly_rate=30.00,
             approve_status=True
         )
@@ -47,7 +47,7 @@ class ApprovedBookingModelTestCase(TestCase):
             total_lesson_count=4,
             duration=120,
             interval = 4,
-            teacher="Joe Miller",
+            assigned_teacher="Joe Miller",
             hourly_rate=25.50,
             approve_status = True
         )
@@ -160,20 +160,20 @@ class ApprovedBookingModelTestCase(TestCase):
         self._assert_approved_booking_is_invalid()
 
 
-    def test_teacher_can_not_be_blank(self):
-        self.approvedBooking1.teacher = ''
+    def test_assigned_teacher_can_not_be_blank(self):
+        self.approvedBooking1.assigned_teacher = ''
         self._assert_approved_booking_is_invalid()
 
-    def test_teacher_not_unique(self):
-        self.approvedBooking1.teacher = self.approvedBooking2.teacher
+    def test_assigned_teacher_not_unique(self):
+        self.approvedBooking1.assigned_teacher = self.approvedBooking2.assigned_teacher
         self._assert_approved_booking_is_valid()
 
-    def test_teacher_may_contain_50_characters(self):
-        self.approvedBooking1.teacher = 'a' * 50
+    def test_assigned_teacher_may_contain_50_characters(self):
+        self.approvedBooking1.assigned_teacher = 'a' * 50
         self._assert_approved_booking_is_valid()
 
-    def test_teacher_must_not_contain_more_than_50_characters(self):
-        self.approvedBooking1.teacher = 'a' * 51
+    def test_assigned_teacher_must_not_contain_more_than_50_characters(self):
+        self.approvedBooking1.assigned_teacher = 'a' * 51
         self._assert_approved_booking_is_invalid()
 
 

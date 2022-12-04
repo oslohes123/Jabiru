@@ -139,8 +139,8 @@ class ApprovedBookingForm(forms.ModelForm):
 
     class Meta:
         model = ApprovedBooking
-        fields = ['duration', 'interval', 'teacher']
-        fields_order = ['start_date', 'day_of_the_week', 'time_of_the_week', 'total_lesson_count', 'duration', 'interval', 'teacher', 'hourly_rate']
+        fields = ['duration', 'interval', 'assigned_teacher']
+        fields_order = ['start_date', 'day_of_the_week', 'time_of_the_week', 'total_lesson_count', 'duration', 'interval', 'assigned_teacher', 'hourly_rate']
 
     def save(self,request):
         super().save(commit=False)
@@ -152,7 +152,7 @@ class ApprovedBookingForm(forms.ModelForm):
             total_lesson_count=self.cleaned_data.get('total_lesson_count'),
             duration=self.cleaned_data.get('duration'),
             interval=self.cleaned_data.get('interval'),
-            teacher=self.cleaned_data.get('teacher'),
+            assigned_teacher=self.cleaned_data.get('assigned_teacher'),
             hourly_rate=self.cleaned_data.get('hourly_rate'),
             approve_status = True
         )
@@ -166,7 +166,7 @@ class ApprovedBookingForm(forms.ModelForm):
         self.fields['total_lesson_count'].widget.attrs['class'] = 'form-control'
         self.fields['duration'].widget.attrs['class'] = 'form-control'
         self.fields['interval'].widget.attrs['class'] = 'form-control'
-        self.fields['teacher'].widget.attrs['class'] = 'form-control'
+        self.fields['assigned_teacher'].widget.attrs['class'] = 'form-control'
         self.fields['hourly_rate'].widget.attrs['class'] = 'form-control'
 
 class InvoiceForm(forms.ModelForm):
