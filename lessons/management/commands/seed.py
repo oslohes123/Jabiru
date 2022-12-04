@@ -17,6 +17,14 @@ class Command(BaseCommand):
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
 
+        self.user = User.objects.create_superuser(
+            'super@super.com',
+            first_name='Super',
+            last_name='Duper',
+            password='Password123',
+            role=director
+        )
+
         self.user = User.objects.create_user(
             'john.doe@example.org',
             first_name='John',
@@ -40,43 +48,45 @@ class Command(BaseCommand):
             role=director,
         )
 
-        for i in range(0, 75):
-            temp_profile = self.fake.simple_profile()
+        def setup_user(insert_role):
             self.user = User.objects.create_user(
                 temp_profile.get("mail"),
                 first_name=temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(
                     temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name=temp_profile.get("name").split()[-1],
                 password=self.fake.password(length=12),
-                role=student
+                role = insert_role
             )
+
+        def setup_lesson_for_student(email):
+            self.lesson = Lesson.objects.create_lesson(
+                student=User.objects.get(email=email),
+                # work on this to be of the students emails
+                availability=fake_lesson.available_time(),
+                lesson_numbers=random.randint(1, 200),
+                duration=random.randint(1, 240),
+                interval=random.randint(1, 8),
+                further_info=info,
+                approve_status=False
+            )
+
+        for i in range(0, 75):
+            temp_profile = self.fake.simple_profile()
+            setup_user(student)
             # For lessons
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
+                print(temp_profile.get('mail'))
+                setup_lesson_for_student(temp_profile.get("mail"))
 
-                self.lesson = Lesson.objects.create_lesson(
-                    student=User.objects.get(email=temp_profile.get("mail")),
-                    # work on this to be of the students emails
-                    availability=fake_lesson.available_time(),
-                    lesson_numbers=random.randint(1, 200),
-                    duration=random.randint(1, 240),
-                    interval=random.randint(1, 8),
-                    further_info=info,
-                    approve_status=False
-                )
+        setup_lesson_for_student("john.doe@example.org")
+        setup_lesson_for_student("john.doe@example.org")
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
-            self.user = User.objects.create_user(
-                temp_profile.get("mail"),
-                first_name=temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(
-                    temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
-                last_name=temp_profile.get("name").split()[-1],
-                password=self.fake.password(length=12),
-                role=administrator
-            )
+            setup_user(administrator)
 
 
 # Lists
