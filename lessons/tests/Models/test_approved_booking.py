@@ -186,11 +186,15 @@ class ApprovedBookingModelTestCase(TestCase):
         self._assert_approved_booking_is_valid()
 
     def test_hourly_rate_cannot_be_negative(self):
-        self.approvedBooking1.hourly_rate = -10
+        self.approvedBooking1.hourly_rate = -10.00
         self._assert_approved_booking_is_invalid()
     
     def test_hourly_rate_cannot_be_zero(self):
-        self.approvedBooking1.hourly_rate = 0
+        self.approvedBooking1.hourly_rate = 0.00
+        self._assert_approved_booking_is_invalid()
+    
+    def test_hourly_rate_cannot_have_more_than_two_decimals(self):
+        self.approvedBooking1.hourly_rate = 15.123
         self._assert_approved_booking_is_invalid()
 
 
