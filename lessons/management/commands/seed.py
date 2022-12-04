@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 import random
-from lessons.models import User, Lesson
+from lessons.models import User, Lesson, ApprovedBooking
 from lessons.constants import *
 import faker.providers
 
@@ -63,12 +63,27 @@ class Command(BaseCommand):
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails
                 availability=fake_lesson.available_time(),
-                lesson_numbers=random.randint(1, 200),
-                duration=random.randint(1, 240),
-                interval=random.randint(1, 8),
+                total_lessons_count=random.randint(1, 200),
+                duration=fake_lesson.duration_time(),
+                interval=fake_lesson.interval_choices(),
                 further_info=info,
                 approve_status=False
             )
+        
+        def setup_approved_lessons(email):
+            teacher_name = fake_lesson.teacher_name()
+            self.approved_booking = ApprovedBooking.objects.create_approvedBooking(
+                student=User.objects.get(email=temp_profile.get("mail")),
+                start_date=self.fake.future_date(),
+                day_of_the_week=self.fake.date_this_year(False,True),
+                total_lesson_count=random.randint(1, 200),
+                duration=fake_lesson.duration_time(),
+                interval=fake_lesson.interval_choices(),
+                teacher=teacher_name,
+                hourly_rate= 10.00 , #done 10 as for now change later 
+                approve_status= True
+                )
+
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
@@ -78,8 +93,9 @@ class Command(BaseCommand):
                 instrument = fake_lesson.lesson_instrument()
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
-                print(temp_profile.get('mail'))
+                #print(temp_profile.get('mail'))
                 setup_lesson_for_student(temp_profile.get("mail"))
+                setup_approved_lessons(temp_profile.get("mail"))
 
         setup_lesson_for_student("john.doe@example.org")
         setup_lesson_for_student("john.doe@example.org")
@@ -90,6 +106,18 @@ class Command(BaseCommand):
 
 
 # Lists
+
+DURATION = [
+    30,
+    45,
+    60
+]
+
+INTERVAL =[
+    1,
+    2
+]
+
 
 TEACHER_NAME = [
     "Mr. Guitar",
@@ -135,3 +163,10 @@ class Provider(faker.providers.BaseProvider):
 
     def available_time(self):
         return self.random_element(AVAILABILITY)  # AVAILABILITY being a list of all available times the student can do
+    
+    def duration_time(self):
+        return self.random_element(DURATION)
+    
+    def interval_choices(self):
+        return self.random_element(INTERVAL)
+

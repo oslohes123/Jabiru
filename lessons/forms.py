@@ -121,7 +121,7 @@ class RequestForm(forms.ModelForm):
 class ApprovedBookingForm(forms.ModelForm):
     start_date = forms.DateField(label="start date")
     day_of_the_week = forms.DateTimeField(label="day and time of the week")
-    lesson_numbers = forms.IntegerField(label="number of lessons")
+    total_lesson_count = forms.IntegerField(label="number of lessons")
 
     class Meta:
         model = ApprovedBooking
@@ -133,7 +133,7 @@ class ApprovedBookingForm(forms.ModelForm):
         approvedBooking = ApprovedBooking.objects.create_approvedBooking(
             start_date=self.cleaned_data.get('start_date'),
             day_of_the_week=self.cleaned_data.get('day_of_the_week'),
-            lesson_numbers=self.cleaned_data.get('total_lessons_count'),
+            total_lesson_count=self.cleaned_data.get('total_lessons_count'),
             duration=self.cleaned_data.get('duration'),
             interval=self.cleaned_data.get('interval'),
             teacher=self.cleaned_data.get('teacher'),
