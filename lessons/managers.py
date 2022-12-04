@@ -58,4 +58,4 @@ class CustomInvoiceManager(BaseUserManager):
             balance_due=balance_due,
             payment_paid=payment_paid
         )
-    
+        invoice.save(using=self._db)
