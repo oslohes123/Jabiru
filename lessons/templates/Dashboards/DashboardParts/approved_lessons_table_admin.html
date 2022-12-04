@@ -1,0 +1,39 @@
+<div>
+    <h1>Approved lessons</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Student</th>
+            <th>Start Date</th>
+            <th>Day of the Week</th>
+            <th>Total Lessons</th>
+            <th>Duration</th>
+            <th>Interval</th>
+            <th>Teacher</th>
+            <th>Hourly Rate</th>
+            <th>Approve Status</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for lesson in approved_Lesson %}
+            <tr>
+                <th>{{ lesson.student }}</th>
+                <th>{{ lesson.start_date}}</th>
+                <th>{{ lesson.day_of_the_week }}</th>
+                <th>{{ lesson.total_lesson_count }}</th>
+                <th>{{ lesson.duration }}</th>
+                <th>{{ lesson.interval }}</th>
+                <th>{{ lesson.teacher }}</th>
+                <th>{{ lesson.hourly_rate }}</th>
+                <th>{{ lesson.approve_status }}</th>
+                <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
+                <td> <a href="{% url 'delete_request' lesson.id %}"> Delete</a> </td> 
+            </tr>
+        {% empty %}
+            You do not have any requested lessons
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>

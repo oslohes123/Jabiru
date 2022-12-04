@@ -51,7 +51,10 @@ def output_student_dashboard(request):
     
 
 def output_admin_dashboard(request):
-    return render(request, "Dashboards/administrator_dashboard.html")
+    lessonsdata = Lesson.objects.all()
+    approved_Lesson = ApprovedBooking.objects.all()
+    return render(request, "Dashboards/administrator_dashboard.html" , {'approved_Lesson':approved_Lesson , 'lessonsdata':lessonsdata})
+
 
 
 def output_director_dashboard(request):
