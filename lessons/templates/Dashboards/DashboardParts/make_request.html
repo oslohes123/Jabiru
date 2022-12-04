@@ -1,19 +1,13 @@
 {% extends 'base.html' %}
-
 {% block title %}
-   <title>Request your lesson</title>
+    <title>Request your lesson</title>
 {% endblock title %}
 
 
 {% block content %}
-    <h1>Make a request for lessons</h1>
-    <form action="{% url 'make_request' %}" method="post">
-        {% csrf_token %}
-        {{ RequestForm.as_p }}
-        <input class = "btn btn-primary" type="submit" value="Make a request">
-        <a class = "btn btn-secondary" href="{% url 'dashboard' %}">Back to dashboard</a>
-    </form>
-    {% include "partials/messages.html" %}
+    {% if lesson.approve_status == True%}
+        {% include "Dashboards/DashboardParts/Invoice.html" %}
+    {% else %}
+        {% include "Dashboards/DashboardParts/make_requests_non_approved.html" %}
+    {% endif %}
 {% endblock content %}
-
-

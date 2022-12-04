@@ -10,7 +10,7 @@
     <a class = "btn btn-primary" href={% url 'sign_up_administrator' %}>Create a new Administrator account</a>
     <a class = "btn btn-primary" href={% url 'view_all_administrators' %}>View all the Administrator accounts</a>
     <p>Other actions</p>
-
+    {% include 'Dashboards/DashboardParts/student_search_form.html' %}
     <a class = "btn btn-secondary" href={% url 'log_out' %}>Log out</a>
 
     {% include 'partials/messages.html' %}

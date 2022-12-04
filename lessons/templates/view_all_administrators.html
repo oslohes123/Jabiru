@@ -1,31 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1>List of Administrators</h1>
-                <p>Here is a list of every administrator account.</p>
-                <p>Be warned, deleting any account is permanent and CANNOT BE REVERTED.</p>
-                <table class="table">
-                    {% for administrator in administrators %}
-                        <tr>
-                            <td>{{ administrator.email }}</td>
-                            <td>{{ administrator.first_name }}</td>
-                            <td>{{ administrator.last_name }}</td>
-                            <td><a class="btn btn-primary"
-                                   href= {% url 'delete_administrator' email=administrator.email %}>Delete
-                                administrator</a></td>
-                            <td><a class="btn btn-secondary"
-                                   href= {% url 'edit_administrator' email=administrator.email %}>Edit administrator
-                                details</a></td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <a class="btn btn-secondary" href= {% url 'dashboard' %}>Return to dashboard</a>
-            </div>
-        </div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>List of Administrators</h1>
+      <p>Here is a list of every administrator account.</p>
+      <p>By giving an Administrator super-administrator privileges, they will become a Director like yourself!</p>
+      <p>Be warned, deleting any account is permanent and CANNOT BE REVERTED.</p>
+      <p>Likewise, giving any Administrator super-administraotor priveldges is permanent and CANNOT BE REVERTED.</p>
+      <table class="table">
+        {% for administrator in administrators %}
+          <tr>
+            <td>{{ administrator.email }}</td>
+            <td>{{ administrator.first_name }}</td>
+            <td>{{ administrator.last_name }}</td>
+            <td><a class="btn btn-primary" href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></td>
+            <td><a class="btn btn-secondary" href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></td>
+            <td> <a class="btn btn-secondary" href = {% url 'make_super_administrator' email=administrator.email %}>Make a super-administrator</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+        <a class = "btn btn-primary m-3" href = {% url 'dashboard' %}>Return to dashboard</a></button>
     </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% include 'partials/messages.html' %}

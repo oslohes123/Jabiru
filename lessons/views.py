@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
-from .forms import RequestForm
+from .forms import RequestForm, ApprovedBookingForm, InvoiceForm
 from .models import User, Lesson, ApprovedBooking
 from django.views import generic
 from .constants import *
@@ -74,21 +74,53 @@ def dashboard(request):
     return redirect("login_user")
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['lesson_numbers'], data['duration'], data['interval'],
-                                         data['further_info'], False)
+            form.save(request)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
 
-    insertForm = RequestForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+    form = RequestForm()
 
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
+
+def approved_booking(request):
+    if request.method == "POST":
+        form = ApprovedBookingForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            ApprovedBooking.objects.create_approvedBooking(get_user(request, request.session["user_email"]),data['start_date'],data['day_of_the_week'],data['lesson_numbers'],data['duration'],data['interval'],data['teacher'],data['price'],True)
+            messages.add_message(request,messages.SUCCESS,"The lesson is successfully booked")
+
+    form = ApprovedBookingForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'ApprovedBookingForm':form})
+
+def make_invoice(request):
+    if request.method == "POST":
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS, "The invoice is successfully updated")
+
+    form = InvoiceForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
+# def edit_request(request, lesson_id):
+#     request_to_edit = Lesson.objects.get(lesson_id=lesson_id)
+#     if request.method == 'POST':
+#         form = EditRequestForm(request.POST, instance=request_to_edit)
+#         if form.is_valid():
+#             form.save()
+#             messages.add_message(request,messages.SUCCESS, "The request is successfully edited")
+#             return redirect('student_dashboard')
+#     else:
+#         form = EditRequestForm(instance=request_to_edit)
+#     return render(request, 'edit_request.html', {'form': form})
 
 def sign_up(request):
     if request.method == 'POST':
@@ -111,7 +143,7 @@ def sign_up_administrator(request):
             user = form.save()
             # login(request, user)
             # request.session['useremail'] = request.user.email
-            messages.info(request, 'Administrator account successfully created!')
+            messages.info(request, f'Administrator account {user.email} successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
@@ -124,7 +156,7 @@ def delete_administrator(request, email):
     b = User.objects.filter(email=adminToDelete)
     b.delete()
     adminToDelete.delete()
-    messages.info(request, 'Administrator account successfully deleted!')
+    messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
     return redirect('view_all_administrators')
 
 @login_required
@@ -135,11 +167,21 @@ def edit_administrator(request, email):
         form = AdministratorEditForm(request.POST, instance=adminToEdit)
         if form.is_valid():
             form.save()
-            messages.info(request, 'The Administrator account has been successfully edited!')
+            messages.info(request, f'The Administrator account details of {adminToEdit.email} has been successfully edited!')
             return redirect('view_all_administrators')
     else:
         form = AdministratorEditForm(instance=adminToEdit)
     return render(request, 'edit_administrator.html', {'form': form})
+
+@login_required
+@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
+def make_super_administrator(request, email):
+    adminToPromote = User.objects.get(email=email)
+    adminToPromote.role = director
+    adminToPromote.save()
+    messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
+    return redirect('view_all_administrators')
+    
         
 @login_required
 @user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
@@ -182,5 +224,26 @@ def getLessons(request):
 
 
 def log_out(request):
-    logout(request)
+    logout(request) 
     return redirect('home')
+
+def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson_form = RequestForm(instance = lesson)
+
+    if request.method == "POST":
+        lesson_form = RequestForm(request.POST, instance= lesson)
+        if lesson_form.is_valid():
+            lesson_form.save()
+            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+                                         data['lesson_numbers'], data['duration'], data['interval'],
+                                         data['further_info'], False) """
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+
+    context = {'RequestForm':lesson_form}
+    return render(request, 'Dashboards/DashboardParts/make_request.html', context = context )
+
+def delete_request(request, lesson_key):
+    lesson = Lesson.objects.get(id = lesson_key)
+    lesson.delete()
+    return redirect('/dashboard/')
