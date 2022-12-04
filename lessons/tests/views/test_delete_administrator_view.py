@@ -19,7 +19,7 @@ class DeleteAdministratorViewTestCase(TestCase):
             "password": "Password123%",
         }
         login_url = reverse("login_user")
-        self.dashboard = self.client.post(login_url,self.directorForm,follow=True)
+        self.dashboard = self.client.post(login_url, self.directorForm, follow=True)
         administrator_list_url = reverse('view_all_administrators')
         self.administrator_list = self.client.post(administrator_list_url, follow=True)
 
@@ -31,6 +31,6 @@ class DeleteAdministratorViewTestCase(TestCase):
 
     def test_successful_deletion(self):
         before_count = User.objects.count()
-        response = self.client.post(self.url, follow=True)
+        self.client.post(self.url, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count-1)

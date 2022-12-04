@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     student=User.objects.get(email=temp_profile.get("mail")),
                     # work on this to be of the students emails
                     availability=fake_lesson.available_time(),
-                    lesson_numbers=random.randint(1, 200),
+                    total_lessons_count=random.randint(1, 200),
                     duration=random.randint(1, 240),
                     interval=random.randint(1, 8),
                     further_info=info,
