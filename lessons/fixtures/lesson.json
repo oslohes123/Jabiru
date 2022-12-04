@@ -5,7 +5,7 @@
     "fields": {
       "student": 2,
       "availability": "I am available from Monday to Friday at any time",
-      "lesson_numbers": 7,
+      "total_lessons_count": 7,
       "duration": 1,
       "interval": 5,
       "further_info": "Requesting piano lessons",
@@ -18,7 +18,7 @@
     "fields": {
       "student": 2,
       "availability": "I am available on Tuesday afternoons",
-      "lesson_numbers": 5,
+      "total_lessons_count": 5,
       "duration": 1.5,
       "interval": 3,
       "further_info": "Requesting singing lessons, I want to learn opera",
@@ -31,7 +31,7 @@
     "fields": {
       "student": 2,
       "availability": "I am available on the 5th and 21st of every month",
-      "lesson_numbers": 20,
+      "total_lessons_count": 20,
       "duration": 3,
       "interval": 2,
       "further_info": "I want to learn to play the guitar and learn my favourite songs!",
@@ -44,7 +44,7 @@
     "fields": {
       "student": 2,
       "availability": "a",
-      "lesson_numbers": 123,
+      "total_lessons_count": 123,
       "duration": 123,
       "interval": 1,
       "further_info": "Teach me to play everything",
@@ -57,7 +57,7 @@
     "fields": {
       "student": 2,
       "availability": "Between 4:30 - 7:00pm",
-      "lesson_numbers": 10,
+      "total_lessons_count": 10,
       "duration": 2,
       "interval": 7,
       "further_info": "Am willing to learn to play anything with strings",
@@ -70,7 +70,7 @@
     "fields": {
       "student": 2,
       "availability": "From March to June",
-      "lesson_numbers": 123,
+      "total_lessons_count": 123,
       "duration": 1,
       "interval": 1,
       "further_info": "I need to learn how to fully play drums before July",
