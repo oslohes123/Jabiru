@@ -6,7 +6,7 @@ from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBook
 from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60"), (75, "75"), (90, "90"), (105, "105"), (120, "120")]
-interval_choices = [(1, "weekly interval"), (2, "fortnightly interval"), (3, "three-weeks interval"), (4, "monthly_interval")]
+interval_choices = [(1, "weekly interval"), (2, "fortnightly interval"), (3, "three-weeks interval"), (4, "monthly interval")]
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
