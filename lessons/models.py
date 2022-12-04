@@ -7,6 +7,7 @@ from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60")]
 interval_choices = [(1, "1"), (2, "2")]
+day_of_the_week_choices = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
@@ -59,7 +60,7 @@ class Lesson(models.Model):
 class ApprovedBooking(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=False)
-    day_of_the_week = models.DateTimeField(blank=False)
+    day_of_the_week = models.CharField(blank=False,choices=day_of_the_week_choices)
     total_lesson_count = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
