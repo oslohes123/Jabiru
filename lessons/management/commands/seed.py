@@ -58,12 +58,12 @@ class Command(BaseCommand):
                 role = insert_role
             )
 
-        def setup_lesson_for_student(email):
+        def setup_lesson_for_student(email,info):
             self.lesson = Lesson.objects.create_lesson(
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails
                 availability=fake_lesson.available_time(),
-                lesson_numbers=random.randint(1, 200),
+                total_lessons_count=random.randint(1, 200),
                 duration=random.randint(1, 240),
                 interval=random.randint(1, 8),
                 further_info=info,
@@ -77,12 +77,12 @@ class Command(BaseCommand):
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
                 teacher = fake_lesson.teacher_name()
-                info = instrument + ' lesson with ' + teacher
+                input_info = instrument + ' lesson with ' + teacher
                 print(temp_profile.get('mail'))
-                setup_lesson_for_student(temp_profile.get("mail"))
-            setup_lesson_for_student("john.doe@example.org")
-            setup_lesson_for_student("john.doe@example.org")
-            
+                setup_lesson_for_student(temp_profile.get("mail"),input_info)
+            setup_lesson_for_student("john.doe@example.org","Some Info")
+            setup_lesson_for_student("john.doe@example.org","Some Info")
+
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
