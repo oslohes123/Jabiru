@@ -129,10 +129,10 @@ class ApprovedBookingForm(forms.ModelForm):
     class Meta:
         model = ApprovedBooking
         fields = ['start_date', 'day_of_the_week', 'time_of_the_week', 'total_lessons_count', 'duration',
-                  'interval', 'teacher', 'hourly_rate']
+                  'interval', 'assigned_teacher', 'hourly_rate']
 
     def __init__(self, *args, **kwargs):
-        super(RequestForm, self).__init__(*args, **kwargs)
+        super(ApprovedBookingForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
         self.fields['day_of_the_week'].widget.attrs['class'] = 'form-control'
         self.fields['time_of_the_week'].widget.attrs['class'] = 'form-control'
