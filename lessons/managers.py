@@ -8,7 +8,8 @@ class CustomUserManager(BaseUserManager):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            role=role
+            role=role,
+            parent=None
         )
         user.set_password(password)
         user.save(using=self._db)
