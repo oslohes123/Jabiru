@@ -32,7 +32,7 @@
                     <input type="hidden" name="lesson_id" value={{ lesson.id }} />
                     <input class="btn btn-secondary" type="submit" value="Edit">
                 </form></td>
-                <td><form action="{% url 'delete_request' %}" method="post">
+                <td><form action="{% url 'delete_approved_lesson' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="lesson_id" value={{ lesson.id }} />
                     <input class="btn btn-primary" type="submit" value="Delete">

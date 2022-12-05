@@ -24,5 +24,6 @@ urlpatterns = [
     path('approve_request/', views.approve_request, name='approve_request'),
     path('edit_approved_lessons/', views.edit_approved_lessons, name='edit_approved_lessons'),
     path('fill_edit_approved_lessons/', views.fill_edit_approved_lessons, name='fill_edit_approved_lessons'),
+    path('delete_approved_lesson/', views.delete_approved_lesson, name='delete_approved_lesson')
     
 ]

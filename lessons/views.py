@@ -213,8 +213,6 @@ def fill_edit_approved_lessons(request):
     if request.method == "POST":
         query = request.POST
         lesson_id = query.get("lesson_id")
-        #print("lessssun")
-        #print(lesson_id)
         approved_lesson_obj = ApprovedBooking.objects.get(id=lesson_id)
         form = ApprovedBookingForm(instance=approved_lesson_obj)
         return render(request, 'Dashboards/DashboardParts/edit_approved.html',
@@ -382,6 +380,17 @@ def delete_request(request):
         lesson_key = query.get("lesson_id")
         lesson = Lesson.objects.get(id=lesson_key)
         lesson.delete()
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+@login_required
+def delete_approved_lesson(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_key = query.get("lesson_id")
+        approved_lesson = ApprovedBooking.objects.get(id=lesson_key)
+        approved_lesson.delete()
         return redirect('dashboard')
     else:
         return redirect('dashboard')
