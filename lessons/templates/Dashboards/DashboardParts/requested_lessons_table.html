@@ -22,7 +22,11 @@
                 {% include 'Dashboards/DashboardParts/is_approved_output.html' %}
                 {% if lesson.approve_status == False %}
                 <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
-                <td> <a href="{% url 'delete_request' lesson.id %}"> Delete</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
+                <td><form action="{% url 'delete_request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-primary" type="submit" value="Delete">
+                </form></td>
                 {% endif %}
             </tr>
         {% empty %}

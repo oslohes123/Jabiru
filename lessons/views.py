@@ -231,7 +231,6 @@ def edit_administrator(request):
         return redirect('view_all_administrators')
 
 
-
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def fill_edit_administrator(request):
@@ -304,7 +303,13 @@ def log_out(request):
     return redirect('home')
 
 
-def delete_request(request, lesson_key):
-    lesson = Lesson.objects.get(id=lesson_key)
-    lesson.delete()
-    return redirect('/dashboard/')
+@login_required
+def delete_request(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_key = query.get("lesson_id")
+        lesson = Lesson.objects.get(id=lesson_key)
+        lesson.delete()
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')
