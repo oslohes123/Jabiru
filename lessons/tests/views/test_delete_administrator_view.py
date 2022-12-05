@@ -24,7 +24,7 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.administrator_list = self.client.post(administrator_list_url, follow=True)
 
     def test_start_from_administrator_list(self):
-        self.assertTemplateUsed(self.administrator_list, 'view_all_administrators.html')
+        self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_delete_url(self):
         self.assertEqual(self.url,'http://localhost:8000/delete_administrator/(%3FPjanedoe@example.org%5Cd+)')

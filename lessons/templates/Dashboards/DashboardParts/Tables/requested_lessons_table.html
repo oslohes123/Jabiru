@@ -19,7 +19,7 @@
                 <td>{{ lesson.duration }}</td>
                 <td>{{ lesson.interval }}</td>
                 <td>{{ lesson.further_info }}</td>
-                {% include 'Dashboards/DashboardParts/is_approved_output.html' %}
+                {% include 'partials/is_approved_output.html' %}
                 {% if lesson.approve_status == False %}
                 <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
                 <td> <a href="{% url 'delete_request' lesson.id %}"> Delete</a> </td> <!--Change parameters passed to actual lesson key when implemented-->

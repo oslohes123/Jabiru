@@ -38,7 +38,7 @@ class EditAdministratorViewTestCase(TestCase):
         }
 
     def test_start_from_administrator_list(self):
-        self.assertTemplateUsed(self.administrator_list, 'view_all_administrators.html')
+        self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_sign_up_url(self):
         self.assertEqual(self.url,'http://localhost:8000/edit_administrator/(%3FPjanedoe@example.org%5Cd+)')
@@ -46,7 +46,7 @@ class EditAdministratorViewTestCase(TestCase):
     def test_get_edit_page(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'edit_administrator.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, AdministratorEditForm))
         self.assertFalse(form.is_bound)
@@ -58,7 +58,7 @@ class EditAdministratorViewTestCase(TestCase):
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'edit_administrator.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, AdministratorEditForm))
         self.assertTrue(form.is_bound)
@@ -71,7 +71,7 @@ class EditAdministratorViewTestCase(TestCase):
         self.assertEqual(after_count, before_count)
         response_url = reverse('view_all_administrators')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'view_all_administrators.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
         user = User.objects.get(email='changedemail@example.org')
         self.assertEqual(user.first_name, 'Jane')
         self.assertEqual(user.last_name, 'Doe')
