@@ -36,6 +36,7 @@ class ApprovedBookingAdmin(admin.ModelAdmin):
         'student',
         'start_date',
         'day_of_the_week',
+        'time_of_the_week',
         'total_lessons_count',
         'duration',
         'interval',
