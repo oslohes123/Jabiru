@@ -50,3 +50,12 @@ class CustomApprovedBookingManager(BaseUserManager):
         )
         approvedBooking.save(using=self._db)
         return approvedBooking
+
+class CustomTransactionManager(BaseUserManager):
+    def create_transaction(self,invoice,payment_amount):
+        transaction = self.model(
+            invoice=invoice,
+            payment_amount=payment_amount,
+        )
+        transaction.save(using=self.db)
+        return transaction
