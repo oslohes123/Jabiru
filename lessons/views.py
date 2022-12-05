@@ -263,7 +263,7 @@ def total_lessons_cost(request,email): #get the total price of each lesson that 
     else:
         lessons =  ApprovedBooking.objects.filter(student=student_object)
         #for loop to go through each lesson and getting total price add em all up
-        total_cost = 0
+        total_cost = 0 #TODO: change to maybe students actual balance as for now its always going to be 0
         for i in lessons:
             total_cost -= i.total_price()
         return total_cost
