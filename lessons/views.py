@@ -215,8 +215,8 @@ def edit_administrator(request):
         query = request.POST
         email = query.get("email")
         adminToEdit = User.objects.get(email=email)
-        form = AdministratorEditForm(request.POST)
-        print(form)
+        form = AdministratorEditForm(request.POST, instance=adminToEdit)
+
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS,
