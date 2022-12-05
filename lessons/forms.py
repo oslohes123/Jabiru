@@ -132,16 +132,15 @@ class ApprovedBookingForm(forms.ModelForm):
                   'interval', 'teacher', 'hourly_rate']
 
     def __init__(self, *args, **kwargs):
-        super(ApprovedBookingForm, self).__init__(*args, **kwargs)
+        super(RequestForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
         self.fields['day_of_the_week'].widget.attrs['class'] = 'form-control'
         self.fields['time_of_the_week'].widget.attrs['class'] = 'form-control'
         self.fields['total_lessons_count'].widget.attrs['class'] = 'form-control'
         self.fields['duration'].widget.attrs['class'] = 'form-control'
         self.fields['interval'].widget.attrs['class'] = 'form-control'
-        self.fields['teacher'].widget.attrs['class'] = 'form-control'
+        self.fields['assigned_teacher'].widget.attrs['class'] = 'form-control'
         self.fields['hourly_rate'].widget.attrs['class'] = 'form-control'
-
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -152,30 +151,3 @@ class InvoiceForm(forms.ModelForm):
         invoice = super().save(commit=False)
 
         return invoice
-
-
-class EditRequestForm(forms.ModelForm):
-    total_lessons_count = forms.IntegerField(label="number of lessons")
-
-    class Meta:
-        model = Lesson
-        fields = ['availability', 'duration', 'interval', 'further_info']
-        widgets = {'availability': forms.Textarea(attrs={'rows': 6, 'cols': 60, 'style': 'resize:none;'}),
-                   'further_info': forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'})}
-        fields_order = ['availability', 'total_lessons_count', 'duration', 'interval', 'further_info']
-
-    def save(self):
-        if self.is_valid():
-            lesson_requested = super().save()
-            if self.cleaned_data.get('approve_status') == True:
-                # Delete a lesson request if it is identical to another existing lesson request
-                Lesson.objects.filter(lesson_requested == lesson_requested).delete()
-
-                edited_lesson = Lesson.objects.create(
-                    availability=self.cleaned_data.get('availability'),
-                    total_lessons_count=self.cleaned_data.get('total_lessons_count'),
-                    duration=self.cleaned_data.get('duration'),
-                    interval=self.cleaned_data.get('interval'),
-                    further_info=self.cleaned_data.get('further_info')
-                )
-                return edited_lesson

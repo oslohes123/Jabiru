@@ -101,7 +101,6 @@ def make_request(request):
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
     form = RequestForm()
-
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 
@@ -154,7 +153,7 @@ def approve_request(request):
             data = form.cleaned_data
             ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'], data['day_of_the_week'],
                                                            data['time_of_the_week'], data['total_lessons_count'],
-                                                           data['duration'], data['interval'], data['teacher'],
+                                                           data['duration'], data['interval'], data['assigned_teacher'],
                                                            data['hourly_rate'])
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
             lesson_obj.approve_status = True
@@ -178,7 +177,7 @@ def fill_in_approve_request(request):
         lesson = Lesson.objects.get(id=lesson_id)
         data_dict = {'start_date': date.today(), 'time_of_the_week': datetime.now(),
                      'total_lessons_count': lesson.total_lessons_count,
-                     'duration': lesson.duration, 'interval': lesson.interval, 'teacher': lesson.further_info}
+                     'duration': lesson.duration, 'interval': lesson.interval, 'assigned_teacher': lesson.further_info}
         form = ApprovedBookingForm(initial=data_dict)
         return render(request, 'Dashboards/DashboardParts/approve_request.html',
                       {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
