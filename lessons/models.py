@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinValueValidator,MaxValueValidator
 from decimal import Decimal
-from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager
+from .managers import *
 from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60"), (75, "75"), (90, "90"), (105, "105"), (120, "120")]
@@ -76,7 +76,7 @@ class ApprovedBooking(models.Model):
 class Invoice(models.Model):
     lesson_in_invoice = models.OneToOneField(ApprovedBooking, on_delete=models.CASCADE,blank=False)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    objects = CustomApprovedBookingManager()
+    objects = CustomInvoiceManager()
 
     def invoice_ref_num(self):
         return f'{self.lesson_in_invoice.student.id}-{self.id}'
@@ -84,7 +84,7 @@ class Invoice(models.Model):
 class Transaction(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE,blank=False)
     payment_amount = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    objects = CustomApprovedBookingManager()
+    objects = CustomTransactionManager()
 
     def transaction_ref_num(self):
         return f'{self.invoice_issued_for_transaction.id}'
