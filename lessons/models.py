@@ -81,7 +81,7 @@ class Invoice(models.Model):
         return f'{self.lesson_in_invoice.student.id}-{self.id}'
 
 class Transaction(models.Model):
-    invoice = models.ForeignKey(Invoice, on_deletee=models.CASCADE,blank=False)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE,blank=False)
     payment_amount = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     objects = CustomApprovedBookingManager()
 
