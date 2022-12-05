@@ -66,7 +66,7 @@ class Command(BaseCommand):
                 total_lessons_count=random.randint(1, 200),
                 duration=fake_lesson.duration_time(),
                 interval=fake_lesson.interval_choices(),
-                further_info=info,
+                further_info=info_data,
                 approve_status=False
             )
         
@@ -75,13 +75,13 @@ class Command(BaseCommand):
             self.approved_booking = ApprovedBooking.objects.create_approvedBooking(
                 student=User.objects.get(email=email),
                 start_date=self.fake.future_date(),
-                day_of_the_week=self.fake.date_this_year(False,True),
-                total_lesson_count=random.randint(1, 200),
+                day_of_the_week=self.fake.day_of_week(),
+                time_of_the_week = self.fake.time(),
+                total_lessons_count=random.randint(1, 200),
                 duration=fake_lesson.duration_time(),
                 interval=fake_lesson.interval_choices(),
-                teacher=teacher_name,
+                assigned_teacher=teacher_name,
                 hourly_rate= 10.00 , #done 10 as for now change later 
-                approve_status= True
                 )
 
 
@@ -94,11 +94,11 @@ class Command(BaseCommand):
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
                 #print(temp_profile.get('mail'))
-                setup_lesson_for_student(temp_profile.get("mail"))
+                setup_lesson_for_student(temp_profile.get("mail"),info)
                 setup_approved_lessons(temp_profile.get("mail"))
 
-        setup_lesson_for_student("john.doe@example.org")
-        setup_lesson_for_student("john.doe@example.org")
+        setup_lesson_for_student("john.doe@example.org",info)
+        setup_lesson_for_student("john.doe@example.org",info)
         setup_approved_lessons("john.doe@example.org")
         setup_approved_lessons("john.doe@example.org")
 

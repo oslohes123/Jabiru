@@ -6,11 +6,11 @@
     {% include 'Dashboards/DashboardParts/student_search_form.html' %}
 
     <div class="col-sm-9 card">
-        {% include 'Dashboards/DashboardParts/approved_lessons_table_admin.html' %}
+        {% include 'Dashboards/DashboardParts/Tables/approved_lessons_table_admin.html' %}
     </div>
     
     <div class="col-sm-9 card">
-        {% include 'Dashboards/DashboardParts/request_lessons_admin.html' %}
+        {% include 'Dashboards/DashboardParts/Tables/request_lessons_admin.html' %}
     </div>
 
     <a class = "btn btn-secondary m-3" href={% url 'log_out' %}>Log out</a>
