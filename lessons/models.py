@@ -5,8 +5,10 @@ from decimal import Decimal
 from .managers import CustomUserManager, CustomLessonManager, CustomApprovedBookingManager
 from .constants import *
 
-duration_choices = [(30, "30"), (45, "45"), (60, "60")]
-interval_choices = [(1, "1"), (2, "2")]
+duration_choices = [(30, "30"), (45, "45"), (60, "60"), (75, "75"), (90, "90"), (105, "105"), (120, "120")]
+interval_choices = [(1, "weekly interval"), (2, "fortnightly interval"), (3, "three-weeks interval"), (4, "monthly interval")]
+
+day_of_the_week_choices = [("Monday","Monday"), ("Tuesday","Tuesday"), ("Wednesday","Wednesday"), ("Thursday","Thursday"), ("Friday","Friday"), ("Saturday","Saturday"), ("Sunday","Sunday")]
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20, blank=False)
@@ -55,28 +57,27 @@ class Lesson(models.Model):
     approve_status = models.BooleanField(default=False)
     objects = CustomLessonManager()
 
-
 class ApprovedBooking(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=False)
-    day_of_the_week = models.DateTimeField(blank=False)
-    total_lesson_count = models.PositiveIntegerField(blank=False)
+    day_of_the_week = models.CharField(blank=False, choices=day_of_the_week_choices, max_length=20)
+    time_of_the_week = models.TimeField(blank=False)
+    total_lessons_count = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
-    teacher = models.CharField(max_length=50, blank=False)
+    assigned_teacher = models.CharField(max_length=50, blank=False)
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    approve_status = models.BooleanField(default=True)
 
     objects = CustomApprovedBookingManager()
 
     def total_price(self):
-        return self.total_lesson_count * self.hourly_rate * self.duration/60
-
+        return self.total_lessons_count * self.hourly_rate * self.duration/60
 
 class Invoice(models.Model):
     lesson_in_invoice = models.OneToOneField(ApprovedBooking, on_delete=models.CASCADE,blank=False)
     balance_due = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     payment_paid = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    objects = CustomApprovedBookingManager()
 
     def invoice_ref_num(self):
         return f'{self.lesson_in_invoice.student.id}-{self.id}'

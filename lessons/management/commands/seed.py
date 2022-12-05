@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 role = insert_role
             )
 
-        def setup_lesson_for_student(email):
+        def setup_lesson_for_student(email,info_data):
             self.lesson = Lesson.objects.create_lesson(
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails

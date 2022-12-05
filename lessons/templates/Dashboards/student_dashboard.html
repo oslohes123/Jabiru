@@ -1,10 +1,9 @@
 {% extends 'Dashboards/../base.html' %}
 
 {% block content %}
-
     <div class="row p-3">
         <div class="col-sm-3 card">
-            {% include 'Dashboards/DashboardParts/greeting_content.html' %}
+            {% include 'partials/greeting_content.html' %}
             <a class="btn btn-secondary my-1" href="{% url 'make_request' %}">Make a lesson request</a>
             <a class="btn btn-primary mb-3" href= {% url 'log_out' %}>Log out</a>
             <div>
@@ -13,16 +12,14 @@
         </div>
 
         <div class="col-sm-9 card">
-            {% include 'Dashboards/DashboardParts/requested_lessons_table.html' %}
+            {% include 'Dashboards/DashboardParts/Tables/requested_lessons_table.html' %}
         </div>
 
         <div class="col-sm-9 card">
-            {% include 'Dashboards/DashboardParts/approved_lessons_table.html'  %}
+            {% include 'Dashboards/DashboardParts/Tables/approved_lessons_table.html' %}
         </div>
-
-
     </div>
-
+    {% include 'partials/messages.html' %}
 {% endblock content %}
 
 

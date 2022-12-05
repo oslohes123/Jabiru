@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users"""
 
     list_display = [
-        'email', 'first_name', 'last_name', 'role', 'is_active','id'
+        'email', 'first_name', 'last_name', 'role', 'is_active', 'id'
     ]
 
 @admin.register(Lesson)
@@ -36,12 +36,12 @@ class ApprovedBookingAdmin(admin.ModelAdmin):
         'student',
         'start_date',
         'day_of_the_week',
-        'total_lesson_count',
+        'time_of_the_week',
+        'total_lessons_count',
         'duration',
         'interval',
-        'teacher',
+        'assigned_teacher',
         'hourly_rate',
-        "approve_status",
         'id'
     ]
 

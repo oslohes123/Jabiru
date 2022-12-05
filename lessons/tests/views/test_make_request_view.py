@@ -35,6 +35,7 @@ class MakeRequestTest(TestCase):
         }
         self.c = Client()
         self.c.post(reverse("login_user"), self.studentLogin, follow=True)
+        
     def test_make_request_input(self):
         original_amount = Lesson.objects.count()
         self.c.post(self.url,self.studentLesson,follow=True)
@@ -47,4 +48,3 @@ class MakeRequestTest(TestCase):
         # Lessons.objects.get() returns the pk for the student.
         self.studentLesson['student'] = self.studentLesson['student'].pk
         self.assertDictEqual(inserted_lesson,self.studentLesson)
-
