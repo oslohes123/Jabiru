@@ -8,7 +8,7 @@
       <p>Here is a list of every administrator account.</p>
       <p>By giving an Administrator super-administrator privileges, they will become a Director like yourself!</p>
       <p>Be warned, deleting any account is permanent and CANNOT BE REVERTED.</p>
-      <p>Likewise, giving any Administrator super-administraotor priveldges is permanent and CANNOT BE REVERTED.</p>
+      <p>Likewise, giving any Administrator super-administrator privileges is permanent and CANNOT BE REVERTED.</p>
       <table class="table">
         {% for administrator in administrators %}
           <tr>
@@ -17,7 +17,11 @@
             <td>{{ administrator.last_name }}</td>
             <td><a class="btn btn-primary" href = {% url 'delete_administrator' email=administrator.email %}>Delete administrator</a></td>
             <td><a class="btn btn-secondary" href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></td>
-            <td> <a class="btn btn-secondary" href = {% url 'make_super_administrator' email=administrator.email %}>Make a super-administrator</a></td>
+            <td><form action="{% url 'make_super_administrator' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="email" value={{ administrator.email }} />
+                <input class="btn btn-secondary" type="submit" value="Make a super-administrator">
+            </form></td>
           </tr>
         {% endfor %}
       </table>

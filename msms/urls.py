@@ -17,7 +17,7 @@ urlpatterns = [
     path('edit_unapproved_lessons/<str:lesson_key>/', views.edit_unapproved_lessons, name='edit_unapproved_lessons'),
     # change the key in the str<>, to the actually key when made
     path('delete_lesson/<str:lesson_key>/', views.delete_request, name='delete_request'),
-    path('make_super_administrator/(?P<email>\d+)', views.make_super_administrator, name='make_super_administrator'),
+    path('make_super_administrator/', views.make_super_administrator, name='make_super_administrator'),
     path('dashboard/search_student_lessons', views.get_requests, name='get_requests'),
     path('fill_in_approve_request/', views.fill_in_approve_request, name='fill_in_approve_request'),
     path('approve_request/', views.approve_request, name='approve_request')

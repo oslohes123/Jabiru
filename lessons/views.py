@@ -229,12 +229,17 @@ def edit_administrator(request, email):
 
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
-def make_super_administrator(request, email):
-    adminToPromote = User.objects.get(email=email)
-    adminToPromote.role = director
-    adminToPromote.save()
-    messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
-    return redirect('view_all_administrators')
+def make_super_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToPromote = User.objects.get(email=email)
+        adminToPromote.role = director
+        adminToPromote.save()
+        messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
+        return redirect('view_all_administrators')
+    else:
+        return redirect('view_all_administrators')
 
 
 @login_required
