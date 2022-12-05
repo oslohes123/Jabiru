@@ -143,7 +143,7 @@ class ApprovedBookingForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['lesson_in_invoice', 'balance_due', 'payment_paid']
+        fields = ['lesson_in_invoice', 'balance_due']
 
     def save(self):
         invoice = super().save(commit=False)

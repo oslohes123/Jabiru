@@ -46,12 +46,11 @@ class ApprovedBookingAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(Invoice)
-class LessonsAdmin(admin.ModelAdmin):
+class InvoiceAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users"""
 
     list_display = [
         'lesson_in_invoice',
         'balance_due',
-        'payment_paid',
         'id'
     ]
