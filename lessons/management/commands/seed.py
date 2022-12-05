@@ -76,8 +76,8 @@ class Command(BaseCommand):
             # For lessons
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
-                teacher = fake_lesson.teacher_name()
-                info = instrument + ' lesson with ' + teacher
+                assigned_teacher = fake_lesson.teacher_name()
+                info = instrument + ' lesson with ' + assigned_teacher
                 print(temp_profile.get('mail'),info)
                 setup_lesson_for_student(temp_profile.get("mail"),info)
 

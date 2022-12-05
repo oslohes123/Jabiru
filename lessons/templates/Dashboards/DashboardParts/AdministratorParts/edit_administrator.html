@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Edit Administrator</title>
+{% endblock title %}
+
+{% block content %}
+    <h1 class="my-3">Edit Administrator details</h1>
+    <form action="{% url 'edit_administrator' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="email" value={{ email }} />
+        <input class="btn btn-primary mb-3" type="submit" value="Submit changes">
+        <a class="btn btn-secondary mb-3" href = {% url 'view_all_administrators' %}>Return to administrator list</a>
+    </form>
+    {% include 'partials/messages.html' %}
+{% endblock content %}

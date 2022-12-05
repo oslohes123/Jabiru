@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Approve lesson request</title>
+{% endblock title %}
+
+
+{% block content %}
+    <h1 class="my-3">Approve lesson request</h1>
+    <form action="{% url 'approve_request' %}" method="post">
+        {% csrf_token %}
+        {{ ApprovedBookingForm.as_p }}
+        <input type="hidden" name="student_id" value={{ student_id }} />
+        <input type="hidden" name="lesson_id" value={{ lesson_id }} />
+        <input class="btn btn-primary mb-4" type="submit" value="Submit">
+        <a class="btn btn-secondary mb-4" href="{% url 'dashboard' %}">Back to dashboard</a>
+        {% include 'partials/messages.html' %}
+    </form>
+{% endblock content %}
