@@ -39,7 +39,7 @@ class ApprovedBookingAdmin(admin.ModelAdmin):
         'total_lessons_count',
         'duration',
         'interval',
-        'teacher',
+        'assigned_teacher',
         'hourly_rate',
         "approve_status",
         'id'

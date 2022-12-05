@@ -48,4 +48,3 @@ class MakeRequestTest(TestCase):
         # Lessons.objects.get() returns the pk for the student.
         self.studentLesson['student'] = self.studentLesson['student'].pk
         self.assertDictEqual(inserted_lesson,self.studentLesson)
-
