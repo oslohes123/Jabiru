@@ -50,16 +50,22 @@ def output_student_dashboard(request):
                   {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
 
 
-#TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
-def return_invoice_for_approved(request, lesson_key):
-    approved_booking_object = ApprovedBooking.objects.get(id=lesson_key)
-    invoice = Invoice.objects.get(lesson_in_invoice=approved_booking_object)
-    invoice = {
-        "invoice_num": '{0:03}'.format(invoice.pk),
-        "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
-        "total_price":invoice.balance_due
-    }
-    return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice})
+# TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
+def return_invoice_for_approved(request):
+    print(request.method)
+    if request.method == "POST":
+        query = request.POST
+        approved_booking_object = ApprovedBooking.objects.get(id=query.get('lesson_id'))
+        invoice = Invoice.objects.get(lesson_in_invoice=approved_booking_object)
+        invoice = {
+            "invoice_num": '{0:03}'.format(invoice.pk),
+            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
+            "total_price": invoice.balance_due
+        }
+        return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice})
+    else:
+        messages.add_message(request,messages.ERROR,"You can't go here")
+        redirect("dashboard")
 
 
 def output_admin_dashboard(request):
@@ -182,7 +188,7 @@ def sign_up_administrator(request):
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
-    return render(request, 'sign_up_administrator.html', {'form': form})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html', {'form': form})
 
 
 @login_required
@@ -209,7 +215,7 @@ def edit_administrator(request, email):
             return redirect('view_all_administrators')
     else:
         form = AdministratorEditForm(instance=adminToEdit)
-    return render(request, 'edit_administrator.html', {'form': form})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html', {'form': form})
 
 
 @login_required
@@ -226,7 +232,8 @@ def make_super_administrator(request, email):
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
-    return render(request, 'view_all_administrators.html', {'administrators': administrators})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html',
+                  {'administrators': administrators})
 
 
 @login_required
