@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Lesson, ApprovedBooking,Invoice
+from .models import *
 
 
 # Register your models here.
@@ -54,4 +54,12 @@ class LessonsAdmin(admin.ModelAdmin):
         'balance_due',
         'payment_paid',
         'id'
+    ]
+
+
+@admin.register(Transaction)
+class TransactionsAdmin(admin.ModelAdmin):
+    list_display = [
+        'invoice',
+        'payment_amount'
     ]
