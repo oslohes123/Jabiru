@@ -45,7 +45,7 @@ class Command(BaseCommand):
             first_name='Marty',
             last_name='Major',
             password='Password123',
-            role=director,
+            role=director
         )
 
         def setup_user(insert_role):
@@ -55,10 +55,10 @@ class Command(BaseCommand):
                     temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name=temp_profile.get("name").split()[-1],
                 password=self.fake.password(length=12),
-                role = insert_role
+                role=insert_role
             )
 
-        def setup_lesson_for_student(email,info_data):
+        def setup_lesson_for_student(email, info_data):
             self.lesson = Lesson.objects.create_lesson(
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails
@@ -69,6 +69,7 @@ class Command(BaseCommand):
                 further_info=info_data,
                 approve_status=False
             )
+
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()

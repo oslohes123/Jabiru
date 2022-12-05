@@ -24,7 +24,7 @@
                     <td>{{ lesson.duration }}</td>
                     <td>{{ lesson.interval }}</td>
                     <td>{{ lesson.further_info }}</td>
-                    {% include 'Dashboards/DashboardParts/../../partials/is_approved_output.html' %}
+                    {% include 'partials/is_approved_output.html' %}
                     {% if lesson.approve_status == False %}
                         <th><form method="post" action='{% url 'fill_in_approve_request' %}'>
                             {% csrf_token %}
