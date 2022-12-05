@@ -19,9 +19,13 @@
                 <th>{{ lesson.duration }}</th>
                 <th>{{ lesson.interval }}</th>
                 <th>{{ lesson.further_info }}</th>
-                {% include 'Dashboards/DashboardParts/is_approved_output.html' %}
+                {% include 'partials/is_approved_output.html' %}
                 {% if lesson.approve_status == False %}
-                <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
+                <td><form action="{% url 'fill_edit_unapproved_lessons' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-secondary" type="submit" value="Edit">
+                </form></td>
                 <td><form action="{% url 'delete_request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="lesson_id" value={{ lesson.id }} />

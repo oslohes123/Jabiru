@@ -15,10 +15,11 @@ urlpatterns = [
     path('delete_administrator/', views.delete_administrator, name='delete_administrator'),
     path('edit_administrator/', views.edit_administrator, name='edit_administrator'),
     path('fill_edit_administrator/', views.fill_edit_administrator, name='fill_edit_administrator'),
-    path('edit_unapproved_lessons/<str:lesson_key>/', views.edit_unapproved_lessons, name='edit_unapproved_lessons'),
+    path('edit_unapproved_lessons/', views.edit_unapproved_lessons, name='edit_unapproved_lessons'),
+    path('fill_edit_unapproved_lessons/', views.fill_edit_unapproved_lessons, name='fill_edit_unapproved_lessons'),
     path('delete_request/', views.delete_request, name='delete_request'),
     path('make_super_administrator/', views.make_super_administrator, name='make_super_administrator'),
-    path('dashboard/search_student_lessons', views.get_requests, name='get_requests'),
+    path('dashboard/search_student_lessons/', views.get_requests, name='get_requests'),
     path('fill_in_approve_request/', views.fill_in_approve_request, name='fill_in_approve_request'),
     path('approve_request/', views.approve_request, name='approve_request')
 ]

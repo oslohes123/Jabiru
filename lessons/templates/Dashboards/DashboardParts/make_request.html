@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}
-    <title>Request your lesson</title>
+    <title>Make a lesson request</title>
 {% endblock title %}
 
 
 {% block content %}
-    <h1 class="my-3">Make a request for lessons</h1>
+    <h1 class="my-3">Make a lesson request</h1>
     <form action="{% url 'make_request' %}" method="post">
         {% csrf_token %}
         {{ RequestForm.as_p }}

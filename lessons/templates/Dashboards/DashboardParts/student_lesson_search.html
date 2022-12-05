@@ -2,7 +2,7 @@
 
 {% block content %}
     <div>
-        <h1 class="my-3">Lesson requests of {{ student.email }}</h1>
+        <h1 class="my-3">Lesson requests of {{ student.first_name }} {{ student.last_name }}</h1>
         <table class="table table-bordered card-body">
             <thead class="p-5">
             <tr>
@@ -24,7 +24,7 @@
                     <td>{{ lesson.duration }}</td>
                     <td>{{ lesson.interval }}</td>
                     <td>{{ lesson.further_info }}</td>
-                    {% include 'Dashboards/DashboardParts/is_approved_output.html' %}
+                    {% include 'Dashboards/DashboardParts/../../partials/is_approved_output.html' %}
                     {% if lesson.approve_status == False %}
                         <th><form method="post" action='{% url 'fill_in_approve_request' %}'>
                             {% csrf_token %}

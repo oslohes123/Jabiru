@@ -105,20 +105,39 @@ def make_request(request):
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 
-def edit_unapproved_lessons(request, lesson_key):  # Change info with primary key
-    lesson = Lesson.objects.get(id=lesson_key)
-    lesson_form = RequestForm(instance=lesson)
+@login_required
+def edit_unapproved_lessons(request):
     if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        lesson = Lesson.objects.get(id=lesson_id)
         lesson_form = RequestForm(request.POST, instance=lesson)
         if lesson_form.is_valid():
             lesson_form.save()
-            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['total_lessons_count'], data['duration'], data['interval'],
-                                         data['further_info'], False) """
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+            return redirect('dashboard')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid details, try again")
+            lesson_form = RequestForm(instance=lesson)
+            return render(request, 'Dashboards/DashboardParts/edit_request.html',
+                          {'RequestForm': lesson_form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
 
-    context = {'RequestForm': lesson_form}
-    return render(request, 'Dashboards/DashboardParts/make_request.html', context=context)
+
+@login_required
+def fill_edit_unapproved_lessons(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        print("lessssun")
+        print(lesson_id)
+        lesson_obj = Lesson.objects.get(id=lesson_id)
+        form = RequestForm(instance=lesson_obj)
+        return render(request, 'Dashboards/DashboardParts/edit_request.html',
+                      {'RequestForm': form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
 
 
 @login_required
@@ -188,7 +207,7 @@ def sign_up_administrator(request):
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
-    return render(request, 'sign_up_administrator.html', {'form': form})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html', {'form': form})
 
 
 @login_required
@@ -226,7 +245,8 @@ def edit_administrator(request):
         else:
             messages.add_message(request, messages.ERROR, "Invalid attempt, please enter valid details")
             form = AdministratorEditForm(instance=adminToEdit)
-            return render(request, 'edit_administrator.html', {'form': form, 'email': email})
+            return render(request, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html',
+                          {'form': form, 'email': email})
     else:
         return redirect('view_all_administrators')
 
@@ -239,7 +259,7 @@ def fill_edit_administrator(request):
         email = query.get("email")
         adminToEdit = User.objects.get(email=email)
         form = AdministratorEditForm(instance=adminToEdit)
-        return render(request, 'edit_administrator.html',
+        return render(request, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html',
                       {'form': form, 'email': email})
     else:
         return redirect('view_all_administrators')
@@ -265,7 +285,8 @@ def make_super_administrator(request):
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
-    return render(request, 'view_all_administrators.html', {'administrators': administrators})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html',
+                  {'administrators': administrators})
 
 
 @login_required
