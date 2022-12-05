@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from django.contrib import messages
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
@@ -14,10 +16,22 @@ from django.views import generic
 from .constants import *
 
 
-
 # Session parameter: _
 # Gets you the email of the user that signed up or logged in
 # To get user object call the getUser(request) and use .field_name to get your data
+
+def sign_up(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            request.session['user_email'] = request.user.email
+            return redirect("dashboard")
+    else:
+        form = SignUpForm()
+    return render(request, 'sign_up.html', {'form': form})
+
 
 def login_user(request):
     if request.method == 'POST':
@@ -47,8 +61,9 @@ def output_student_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
-    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData})
-    
+    return render(request, "Dashboards/student_dashboard.html",
+                  {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
+
 
 def output_admin_dashboard(request):
     return render(request, "Dashboards/administrator_dashboard.html")
@@ -61,7 +76,7 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-    ourUser = get_user(request,request.session["user_email"])
+    ourUser = get_user(request, request.session["user_email"])
     if ourUser.role == student:
         return output_student_dashboard(request)
     elif ourUser.role == administrator:
@@ -74,9 +89,8 @@ def dashboard(request):
     return redirect("login_user")
 
 
-
 @login_required
-@user_passes_test(lambda u: u.is_student,login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_student, login_url='/dashboard/')
 def make_request(request):
     if request.method == "POST":
         form = RequestForm(request.POST)
@@ -89,108 +103,191 @@ def make_request(request):
     form = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
-def edit_unapproved_lessons(request, lesson_key): #Change info with primary key
-    lesson = Lesson.objects.get(id = lesson_key)
-    lesson_form = RequestForm(instance = lesson)
+
+@login_required
+def edit_unapproved_lessons(request):
     if request.method == "POST":
-        lesson_form = RequestForm(request.POST, instance= lesson)
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        lesson = Lesson.objects.get(id=lesson_id)
+        lesson_form = RequestForm(request.POST, instance=lesson)
         if lesson_form.is_valid():
             lesson_form.save()
-            """ Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
-                                         data['total_lessons_count'], data['duration'], data['interval'],
-                                         data['further_info'], False) """
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+            return redirect('dashboard')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid details, try again")
+            lesson_form = RequestForm(instance=lesson)
+            return render(request, 'Dashboards/DashboardParts/edit_request.html',
+                          {'RequestForm': lesson_form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
 
-    context = {'RequestForm':lesson_form}
-    return render(request, 'Dashboards/DashboardParts/make_request.html',context=context)
 
-
-def approved_booking(request):
+@login_required
+def fill_edit_unapproved_lessons(request):
     if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        print("lessssun")
+        print(lesson_id)
+        lesson_obj = Lesson.objects.get(id=lesson_id)
+        form = RequestForm(instance=lesson_obj)
+        return render(request, 'Dashboards/DashboardParts/edit_request.html',
+                      {'RequestForm': form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
+def approve_request(request):
+    if request.method == "POST":
+        query = request.POST
+        student_id = query.get("student_id")
+        lesson_id = query.get("lesson_id")
+        student_obj = User.objects.get(id=student_id)
+        lesson_obj = Lesson.objects.get(id=lesson_id)
         form = ApprovedBookingForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.add_message(request,messages.SUCCESS,"The lesson is successfully booked")
+            data = form.cleaned_data
+            ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'], data['day_of_the_week'],
+                                                           data['time_of_the_week'], data['total_lessons_count'],
+                                                           data['duration'], data['interval'], data['assigned_teacher'],
+                                                           data['hourly_rate'])
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
+            lesson_obj.approve_status = True
+            lesson_obj.save()
+            return redirect("dashboard")
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid details, try again")
+            return render(request, 'Dashboards/DashboardParts/approve_request.html',
+                          {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
 
-    form = ApprovedBookingForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'ApprovedBookingForm':form})
+
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
+def fill_in_approve_request(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_request")
+        student_id = query.get("student")
+        lesson = Lesson.objects.get(id=lesson_id)
+        data_dict = {'start_date': date.today(), 'time_of_the_week': datetime.now(),
+                     'total_lessons_count': lesson.total_lessons_count,
+                     'duration': lesson.duration, 'interval': lesson.interval, 'assigned_teacher': lesson.further_info}
+        form = ApprovedBookingForm(initial=data_dict)
+        return render(request, 'Dashboards/DashboardParts/approve_request.html',
+                      {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
 
 def make_invoice(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.add_message(request,messages.SUCCESS, "The invoice is successfully updated")
+            messages.add_message(request, messages.SUCCESS, "The invoice is successfully updated")
 
     form = InvoiceForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
-def sign_up(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            request.session['user_email'] = request.user.email
-            return redirect("dashboard")
-    else:
-        form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
 
 @login_required
-@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def sign_up_administrator(request):
     if request.method == 'POST':
         form = AdministratorSignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # login(request, user)
-            # request.session['useremail'] = request.user.email
-            messages.info(request, f'Administrator account {user.email} successfully created!')
+            messages.add_message(request, messages.SUCCESS, f'Administrator account {user.email} successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
-    return render(request, 'sign_up_administrator.html', {'form': form})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html', {'form': form})
+
 
 @login_required
-@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
-def delete_administrator(request, email):
-    adminToDelete = User.objects.get(email=email)
-    b = User.objects.filter(email=adminToDelete)
-    b.delete()
-    adminToDelete.delete()
-    messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
-    return redirect('view_all_administrators')
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+def delete_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToDelete = User.objects.get(email=email)
+        b = User.objects.filter(email=adminToDelete)
+        b.delete()
+        adminToDelete.delete()
+        messages.add_message(request, messages.SUCCESS,
+                             f'The Administrator account {adminToDelete.email} has successfully been deleted!')
+        return redirect('view_all_administrators')
+    else:
+        return redirect('view_all_administrators')
+
 
 @login_required
-@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
-def edit_administrator(request, email):
-    adminToEdit = User.objects.get(email=email)
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+def edit_administrator(request):
     if request.method == 'POST':
+        query = request.POST
+        email = query.get("email")
+        adminToEdit = User.objects.get(email=email)
         form = AdministratorEditForm(request.POST, instance=adminToEdit)
+
         if form.is_valid():
             form.save()
-            messages.info(request, f'The Administrator account details of {adminToEdit.email} has been successfully edited!')
+            messages.add_message(request, messages.SUCCESS,
+                                 f'The Administrator account details of {adminToEdit.email} has been successfully '
+                                 f'edited!')
             return redirect('view_all_administrators')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid attempt, please enter valid details")
+            form = AdministratorEditForm(instance=adminToEdit)
+            return render(request, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html',
+                          {'form': form, 'email': email})
     else:
-        form = AdministratorEditForm(instance=adminToEdit)
-    return render(request, 'edit_administrator.html', {'form': form})
+        return redirect('view_all_administrators')
+
 
 @login_required
-@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
-def make_super_administrator(request, email):
-    adminToPromote = User.objects.get(email=email)
-    adminToPromote.role = director
-    adminToPromote.save()
-    messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
-    return redirect('view_all_administrators')
-    
-        
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+def fill_edit_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToEdit = User.objects.get(email=email)
+        form = AdministratorEditForm(instance=adminToEdit)
+        return render(request, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html',
+                      {'form': form, 'email': email})
+    else:
+        return redirect('view_all_administrators')
+
+
 @login_required
-@user_passes_test(lambda u: u.is_director,login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+def make_super_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToPromote = User.objects.get(email=email)
+        adminToPromote.role = director
+        adminToPromote.save()
+        messages.add_message(request, messages.SUCCESS,
+                             f'The Administrator account {adminToPromote} is now a Director!')
+        return redirect('view_all_administrators')
+    else:
+        return redirect('view_all_administrators')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def view_all_administrators(request):
     administrators = User.objects.filter(role="Administrator")
-    return render(request, 'view_all_administrators.html', {'administrators': administrators})
+    return render(request, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html',
+                  {'administrators': administrators})
+
 
 @login_required
 def get_user(request, email):
@@ -203,10 +300,11 @@ def get_user(request, email):
         messages.add_message(request, messages.ERROR, "Multiple objects were returned")
         return MultipleObjectsReturned
 
+
 @login_required
-@user_passes_test(lambda u: u.is_director_or_administrator,login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def get_requests(request):  # so far only works if a student email is inputted correctly
-    student_lesson = request.GET
+    student_lesson = request.POST
     student_email_query = student_lesson.get("student_email_input")
     try:
         user_object = get_user(request, student_email_query)
@@ -215,24 +313,24 @@ def get_requests(request):  # so far only works if a student email is inputted c
             return output_admin_dashboard(request)
         else:
             lessons = Lesson.objects.filter(student=user_object)
-            context = {"lessons": lessons}
+            context = {"lessons": lessons, "student": user_object}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
 
-@login_required
-def getLessons(request):
-    lessons = Lesson.objects.all()
-    return lessons
-
 
 def log_out(request):
-    logout(request) 
+    logout(request)
     return redirect('home')
 
 
-
-def delete_request(request, lesson_key):
-    lesson = Lesson.objects.get(id = lesson_key)
-    lesson.delete()
-    return redirect('/dashboard/')
+@login_required
+def delete_request(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_key = query.get("lesson_id")
+        lesson = Lesson.objects.get(id=lesson_key)
+        lesson.delete()
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')

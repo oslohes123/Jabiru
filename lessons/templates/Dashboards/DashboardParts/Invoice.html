@@ -1,4 +1,4 @@
-<h1>Your lesson request is approved!</h1>
+<h1 class="my-3">Your lesson request is approved!</h1>
 <form action="{% url 'approved_booking' %}" method="post">
     {% csrf_token %}
     {{ ApprovedBookingForm.as_p }}

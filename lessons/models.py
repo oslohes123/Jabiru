@@ -7,6 +7,7 @@ from .constants import *
 
 duration_choices = [(30, "30"), (45, "45"), (60, "60"), (75, "75"), (90, "90"), (105, "105"), (120, "120")]
 interval_choices = [(1, "weekly interval"), (2, "fortnightly interval"), (3, "three-weeks interval"), (4, "monthly interval")]
+
 day_of_the_week_choices = [("Monday","Monday"), ("Tuesday","Tuesday"), ("Wednesday","Wednesday"), ("Thursday","Thursday"), ("Friday","Friday"), ("Saturday","Saturday"), ("Sunday","Sunday")]
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -59,14 +60,14 @@ class Lesson(models.Model):
 class ApprovedBooking(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=False)
-    day_of_the_week = models.CharField(blank=False,choices=day_of_the_week_choices,max_length=20)
+    day_of_the_week = models.CharField(blank=False, choices=day_of_the_week_choices, max_length=20)
     time_of_the_week = models.TimeField(blank=False)
     total_lessons_count = models.PositiveIntegerField(blank=False)
     duration = models.PositiveIntegerField(blank=False, choices=duration_choices)
     interval = models.PositiveIntegerField(blank=False, choices=interval_choices)
     assigned_teacher = models.CharField(max_length=50, blank=False)
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    approve_status = models.BooleanField(default=True)
+
     objects = CustomApprovedBookingManager()
 
     def total_price(self):

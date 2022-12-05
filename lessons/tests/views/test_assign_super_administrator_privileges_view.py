@@ -27,7 +27,7 @@ class AssignSuperAdministratorViewTestCase(TestCase):
         
 
     def test_start_from_administrator_list(self):
-        self.assertTemplateUsed(self.administrator_list, 'view_all_administrators.html')
+        self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_sign_up_url(self):
         self.assertEqual(self.url,'http://localhost:8000/make_super_administrator/(%3FPjanedoe@example.org%5Cd+)')

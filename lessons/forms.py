@@ -77,6 +77,14 @@ class AdministratorEditForm(UserChangeForm):
     )
     confirm_password = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(AdministratorEditForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['class'] = 'form-control'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+        self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
+
     def clean(self):
         super().clean()
         password = self.cleaned_data.get('password')
@@ -106,7 +114,6 @@ class RequestForm(forms.ModelForm):
         widgets = {'availability': forms.Textarea(attrs={'rows': 6, 'cols': 60, 'style': 'resize:none;'}),
                    'further_info': forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'})}
 
-
     field_order = ['availability', 'total_lessons_count', 'duration', 'interval', 'further_info']
 
     def __init__(self, *args, **kwargs):
@@ -119,18 +126,13 @@ class RequestForm(forms.ModelForm):
 
 
 class ApprovedBookingForm(forms.ModelForm):
-    start_date = forms.DateField(label="start date")
-    day_of_the_week = forms.CharField(label="day of the week")
-    time_of_the_week = forms.TimeField(label="time of the week")
-    total_lessons_count = forms.IntegerField(label="total number of lessons", min_value=0)
-
     class Meta:
         model = ApprovedBooking
-        fields = ['duration', 'interval', 'assigned_teacher', 'hourly_rate']
-        fields_order = ['start_date', 'day_of_the_week', 'time_of_the_week', 'total_lessons_count', 'duration', 'interval', 'assigned_teacher', 'hourly_rate']
+        fields = ['start_date', 'day_of_the_week', 'time_of_the_week', 'total_lessons_count', 'duration',
+                  'interval', 'assigned_teacher', 'hourly_rate']
 
     def __init__(self, *args, **kwargs):
-        super(RequestForm, self).__init__(*args, **kwargs)
+        super(ApprovedBookingForm, self).__init__(*args, **kwargs)
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
         self.fields['day_of_the_week'].widget.attrs['class'] = 'form-control'
         self.fields['time_of_the_week'].widget.attrs['class'] = 'form-control'
@@ -149,4 +151,3 @@ class InvoiceForm(forms.ModelForm):
         invoice = super().save(commit=False)
 
         return invoice
-
