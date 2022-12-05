@@ -21,7 +21,11 @@
                 <input type="hidden" name="email" value={{ administrator.email }} />
                 <input class="btn btn-primary" type="submit" value="Delete administrator">
             </form></td>
-            <td><a class="btn btn-secondary" href = {% url 'edit_administrator' email=administrator.email %}>Edit administrator details</a></td>
+            <td><form action="{% url 'fill_edit_administrator' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="email" value={{ administrator.email }} />
+                <input class="btn btn-primary" type="submit" value="Edit administrator details">
+            </form></td>
             <td><form action="{% url 'make_super_administrator' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="email" value={{ administrator.email }} />

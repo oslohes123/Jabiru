@@ -133,8 +133,7 @@ def approve_request(request):
         form = ApprovedBookingForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            ApprovedBooking.objects.create_approvedBooking(student_obj,
-                                                           data['start_date'], data['day_of_the_week'],
+            ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'], data['day_of_the_week'],
                                                            data['total_lessons_count'], data['duration'],
                                                            data['interval'], data['teacher'], data['hourly_rate'])
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
@@ -145,20 +144,26 @@ def approve_request(request):
             messages.add_message(request, messages.ERROR, "Invalid details, try again")
             return render(request, 'Dashboards/DashboardParts/approve_request.html',
                           {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
 
 @login_required
 @user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_in_approve_request(request):
-    query = request.POST
-    lesson_id = query.get("lesson_request")
-    student_id = query.get("student")
-    lesson = Lesson.objects.get(id=lesson_id)
-    data_dict = {'start_date': date.today(), 'day_of_the_week': datetime.now(),
-                 'total_lessons_count': lesson.total_lessons_count,
-                 'duration': lesson.duration, 'interval': lesson.interval, 'teacher': lesson.further_info}
-    form = ApprovedBookingForm(initial=data_dict)
-    return render(request, 'Dashboards/DashboardParts/approve_request.html',
-                  {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_request")
+        student_id = query.get("student")
+        lesson = Lesson.objects.get(id=lesson_id)
+        data_dict = {'start_date': date.today(), 'day_of_the_week': datetime.now(),
+                     'total_lessons_count': lesson.total_lessons_count,
+                     'duration': lesson.duration, 'interval': lesson.interval, 'teacher': lesson.further_info}
+        form = ApprovedBookingForm(initial=data_dict)
+        return render(request, 'Dashboards/DashboardParts/approve_request.html',
+                      {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
 
 
 def make_invoice(request):
@@ -179,9 +184,7 @@ def sign_up_administrator(request):
         form = AdministratorSignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # login(request, user)
-            # request.session['useremail'] = request.user.email
-            messages.info(request, f'Administrator account {user.email} successfully created!')
+            messages.add_message(request, messages.SUCCESS, f'Administrator account {user.email} successfully created!')
             return redirect("dashboard")
     else:
         form = AdministratorSignUpForm()
@@ -198,7 +201,8 @@ def delete_administrator(request):
         b = User.objects.filter(email=adminToDelete)
         b.delete()
         adminToDelete.delete()
-        messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
+        messages.add_message(request, messages.SUCCESS,
+                             f'The Administrator account {adminToDelete.email} has successfully been deleted!')
         return redirect('view_all_administrators')
     else:
         return redirect('view_all_administrators')
@@ -206,18 +210,40 @@ def delete_administrator(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
-def edit_administrator(request, email):
-    adminToEdit = User.objects.get(email=email)
+def edit_administrator(request):
     if request.method == 'POST':
-        form = AdministratorEditForm(request.POST, instance=adminToEdit)
+        query = request.POST
+        email = query.get("email")
+        adminToEdit = User.objects.get(email=email)
+        form = AdministratorEditForm(request.POST)
+        print(form)
         if form.is_valid():
             form.save()
-            messages.info(request,
-                          f'The Administrator account details of {adminToEdit.email} has been successfully edited!')
+            messages.add_message(request, messages.SUCCESS,
+                                 f'The Administrator account details of {adminToEdit.email} has been successfully '
+                                 f'edited!')
             return redirect('view_all_administrators')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid attempt, please enter valid details")
+            form = AdministratorEditForm(instance=adminToEdit)
+            return render(request, 'edit_administrator.html', {'form': form, 'email': email})
     else:
+        return redirect('view_all_administrators')
+
+
+
+@login_required
+@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+def fill_edit_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToEdit = User.objects.get(email=email)
         form = AdministratorEditForm(instance=adminToEdit)
-    return render(request, 'edit_administrator.html', {'form': form})
+        return render(request, 'edit_administrator.html',
+                      {'form': form, 'email': email})
+    else:
+        return redirect('view_all_administrators')
 
 
 @login_required
@@ -229,7 +255,8 @@ def make_super_administrator(request):
         adminToPromote = User.objects.get(email=email)
         adminToPromote.role = director
         adminToPromote.save()
-        messages.info(request, f'The Administrator account {adminToPromote} is now a Director!')
+        messages.add_message(request, messages.SUCCESS,
+                             f'The Administrator account {adminToPromote} is now a Director!')
         return redirect('view_all_administrators')
     else:
         return redirect('view_all_administrators')
