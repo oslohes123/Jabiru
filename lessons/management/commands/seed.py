@@ -80,8 +80,9 @@ class Command(BaseCommand):
                 input_info = instrument + ' lesson with ' + teacher
                 print(temp_profile.get('mail'))
                 setup_lesson_for_student(temp_profile.get("mail"),input_info)
-            setup_lesson_for_student("john.doe@example.org","Some Info")
-            setup_lesson_for_student("john.doe@example.org","Some Info")
+
+        setup_lesson_for_student("john.doe@example.org","Some Info")
+        setup_lesson_for_student("john.doe@example.org","Some Info")
 
 
         for i in range(0, 25):
