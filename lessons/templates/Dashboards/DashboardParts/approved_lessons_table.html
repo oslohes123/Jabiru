@@ -14,12 +14,13 @@
         <tbody class="table-group-divider">
         {% for lesson in approvedLessonData %}
             <tr>
-                <th>{{ lesson.start_date }}</th>
-                <th>{{ lesson.day_of_the_week }}</th>
-                <th>{{ lesson.duration }}</th>
-                <th>{{ lesson.interval }}</th>
-                <th>{{ lesson.teacher }}</th>
-                <th>${{ lesson.price }}</th>
+                <td>{{ lesson.start_date }}</td>
+                <td>{{ lesson.day_of_the_week }}</td>
+                <td>{{ lesson.duration }}</td>
+                <td>{{ lesson.interval }}</td>
+                <td>{{ lesson.teacher }}</td>
+                <td>${{ lesson.price }}</td>
+                <td> <a class = "btn btn-primary" href="{% url 'return_invoice_for_approved' lesson.id %}">Invoice</a> </td>
             </tr>
         {% empty %}
             No lessons approved yet
