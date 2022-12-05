@@ -1,7 +1,7 @@
 """Tests of the editing an unapproved lesson"""
 from django.test import TestCase
 from django.urls import reverse
-from lessons.forms import RequestForm, EditRequestForm
+from lessons.forms import RequestForm
 from lessons.models import User, Lesson
 
 class EditLessonViewTestCase(TestCase):
