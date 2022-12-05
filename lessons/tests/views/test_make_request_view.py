@@ -5,6 +5,7 @@ from lessons.constants import *
 from lessons.models import User,Lesson
 from django.forms.models import model_to_dict
 
+
 class MakeRequestTest(TestCase):
     def setUp(self):
         self.url = reverse("make_request")
@@ -23,18 +24,18 @@ class MakeRequestTest(TestCase):
             "password":"Password123"
         }
         self.studentLesson = {
-            "id":1,
-            "student":self.studentUser,
-            "availability":"I am available on Tuesdays",
-            "lesson_numbers":2,
-            "duration":2,
-            "interval":3,
-            "further_info":"I will need extra help!",
-            "approve_status":False
+            "id": 1,
+            "student": self.studentUser,
+            "availability": "I am available on Tuesdays",
+            "total_lessons_count": 2,
+            "duration": 30,
+            "interval": 1,
+            "further_info": "I will need extra help!",
+            "approve_status": False
         }
         self.c = Client()
         self.c.post(reverse("login_user"), self.studentLogin, follow=True)
-
+        
     def test_make_request_input(self):
         original_amount = Lesson.objects.count()
         self.c.post(self.url,self.studentLesson,follow=True)

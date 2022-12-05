@@ -1,0 +1,31 @@
+<div>
+    <h1 class="my-3">Approved lessons by Administrator</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Start date</th>
+            <th>day of the week</th>
+            <th>Duration</th>
+            <th>Interval</th>
+            <th>Teacher</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for lesson in approvedLessonData %}
+            <tr>
+                <th>{{ lesson.start_date }}</th>
+                <th>{{ lesson.day_of_the_week }}</th>
+                <th>{{ lesson.duration }}</th>
+                <th>{{ lesson.interval }}</th>
+                <th>{{ lesson.assigned_teacher }}</th>
+                <th>${{ lesson.total_price }}</th>
+            </tr>
+        {% empty %}
+            No lessons approved yet
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>

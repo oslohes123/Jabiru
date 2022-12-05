@@ -1,3 +1,4 @@
+"""Tests of the signing up a new administrator view."""
 from django.contrib.auth.hashers import check_password
 from django.test import TestCase
 from django.urls import reverse
@@ -5,6 +6,7 @@ from lessons.forms import AdministratorSignUpForm
 from lessons.models import User
 
 class SignUpAdministratorViewTestCase(TestCase):
+    """Tests of the signing up a new administrator view."""
 
     fixtures = ['lessons/fixtures/user.json',]
 
@@ -32,12 +34,12 @@ class SignUpAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/director_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'/sign_up_administrator/')
+        self.assertEqual(self.url, '/sign_up_administrator/')
 
     def test_get_sign_up(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'sign_up_administrator.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, AdministratorSignUpForm))
         self.assertFalse(form.is_bound)
@@ -49,7 +51,7 @@ class SignUpAdministratorViewTestCase(TestCase):
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'sign_up_administrator.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, AdministratorSignUpForm))
         self.assertTrue(form.is_bound)

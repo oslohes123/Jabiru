@@ -1,0 +1,43 @@
+<div>
+    <h1 class="my-3">Your requested lessons</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Availability</th>
+            <th>Number of lessons</th>
+            <th>Duration</th>
+            <th>Interval</th>
+            <th>Further info</th>
+            <th>Approved status</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for lesson in lessonsdata %}
+            <tr>
+                <th>{{ lesson.availability }}</th>
+                <th>{{ lesson.total_lessons_count}}</th>
+                <th>{{ lesson.duration }}</th>
+                <th>{{ lesson.interval }}</th>
+                <th>{{ lesson.further_info }}</th>
+                {% include 'partials/is_approved_output.html' %}
+                {% if lesson.approve_status == False %}
+                <td><form action="{% url 'fill_edit_unapproved_lessons' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-secondary" type="submit" value="Edit">
+                </form></td>
+                <td><form action="{% url 'delete_request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-primary" type="submit" value="Delete">
+                </form></td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            You do not have any requested lessons
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>

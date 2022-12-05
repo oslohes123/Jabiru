@@ -14,22 +14,30 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        fake_lesson = Faker()
+        fake_lesson.add_provider(Provider)
+
+        self.user = User.objects.create_superuser(
+            'super@super.com',
+            first_name='Super',
+            last_name='Duper',
+            password='Password123',
+            role=director
+        )
+
         self.user = User.objects.create_user(
             'john.doe@example.org',
             first_name='John',
             last_name='Doe',
             password='Password123',
-            role=student,
-            parent=None
+            role=student
         )
-
         self.user = User.objects.create_user(
             'petra.pickles@example.org',
             first_name='Petra',
             last_name='Pickles',
             password='Password123',
-            role=administrator,
-            parent=None
+            role=administrator
         )
 
         self.user = User.objects.create_user(
@@ -37,52 +45,51 @@ class Command(BaseCommand):
             first_name='Marty',
             last_name='Major',
             password='Password123',
-            role=director,
-            parent=None
+            role=director
         )
 
-        fake_lesson = Faker()
-        fake_lesson.add_provider(Provider)
+        def setup_user(insert_role):
+            self.user = User.objects.create_user(
+                temp_profile.get("mail"),
+                first_name=temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(
+                    temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
+                last_name=temp_profile.get("name").split()[-1],
+                password=self.fake.password(length=12),
+                role=insert_role
+            )
+
+        def setup_lesson_for_student(email, info_data):
+            self.lesson = Lesson.objects.create_lesson(
+                student=User.objects.get(email=email),
+                # work on this to be of the students emails
+                availability=fake_lesson.available_time(),
+                total_lessons_count=random.randint(1, 200),
+                duration=random.randint(1, 240),
+                interval=random.randint(1, 8),
+                further_info=info_data,
+                approve_status=False
+            )
+
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
-            self.user = User.objects.create_user(
-                temp_profile.get("mail"),
-                first_name=temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(
-                    temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
-                last_name=temp_profile.get("name").split()[-1],
-                password=self.fake.password(length=12),
-                role=student,
-                parent=None
-            )
+            setup_user(student)
             # For lessons
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
-                teacher = fake_lesson.teacher_name()
-                info = instrument + ' lesson with ' + teacher
+                assigned_teacher = fake_lesson.teacher_name()
+                info = instrument + ' lesson with ' + assigned_teacher
+                print(temp_profile.get('mail'),info)
+                setup_lesson_for_student(temp_profile.get("mail"),info)
 
-                self.lesson = Lesson.objects.create_lesson(
-                    student=User.objects.get(email=temp_profile.get("mail")),
-                    # work on this to be of the students emails
-                    availability=fake_lesson.available_time(),
-                    lesson_numbers=random.randint(1, 200),
-                    duration=random.randint(1, 240),
-                    interval=random.randint(1, 8),
-                    further_info=info,
-                    approve_status=False
-                )
+
+        setup_lesson_for_student("john.doe@example.org","Some Info")
+        setup_lesson_for_student("john.doe@example.org","Some Info")
+            
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
-            self.user = User.objects.create_user(
-                temp_profile.get("mail"),
-                first_name=temp_profile.get("name").split()[0] + " " + temp_profile.get("name").split()[1] if len(
-                    temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
-                last_name=temp_profile.get("name").split()[-1],
-                password=self.fake.password(length=12),
-                role=administrator,
-                parent=None
-            )
+            setup_user(administrator)
 
 
 # Lists

@@ -3,7 +3,7 @@ from django import forms
 from django.test import TestCase
 from lessons.forms import LogInForm
 
-class LogInUserTestForm(TestCase):
+class LogInUserTestCase(TestCase):
     """Unit tests of the log in form."""
     def setUp(self):
         self.form_input = {"email": "testing@email.com","password": "Testing123%"}

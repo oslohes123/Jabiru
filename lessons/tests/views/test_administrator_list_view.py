@@ -39,7 +39,7 @@ class DashboardCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/director_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'/view_all_administrators/')
+        self.assertEqual(self.url, '/view_all_administrators/')
 
     def invalid_admins_not_appearing(self):
         self.form_input['email'] = 'bademail'
@@ -52,7 +52,7 @@ class DashboardCase(TestCase):
         self._create_test_users(5)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'view_all_administrators.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
         #self.assertEqual(len(response.context['users']), 15)
         for user_id in range(5):
             self.assertContains(response, f'user{user_id}@test.org')
