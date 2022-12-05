@@ -39,12 +39,13 @@ class CustomLessonManager(BaseUserManager):
 
 
 class CustomApprovedBookingManager(BaseUserManager):
-    def create_approvedBooking(self, student, start_date, day_of_the_week, total_lessons_count,
+    def create_approvedBooking(self, student, start_date, day_of_the_week, time_of_the_week, total_lessons_count,
                                duration, interval, teacher, hourly_rate):
         approvedBooking = self.model(
             student=student,
             start_date=start_date,
             day_of_the_week=day_of_the_week,
+            time_of_the_week=time_of_the_week,
             total_lessons_count=total_lessons_count,
             duration=duration,
             interval=interval,

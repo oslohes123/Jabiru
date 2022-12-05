@@ -153,8 +153,9 @@ def approve_request(request):
         if form.is_valid():
             data = form.cleaned_data
             ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'], data['day_of_the_week'],
-                                                           data['total_lessons_count'], data['duration'],
-                                                           data['interval'], data['teacher'], data['hourly_rate'])
+                                                           data['time_of_the_week'], data['total_lessons_count'],
+                                                           data['duration'], data['interval'], data['teacher'],
+                                                           data['hourly_rate'])
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
             lesson_obj.approve_status = True
             lesson_obj.save()
@@ -175,7 +176,7 @@ def fill_in_approve_request(request):
         lesson_id = query.get("lesson_request")
         student_id = query.get("student")
         lesson = Lesson.objects.get(id=lesson_id)
-        data_dict = {'start_date': date.today(), 'day_of_the_week': datetime.now(),
+        data_dict = {'start_date': date.today(), 'time_of_the_week': datetime.now(),
                      'total_lessons_count': lesson.total_lessons_count,
                      'duration': lesson.duration, 'interval': lesson.interval, 'teacher': lesson.further_info}
         form = ApprovedBookingForm(initial=data_dict)
