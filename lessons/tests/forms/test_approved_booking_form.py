@@ -4,7 +4,7 @@ from django import forms
 from lessons.models import User, ApprovedBooking
 from lessons.forms import ApprovedBookingForm
 import datetime
-
+from lessons.constants import *
 class RequestFormTestCase(TestCase):
     """Tests of the approved booking form."""
 
@@ -14,7 +14,8 @@ class RequestFormTestCase(TestCase):
             first_name='John',
             last_name='Smith',
             email='john.smith@example.com',
-            password='Password456!'
+            password='Password456!',
+            role = administrator
         )
 
         self.form_input1 = {
