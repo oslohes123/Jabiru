@@ -5,11 +5,11 @@
 
 
 {% block content %}
-    <h1>Create a new administrator account</h1>
+    <h1 class="my-3">Create a new administrator account</h1>
     <form action="{% url 'sign_up_administrator' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Create new administrator">
-        <button type="button"><a href= {% url 'dashboard' %}>Return to dashboard</a></button>
+        <input class="btn btn-primary" type="submit" value="Create new administrator">
+        <a class="btn btn-secondary" href="{% url 'dashboard' %}">Return to dashboard</a>
     </form>
 {% endblock content %}

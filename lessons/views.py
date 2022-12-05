@@ -20,6 +20,19 @@ from .constants import *
 # Gets you the email of the user that signed up or logged in
 # To get user object call the getUser(request) and use .field_name to get your data
 
+def sign_up(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            request.session['user_email'] = request.user.email
+            return redirect("dashboard")
+    else:
+        form = SignUpForm()
+    return render(request, 'sign_up.html', {'form': form})
+
+
 def login_user(request):
     if request.method == 'POST':
         form = LogInForm(request.POST)
@@ -159,31 +172,6 @@ def make_invoice(request):
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 
-# def edit_request(request, lesson_id):
-#     request_to_edit = Lesson.objects.get(lesson_id=lesson_id)
-#     if request.method == 'POST':
-#         form = EditRequestForm(request.POST, instance=request_to_edit)
-#         if form.is_valid():
-#             form.save()
-#             messages.add_message(request,messages.SUCCESS, "The request is successfully edited")
-#             return redirect('student_dashboard')
-#     else:
-#         form = EditRequestForm(instance=request_to_edit)
-#     return render(request, 'edit_request.html', {'form': form})
-
-def sign_up(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            request.session['user_email'] = request.user.email
-            return redirect("dashboard")
-    else:
-        form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
-
-
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def sign_up_administrator(request):
@@ -202,13 +190,18 @@ def sign_up_administrator(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
-def delete_administrator(request, email):
-    adminToDelete = User.objects.get(email=email)
-    b = User.objects.filter(email=adminToDelete)
-    b.delete()
-    adminToDelete.delete()
-    messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
-    return redirect('view_all_administrators')
+def delete_administrator(request):
+    if request.method == "POST":
+        query = request.POST
+        email = query.get("email")
+        adminToDelete = User.objects.get(email=email)
+        b = User.objects.filter(email=adminToDelete)
+        b.delete()
+        adminToDelete.delete()
+        messages.info(request, f'The Administrator account {adminToDelete.email} has successfully been deleted!')
+        return redirect('view_all_administrators')
+    else:
+        return redirect('view_all_administrators')
 
 
 @login_required
@@ -277,12 +270,6 @@ def get_requests(request):  # so far only works if a student email is inputted c
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
-
-
-@login_required
-def getLessons(request):
-    lessons = Lesson.objects.all()
-    return lessons
 
 
 def log_out(request):

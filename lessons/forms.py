@@ -77,6 +77,14 @@ class AdministratorEditForm(UserChangeForm):
     )
     confirm_password = forms.CharField(label='Confirm password', widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(AdministratorEditForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['class'] = 'form-control'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+        self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
+
     def clean(self):
         super().clean()
         password = self.cleaned_data.get('password')
