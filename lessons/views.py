@@ -108,6 +108,8 @@ def edit_unapproved_lessons(request, lesson_key):  # Change info with primary ke
     return render(request, 'Dashboards/DashboardParts/make_request.html', context=context)
 
 
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def approve_request(request):
     if request.method == "POST":
         query = request.POST
@@ -131,13 +133,15 @@ def approve_request(request):
             return render(request, 'Dashboards/DashboardParts/approve_request.html',
                           {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
 
-
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_in_approve_request(request):
     query = request.POST
     lesson_id = query.get("lesson_request")
     student_id = query.get("student")
     lesson = Lesson.objects.get(id=lesson_id)
-    data_dict = {'start_date': date.today(), 'day_of_the_week': datetime.now(), 'total_lessons_count': lesson.total_lessons_count,
+    data_dict = {'start_date': date.today(), 'day_of_the_week': datetime.now(),
+                 'total_lessons_count': lesson.total_lessons_count,
                  'duration': lesson.duration, 'interval': lesson.interval, 'teacher': lesson.further_info}
     form = ApprovedBookingForm(initial=data_dict)
     return render(request, 'Dashboards/DashboardParts/approve_request.html',
