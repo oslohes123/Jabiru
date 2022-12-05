@@ -6,7 +6,7 @@ The members of the team are:
 - Arraf Rahman
 - Ashley Tyagi
 - Jingyi Wang
-- Micheal Seiranian
+- Michael Seiranian
 
 ## Project structure
 The project is called `msms` (Music School Management System).  It currently consists of a single app `lessons` where all functionality resides.
