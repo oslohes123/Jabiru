@@ -21,9 +21,18 @@
                 <th>{{ lesson.duration }}</th>
                 <th>{{ lesson.interval }}</th>
                 <th>{{ lesson.further_info }}</th>
+                {% include 'partials/is_approved_output.html' %}
                 {% if lesson.approve_status == False %}
-                <td> <a href="{% url 'edit_unapproved_lessons' %}"> Edit</a> </td>
-                <td> <a href="{% url 'delete_request' %}"> Delete</a> </td> <!--Change parameters passed to actual lesson key when implemented-->
+                <td><form action="{% url 'fill_edit_unapproved_lessons' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-secondary" type="submit" value="Edit">
+                </form></td>
+                <td><form action="{% url 'delete_request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-primary" type="submit" value="Delete">
+                </form></td>
                 {% endif %}
             </tr>
         {% empty %}

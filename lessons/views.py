@@ -171,6 +171,7 @@ def approve_request(request):
         return redirect('dashboard')
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_in_approve_request(request):
@@ -185,6 +186,39 @@ def fill_in_approve_request(request):
         form = ApprovedBookingForm(initial=data_dict)
         return render(request, 'Dashboards/DashboardParts/approve_request.html',
                       {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
+@login_required
+def edit_approved_lessons(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        approved_lesson = ApprovedBooking.objects.get(id=lesson_id)
+        form = ApprovedBookingForm(request.POST , instance = approved_lesson)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+            return redirect('dashboard')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid details, try again")
+            form = ApprovedBookingForm(instance=approved_lesson)
+            return render(request, 'Dashboards/DashboardParts/edit_approved.html',
+                          {'ApprovedBookingForm': form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
+@login_required
+def fill_edit_approved_lessons(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        #print("lessssun")
+        #print(lesson_id)
+        approved_lesson_obj = ApprovedBooking.objects.get(id=lesson_id)
+        form = ApprovedBookingForm(instance=approved_lesson_obj)
+        return render(request, 'Dashboards/DashboardParts/edit_approved.html',
+                      {'ApprovedBookingForm': form, 'lesson_id': lesson_id})
     else:
         return redirect('dashboard')
 
@@ -340,6 +374,7 @@ def total_lessons_cost(request,email): #get the total price of each lesson that 
         for i in lessons:
             total_cost -= i.total_price()
         return total_cost
+
 @login_required
 def delete_request(request):
     if request.method == "POST":

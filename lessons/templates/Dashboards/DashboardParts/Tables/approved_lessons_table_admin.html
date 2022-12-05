@@ -6,6 +6,7 @@
             <th>Student</th>
             <th>Start Date</th>
             <th>Day of the Week</th>
+            <th>Time</th>
             <th>Total Lessons</th>
             <th>Duration</th>
             <th>Interval</th>
@@ -20,13 +21,22 @@
                 <th>{{ lesson.student }}</th>
                 <th>{{ lesson.start_date}}</th>
                 <th>{{ lesson.day_of_the_week }}</th>
+                <th>{{ lesson.time_of_the_week }}</th>
                 <th>{{ lesson.total_lessons_count }}</th>
                 <th>{{ lesson.duration }}</th>
                 <th>{{ lesson.interval }}</th>
                 <th>{{ lesson.assigned_teacher }}</th>
                 <th>{{ lesson.hourly_rate }}</th>
-                <td> <a href="{% url 'edit_unapproved_lessons' %}"> Edit</a> </td> <!--Change to edit approved lessons-->
-                <td> <a href="{% url 'delete_request' %}"> Delete</a> </td> 
+                <td><form action="{% url 'fill_edit_approved_lessons' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-secondary" type="submit" value="Edit">
+                </form></td>
+                <td><form action="{% url 'delete_request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-primary" type="submit" value="Delete">
+                </form></td>   
             </tr>
         {% empty %}
             You do not have any requested lessons
