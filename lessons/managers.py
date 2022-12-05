@@ -20,6 +20,9 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+
+
 class CustomLessonManager(BaseUserManager):
     def create_lesson(self, student, availability,total_lessons_count, duration, interval, further_info, approve_status):
         lesson = self.model(
@@ -51,11 +54,21 @@ class CustomApprovedBookingManager(BaseUserManager):
         approvedBooking.save(using=self._db)
         return approvedBooking
 
+class CustomInvoiceManager(BaseUserManager):
+    def create_invoice(self,lesson_in_invoice,balance_due):
+        invoice = self.model(
+            lesson_in_invoice=lesson_in_invoice,
+            balance_due=balance_due
+        )
+        invoice.save(using=self._db)
+        return invoice
+
+
 class CustomTransactionManager(BaseUserManager):
     def create_transaction(self,invoice,payment_amount):
         transaction = self.model(
             invoice=invoice,
             payment_amount=payment_amount,
         )
-        transaction.save(using=self.db)
+        transaction.save(using=self._db)
         return transaction
