@@ -26,7 +26,7 @@
                 <th>{{ lesson.teacher }}</th>
                 <th>{{ lesson.hourly_rate }}</th>
                 <th>{{ lesson.approve_status }}</th>
-                <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td>
+                <td> <a href="{% url 'edit_unapproved_lessons' lesson.id %}"> Edit</a> </td> <!--Change to edit approved lessons-->
                 <td> <a href="{% url 'delete_request' lesson.id %}"> Delete</a> </td> 
             </tr>
         {% empty %}

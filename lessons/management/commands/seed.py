@@ -73,7 +73,7 @@ class Command(BaseCommand):
         def setup_approved_lessons(email):
             teacher_name = fake_lesson.teacher_name()
             self.approved_booking = ApprovedBooking.objects.create_approvedBooking(
-                student=User.objects.get(email=temp_profile.get("mail")),
+                student=User.objects.get(email=email),
                 start_date=self.fake.future_date(),
                 day_of_the_week=self.fake.date_this_year(False,True),
                 total_lesson_count=random.randint(1, 200),
@@ -99,6 +99,8 @@ class Command(BaseCommand):
 
         setup_lesson_for_student("john.doe@example.org")
         setup_lesson_for_student("john.doe@example.org")
+        setup_approved_lessons("john.doe@example.org")
+        setup_approved_lessons("john.doe@example.org")
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()

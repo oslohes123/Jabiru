@@ -47,7 +47,9 @@ def output_student_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
-    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData})
+    lessons_cost = total_lessons_cost(request, theUser.email)
+    return render(request,"Dashboards/student_dashboard.html", {'lessonsdata':lessonsdata,'approvedLessonData':approvedLessonData
+    , 'lessons_cost':lessons_cost})
     
 
 def output_admin_dashboard(request):
@@ -248,8 +250,19 @@ def log_out(request):
     return redirect('home')
 
 
-
 def delete_request(request, lesson_key):
     lesson = Lesson.objects.get(id = lesson_key)
     lesson.delete()
     return redirect('/dashboard/')
+
+def total_lessons_cost(request,email): #get the total price of each lesson that the student has
+    student_object = get_user(request,email)
+    if student_object.role != student:
+        messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
+    else:
+        lessons =  ApprovedBooking.objects.filter(student=student_object)
+        #for loop to go through each lesson and getting total price add em all up
+        total_cost = 0
+        for i in lessons:
+            total_cost -= i.total_price()
+        return total_cost
