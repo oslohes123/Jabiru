@@ -25,10 +25,10 @@
                 <td>${{ item.invoice.balance_due }}</td>
 
                 <td>
-                    <form action="{% url 'return_invoice_for_approved' %}" method="post">
+                    <form action="{% url 'return_transaction_and_invoice_for_approved' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="lesson_id" value={{ item.lesson.id }}>
-                        <input class="btn btn-primary" type="submit" value = "Invoice">
+                        <input class="btn btn-primary" type="submit" value = "Transactions and invoices">
                     </form>
                 </td>
                 <td>
