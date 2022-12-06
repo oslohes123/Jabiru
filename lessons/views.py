@@ -109,7 +109,7 @@ def make_payment_approved_lesson(request):
                 messages.add_message(request,messages.ERROR,"You are paying more than what is due")
             else:
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
-                our_invoice.balance_due = our_invoice.balance_due - payment_amount
+                our_invoice.balance_due = our_invoice.balance_due + payment_amount
                 our_invoice.save()
                 messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
 
