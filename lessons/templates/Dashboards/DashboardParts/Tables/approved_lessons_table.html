@@ -27,6 +27,15 @@
                         <input class="btn btn-primary" type="submit" value = "Invoice">
                     </form>
                 </td>
+                <td>
+                    <form action="{% url 'make_payment_approved_lesson' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="lesson_id" value={{ lesson.id }}>
+                        <input type="hidden" name="making_payment" value="False">
+
+                        <input class="btn btn-primary" type="submit" value = "Make Payment">
+                    </form>
+                </td>
             </tr>
         {% empty %}
             No lessons approved yet
