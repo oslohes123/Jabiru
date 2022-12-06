@@ -103,4 +103,4 @@ class Transaction(models.Model):
     objects = CustomTransactionManager()
 
     def transaction_ref_num(self):
-        return f'{self.invoice_issued_for_transaction.id}'
+        return f'{self.invoice.id}'
