@@ -87,8 +87,8 @@ class Command(BaseCommand):
                 hourly_rate= 10.00 , #done 10 as for now change later 
                 )
             self.invoice =Invoice.objects.create_invoice(
-                lesson_in_invoice=self.approved_lesson,
-                balance_due=self.approved_lesson.total_price()
+                lesson_in_invoice=self.approved_booking,
+                balance_due=self.approved_booking.total_price()
             )
 
 

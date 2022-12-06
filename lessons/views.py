@@ -72,7 +72,7 @@ def output_student_dashboard(request):
         data.append(data_item)
 
     return render(request, "Dashboards/student_dashboard.html",
-                  {'data': data,'lessonsdata':lessonsdata}, 'lessons_cost':lessons_cost})
+                  {'data': data,'lessonsdata':lessonsdata, 'lessons_cost':lessons_cost})
 
 
 # TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
