@@ -136,7 +136,8 @@ def make_request(request):
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
             return redirect("dashboard")
-
+    form = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
