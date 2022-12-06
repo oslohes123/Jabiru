@@ -7,10 +7,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, QueryDict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-
-from .forms import LogInForm
-from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
-from .forms import RequestForm, ApprovedBookingForm, InvoiceForm
+from decimal import Decimal
+from .forms import *
 from .models import User, Lesson, ApprovedBooking, Invoice
 from django.views import generic
 from .constants import *
@@ -65,10 +63,8 @@ def output_student_dashboard(request):
                   {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
 
 
-
 # TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
 def return_invoice_for_approved(request):
-    print(request.method)
     if request.method == "POST":
         query = request.POST
         approved_booking_object = ApprovedBooking.objects.get(id=query.get('lesson_id'))
@@ -80,15 +76,40 @@ def return_invoice_for_approved(request):
         }
         return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice})
     else:
-        messages.add_message(request,messages.ERROR,"You can't go here")
+        messages.add_message(request, messages.ERROR, "You can't go here")
         redirect("dashboard")
+
+
+@login_required
+def make_payment_approved_lesson(request):
+    if request.method == "POST":
+        query = request.POST
+        if query.get('making_payment') == "False":
+            lesson_id = query.get('lesson_id')
+            payment_form = TransactionForm()
+            return render(request, "Dashboards/DashboardParts/make_payment.html",
+                          {'lesson_id': lesson_id, 'form': payment_form})
+        else:
+            lesson_id = query.get("lesson_id")
+            approved_booking = ApprovedBooking.objects.get(id = lesson_id)
+            our_invoice = Invoice.objects.get(lesson_in_invoice=approved_booking)
+            payment_amount = query.get("payment_amount")
+            payment_amount = [Decimal(x.strip(' "')) for x in payment_amount]
+            Transaction.objects.create_transaction(our_invoice,payment_amount)
+            our_invoice.balance_due = our_invoice.balance_due - payment_amount
+
+            return redirect("dashboard")
+    else:
+        return redirect("dashboard")
+
+
+
 
 def output_adult_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     childdata = theUser.children.all()
     return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata, 'childdata': childdata})
-
 
 
 def output_admin_dashboard(request):
@@ -102,7 +123,6 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-
     ourUser: User = request.user
     if ourUser.role == student:
         return output_student_dashboard(request)
@@ -137,9 +157,10 @@ def make_request(request):
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
             return redirect("dashboard")
         else:
-            messages.add_message(request,messages.ERROR,"The form submitted is not valid try again")
+            messages.add_message(request, messages.ERROR, "The form submitted is not valid try again")
     form = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+
 
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
@@ -171,7 +192,6 @@ def edit_unapproved_lessons(request):
         return redirect('dashboard')
 
 
-
 @login_required
 def fill_edit_unapproved_lessons(request):
     if request.method == "POST":
@@ -199,10 +219,14 @@ def approve_request(request):
         form = ApprovedBookingForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'], data['day_of_the_week'],
-                                                           data['time_of_the_week'], data['total_lessons_count'],
-                                                           data['duration'], data['interval'], data['assigned_teacher'],
-                                                           data['hourly_rate'])
+            approved_lesson = ApprovedBooking.objects.create_approvedBooking(student_obj, data['start_date'],
+                                                                             data['day_of_the_week'],
+                                                                             data['time_of_the_week'],
+                                                                             data['total_lessons_count'],
+                                                                             data['duration'], data['interval'],
+                                                                             data['assigned_teacher'],
+                                                                             data['hourly_rate'])
+            Invoice.objects.create_invoice(lesson_in_invoice=approved_lesson, balance_due=approved_lesson.total_price())
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
             lesson_obj.approve_status = True
             lesson_obj.save()
@@ -233,7 +257,6 @@ def fill_in_approve_request(request):
         return redirect('dashboard')
 
 
-
 def make_invoice(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
@@ -259,7 +282,6 @@ def sign_up_administrator(request):
     return render(request, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html', {'form': form})
 
 
-
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def delete_administrator(request):
@@ -275,7 +297,6 @@ def delete_administrator(request):
         return redirect('view_all_administrators')
     else:
         return redirect('view_all_administrators')
-
 
 
 @login_required
@@ -302,7 +323,6 @@ def edit_administrator(request):
         return redirect('view_all_administrators')
 
 
-
 def fill_edit_administrator(request):
     if request.method == "POST":
         query = request.POST
@@ -313,7 +333,6 @@ def fill_edit_administrator(request):
                       {'form': form, 'email': email})
     else:
         return redirect('view_all_administrators')
-
 
 
 @login_required
@@ -400,7 +419,6 @@ def log_out(request):
     return redirect('home')
 
 
-
 @login_required
 def delete_request(request):
     if request.method == "POST":
@@ -411,4 +429,3 @@ def delete_request(request):
         return redirect('dashboard')
     else:
         return redirect('dashboard')
-
