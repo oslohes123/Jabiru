@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Lesson, ApprovedBooking,Invoice
+from .models import *
 
 
 # Register your models here.
@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users"""
 
     list_display = [
-        'email', 'first_name', 'last_name', 'role', 'is_active', 'id'
+        'email', 'first_name', 'last_name', 'role', 'parent', 'is_active'
     ]
 
 @admin.register(Lesson)
@@ -46,12 +46,19 @@ class ApprovedBookingAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(Invoice)
-class LessonsAdmin(admin.ModelAdmin):
+class InvoiceAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users"""
 
     list_display = [
         'lesson_in_invoice',
         'balance_due',
-        'payment_paid',
         'id'
+    ]
+
+
+@admin.register(Transaction)
+class TransactionsAdmin(admin.ModelAdmin):
+    list_display = [
+        'invoice',
+        'payment_amount'
     ]

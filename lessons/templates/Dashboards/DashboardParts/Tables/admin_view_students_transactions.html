@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>See all the transactions</title>
+{% endblock title %}
+
+{% block content %}
+<div>
+    <h1>Transactions for all students</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Student Name</th>
+            <th>Invoice Number</th>
+            <th>Payment Amount</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for item in data %}
+            <tr>
+                <td>{{ item.student }}</td>
+                <td>{{ item.transaction.pk}}</td>
+                <td>{{ item.transaction.payment_amount }}</td>
+            </tr>
+        {% empty %}
+            No transactions have been made
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class = "btn btn-primary" href={% url 'dashboard' %}>Dashboard</a>
+
+</div>
+
+{% endblock content %}

@@ -12,9 +12,13 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('sign_up_administrator/', views.sign_up_administrator, name='sign_up_administrator'),
     path('view_all_administrators/', views.view_all_administrators, name='view_all_administrators'),
+    path('dashboard/assign_child/', views.assign_child, name='assign_child'),
+    path('make_request_for_child/', views.make_request_for_child, name='make_request_for_child'),
     path('delete_administrator/', views.delete_administrator, name='delete_administrator'),
     path('edit_administrator/', views.edit_administrator, name='edit_administrator'),
     path('fill_edit_administrator/', views.fill_edit_administrator, name='fill_edit_administrator'),
+    path('transactions_and_invoice/', views.return_transactions_and_invoice, name="return_transaction_and_invoice_for_approved"),
+    path('make_payment/', views.make_payment_approved_lesson, name="make_payment_approved_lesson"),
     path('edit_unapproved_lessons/', views.edit_unapproved_lessons, name='edit_unapproved_lessons'),
     path('fill_edit_unapproved_lessons/', views.fill_edit_unapproved_lessons, name='fill_edit_unapproved_lessons'),
     path('delete_request/', views.delete_request, name='delete_request'),
@@ -24,6 +28,9 @@ urlpatterns = [
     path('approve_request/', views.approve_request, name='approve_request'),
     path('edit_approved_lessons/', views.edit_approved_lessons, name='edit_approved_lessons'),
     path('fill_edit_approved_lessons/', views.fill_edit_approved_lessons, name='fill_edit_approved_lessons'),
-    path('delete_approved_lesson/', views.delete_approved_lesson, name='delete_approved_lesson')
-    
+    path('delete_approved_lesson/', views.delete_approved_lesson, name='delete_approved_lesson'),
+    path('view_transactions/',views.admin_view_transactions_specific_student,name="view_transactions_specific_student"),
+    path('view_transactions_all/',views.admin_view_transactions_of_all,name="view_transactions_all_students"),
+    path('approve_request/', views.approve_request, name='approve_request')
+
 ]

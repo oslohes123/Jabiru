@@ -1,21 +1,24 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 import random
-from lessons.models import User, Lesson, ApprovedBooking
+from lessons.models import *
 from lessons.constants import *
-import faker.providers
-
+from faker.providers import BaseProvider,date_time
+from datetime import date
+import calendar
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fake = Faker('en_GB')
+        self.fake.add_provider(date_time)
         Faker.seed(random.randint(0, 999999))
 
     def handle(self, *args, **options):
 
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
+
 
         self.user = User.objects.create_superuser(
             'super@super.com',
@@ -83,7 +86,17 @@ class Command(BaseCommand):
                 assigned_teacher=teacher_name,
                 hourly_rate= 10.00 , #done 10 as for now change later 
                 )
+            self.invoice =Invoice.objects.create_invoice(
+                lesson_in_invoice=self.approved_lesson,
+                balance_due=self.approved_lesson.total_price()
+            )
 
+
+
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_approved_lessons("john.doe@example.org")
+        setup_approved_lessons("john.doe@example.org")
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
@@ -93,14 +106,19 @@ class Command(BaseCommand):
                 instrument = fake_lesson.lesson_instrument()
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
-                #print(temp_profile.get('mail'))
+
+                print(temp_profile.get('mail'))
                 setup_lesson_for_student(temp_profile.get("mail"),info)
                 setup_approved_lessons(temp_profile.get("mail"))
 
-        setup_lesson_for_student("john.doe@example.org",info)
-        setup_lesson_for_student("john.doe@example.org",info)
-        setup_approved_lessons("john.doe@example.org")
-        setup_approved_lessons("john.doe@example.org")
+                print(temp_profile.get('mail'))
+                email = temp_profile.get("mail")
+                setup_lesson_for_student(email, info)
+                setup_approved_lessons(email)
+
+
+            
+
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
@@ -108,12 +126,6 @@ class Command(BaseCommand):
 
 
 # Lists
-
-DURATION = [
-    30,
-    45,
-    60
-]
 
 INTERVAL =[
     1,
@@ -155,8 +167,11 @@ AVAILABILITY = [
     "From 12:00 to 17:00"
 ]
 
+DURATION=[
+    30,45,60,75,90,105,120
+]
 
-class Provider(faker.providers.BaseProvider):
+class Provider(BaseProvider):
     def teacher_name(self):
         return self.random_element(TEACHER_NAME)  # TEACHER_NAME being the list of all the teachers
 
@@ -171,4 +186,5 @@ class Provider(faker.providers.BaseProvider):
     
     def interval_choices(self):
         return self.random_element(INTERVAL)
+
 

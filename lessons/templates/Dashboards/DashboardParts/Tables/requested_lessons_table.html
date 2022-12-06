@@ -14,11 +14,11 @@
         <tbody class="table-group-divider">
         {% for lesson in lessonsdata %}
             <tr>
-                <th>{{ lesson.availability }}</th>
-                <th>{{ lesson.total_lessons_count}}</th>
-                <th>{{ lesson.duration }}</th>
-                <th>{{ lesson.interval }}</th>
-                <th>{{ lesson.further_info }}</th>
+                <td>{{ lesson.availability }}</td>
+                <td>{{ lesson.total_lessons_count}}</td>
+                <td>{{ lesson.duration }}</td>
+                <td>{{ lesson.interval }}</td>
+                <td>{{ lesson.further_info }}</td>
                 {% include 'partials/is_approved_output.html' %}
                 {% if lesson.approve_status == False %}
                 <td><form action="{% url 'fill_edit_unapproved_lessons' %}" method="post">

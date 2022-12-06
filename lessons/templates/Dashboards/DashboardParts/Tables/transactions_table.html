@@ -1,0 +1,23 @@
+<div>
+    <h1>Transactions</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Invoice</th>
+            <th>Payment Amount</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.invoice.pk}}</td>
+                <td>{{ transaction.payment_amount }}</td>
+            </tr>
+        {% empty %}
+            No transactions yet
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>

@@ -5,7 +5,7 @@ from lessons.models import User, ApprovedBooking, Invoice
 from lessons.forms import InvoiceForm
 import datetime
 
-class RequestFormTestCase(TestCase):
+class InvoiceFormTestCase(TestCase):
     """Tests of the invoice form."""
     def setUp(self):
 
@@ -13,11 +13,12 @@ class RequestFormTestCase(TestCase):
             first_name='John',
             last_name='Smith',
             email='john.smith@example.com',
+            role='Student',
             password='Password456!'
         )
-
+        
         self.approvedBooking = ApprovedBooking.objects.create_approvedBooking(
-            user=self.user,
+            student=self.user,
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Friday",
             time_of_the_week=datetime.time(20, 0, 0),
@@ -25,50 +26,29 @@ class RequestFormTestCase(TestCase):
             duration=90,
             interval=2,
             assigned_teacher='Paul Anderson',
-            hourly_rate=30.00,
-            approve_status=True
+            hourly_rate=30.00
         )
 
-        self.form_input1 = {
+        self.form_input = {
+            'lesson_in_invoice': self.approvedBooking,
             'balance_due': 1200.00,
-            'payment_paid': 200.00
         }
-
-        self.form_input2 = {
-            'balance_due': 1200.00
-        }
-
-    def test_valid_data_invoice_form(self):
-        form = InvoiceForm(user=self.approvedBooking)
-        self.assertTrue(form.is_valid())
 
     def test_form_contains_required_fields(self):
         form = InvoiceForm()
         self.assertIn('balance_due', form.fields)
-        self.assertIn('payment_paid', form.fields)
+        self.assertIn('lesson_in_invoice', form.fields)
 
     def test_valid_post_form(self):
-        form = InvoiceForm(user=self.user, data=self.form_input1)
+        form = InvoiceForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
-    def test_invalid_post_form(self):
-        form = InvoiceForm(user=self.user, data=self.form_input2)
+    def test_balance_cannot_have_more_than_8_digits(self):
+        self.form_input['balance_due'] = 100000000
+        form = InvoiceForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
-    def test_form_must_save_correctly(self):
-        form = InvoiceForm(user=self.user, data=self.form_input1)
-        object_num_before_save = Invoice.objects.count()
-        form.save()
-        object_num_after_save = Invoice.objects.count()
-        self.assertEqual(object_num_after_save, object_num_before_save + 1)
-        request_of_lesson = Invoice.objects.get(student=self.user)
-        self.assertEqual(request_of_lesson.balance_due, 1200.00)
-        self.assertEqual(request_of_lesson.payment_paid, 200.00)
-
-    def test_invalid_form_does_not_save(self):
-        form = InvoiceForm(user=self.user, data=self.form_input2)
-        object_num_after_save = Invoice.objects.count()
-        form.save()
-        object_num_after_save = Invoice.objects.count()
-        self.assertEqual(object_num_after_save, object_num_after_save)
-    
+    def test_balance_cannot_have_more_than_2_decimals(self):
+        self.form_input['balance_due'] = 1200.001
+        form = InvoiceForm(data=self.form_input)
+        self.assertFalse(form.is_valid())

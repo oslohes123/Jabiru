@@ -1,10 +1,21 @@
-<h1 class="my-3">Your lesson request is approved!</h1>
-<form action="{% url 'approved_booking' %}" method="post">
-    {% csrf_token %}
-    {{ ApprovedBookingForm.as_p }}
-</form>
-<h2>Invoice</h2>
-<p>Invoice number is: {{ lesson.invoice_num }}</p>
-<p>Invoice unique reference number is: {{ lesson.invoice_num }}-{{ student_ref_num }}</p>
-<p>Total price is: {{ lesson.total_price }}</p>
-<p>Contact administrator if you wish to change bookings!<p>
+{% extends "base.html" %}
+{% block title %}
+    <title>Invoice</title>
+{% endblock title %}
+
+<h1>Your lesson request is approved!</h1>
+{% block content %}
+    <div class = "mt-5">
+        <h2>Invoice</h2>
+        <p>Invoice number is: {{ invoice.invoice_num }}</p>
+        <p>Invoice unique reference number is: {{ invoice.invoice_num }}-{{ invoice.student_ref_num }}</p>
+        <p>Remaining balance: ${{ invoice.total_price }}</p>
+        <p>Contact administrator if you wish to change bookings!</p>
+    </div>
+
+    {% include 'Dashboards/DashboardParts/Tables/transactions_table.html' %}
+
+    <a class="btn btn-primary" href ={% url 'dashboard' %}>Dashboard</a>
+
+
+{% endblock content %}

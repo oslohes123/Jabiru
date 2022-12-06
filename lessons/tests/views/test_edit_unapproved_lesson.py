@@ -1,7 +1,7 @@
 """Tests of the editing an unapproved lesson"""
 from django.test import TestCase
 from django.urls import reverse
-from lessons.forms import RequestForm, EditRequestForm
+from lessons.forms import RequestForm
 from lessons.models import User, Lesson
 
 class EditLessonViewTestCase(TestCase):
@@ -14,7 +14,7 @@ class EditLessonViewTestCase(TestCase):
 
     def setUp(self):
         self.totalLessons = Lesson.objects.count()
-        self.edit_url = 'http://localhost:8000/edit_unapproved_lessons/1/'
+        self.edit_url = reverse('fill_edit_unapproved_lessons')
         self.request_url = reverse("make_request")
         login_url = reverse("login_user")
         self.studentUser = User.objects.get(email='dillyparker@example.org')
@@ -48,7 +48,7 @@ class EditLessonViewTestCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/student_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.edit_url,'http://localhost:8000/edit_unapproved_lessons/1/')
+        self.assertEqual(self.edit_url,'/fill_edit_unapproved_lessons/')
 
     def test_make_lesson_request(self):
         lessons_before = Lesson.objects.count()

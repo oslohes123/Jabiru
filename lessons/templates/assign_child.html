@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Assign child</title>
+{% endblock title %}
+
+
+{% block content %}
+    <h1 class="my-3">Register your child</h1>
+    <form action="{% url 'assign_child' %}" method="post">
+        {% csrf_token %}
+        <label class = "form-label" for="student_email">Enter your child's email address:</label>
+        <input class = "form-control text-center" id="student_email" type="text" name="student_email_input">
+        <input class = "btn btn-primary my-3" type="submit" value="Add child">
+        <a class = "btn btn-secondary my-3" href={% url 'dashboard' %}>Back to dashboard</a>
+    </form>
+    {% include "partials/messages.html" %}
+{% endblock content %}

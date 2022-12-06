@@ -12,6 +12,7 @@ class SignUpFormTestCase(TestCase):
             'first_name': 'Name',
             'last_name': 'Lastname',
             'email': 'namelastname@example.org',
+            'role': 'Student',
             'password': 'Password123!',
             'confirm_password': 'Password123!'
         }
