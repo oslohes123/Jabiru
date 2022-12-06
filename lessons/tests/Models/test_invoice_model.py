@@ -25,14 +25,12 @@ class InvoiceModelTestCase(TestCase):
             duration=90,
             interval=2,
             assigned_teacher='Paul Anderson',
-            hourly_rate=30.00,
-            approve_status=True
+            hourly_rate=30.00
         )
 
-        self.invoice1 = Invoice.objects.create_approvedBooking(
+        self.invoice1 = Invoice.objects.create_invoice(
             lesson_in_invoice=self.approvedBooking1,
-            balance_due=self.approvedBooking1.total_price(),
-            payment_paid=550.00
+            balance_due=self.approvedBooking1.total_price()
         )
 
         self.student2 = User.objects.create_user(
@@ -52,14 +50,12 @@ class InvoiceModelTestCase(TestCase):
             duration=120,
             interval = 4,
             assigned_teacher="Joe Miller",
-            hourly_rate=25.50,
-            approve_status = True
+            hourly_rate=25.50
         )
 
-        self.invoice2 = Invoice.objects.create_approvedBooking(
+        self.invoice2 = Invoice.objects.create_invoice(
             lesson_in_invoice=self.approvedBooking2,
-            balance_due=self.approvedBooking2.total_price(),
-            payment_paid=0.00
+            balance_due=self.approvedBooking2.total_price()
         )
     
     def test_valid_object(self):
@@ -72,10 +68,6 @@ class InvoiceModelTestCase(TestCase):
     
     def test_lesson_in_invoice_is_unique(self):
         self.invoice1.lesson_in_invoice = self.invoice2.lesson_in_invoice
-        self._assert_invoice_is_invalid()
-    
-    def test_lesson_in_invoice_request_must_have_been_approved(self):
-        self.approvedBooking1.approve_status = False
         self._assert_invoice_is_invalid()
     
 
@@ -98,27 +90,7 @@ class InvoiceModelTestCase(TestCase):
     def test_balance_due_not_unique(self):
         self.invoice1.balance_due = self.invoice2.balance_due
         self._assert_invoice_is_valid()
-    
 
-    def test_payment_paid_cannot_be_blank(self):
-        self.invoice1.payment_paid = None
-        self._assert_invoice_is_invalid()
-    
-    def test_payment_paid_can_be_zero(self):
-        self.invoice1.payment_paid = 0.00
-        self._assert_invoice_is_valid()
-    
-    def test_payment_paid_cannot_be_negative(self):
-        self.invoice1.payment_paid = -36.50
-        self._assert_invoice_is_invalid()
-
-    def test_payment_paid_cannot_have_more_than_two_decimals(self):
-        self.invoice1.payment_paid = 15.234
-        self._assert_invoice_is_invalid()
-
-    def test_payment_paid_not_unique(self):
-        self.invoice1.payment_paid = self.invoice2.payment_paid
-        self._assert_invoice_is_valid()
 
     def _assert_invoice_is_valid(self):
         try:

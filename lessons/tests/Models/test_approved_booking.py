@@ -31,12 +31,11 @@ class ApprovedBookingModelTestCase(TestCase):
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Friday",
             time_of_the_week=datetime.time(20, 0, 0),
-            total_lesson_count=5,
+            total_lessons_count=5,
             duration=90,
             interval=2,
             assigned_teacher='Paul Anderson',
             hourly_rate=30.00,
-            approve_status=True
         )
 
         self.approvedBooking2 = ApprovedBooking.objects.create_approvedBooking(
@@ -44,12 +43,11 @@ class ApprovedBookingModelTestCase(TestCase):
             start_date=datetime.date(2023, 3, 5),
             day_of_the_week="Monday",
             time_of_the_week=datetime.time(20, 0, 0),
-            total_lesson_count=4,
+            total_lessons_count=4,
             duration=120,
             interval = 4,
             assigned_teacher="Joe Miller",
             hourly_rate=25.50,
-            approve_status = True
         )
 
     
@@ -93,21 +91,13 @@ class ApprovedBookingModelTestCase(TestCase):
         self._assert_approved_booking_is_valid()
 
 
-    def test_total_lesson_count_cannot_be_blank(self):
-        self.approvedBooking1.total_lesson_count = None
+    def test_total_lessons_count_cannot_be_blank(self):
+        self.approvedBooking1.total_lessons_count = None
         self._assert_approved_booking_is_invalid()
 
-    def test_total_lesson_count_not_unique(self):
-        self.approvedBooking1.total_lesson_count = self.approvedBooking2.total_lesson_count
+    def test_total_lessons_count_not_unique(self):
+        self.approvedBooking1.total_lessons_count = self.approvedBooking2.total_lessons_count
         self._assert_approved_booking_is_valid()
-
-    def test_total_lesson_count_cannot_be_negative(self):
-        self.approvedBooking1.total_lesson_count = -10
-        self._assert_approved_booking_is_invalid()
-    
-    def test_total_lesson_count_cannot_be_zero(self):
-        self.approvedBooking1.total_lesson_count = 0
-        self._assert_approved_booking_is_invalid()
 
 
     def test_duration_cannot_be_blank(self):
@@ -147,8 +137,8 @@ class ApprovedBookingModelTestCase(TestCase):
         self.approvedBooking1.interval = 0
         self._assert_approved_booking_is_invalid()
 
-    def test_interval_can_equal_to_8(self):
-        self.approvedBooking1.interval = 8
+    def test_interval_can_equal_to_4(self):
+        self.approvedBooking1.interval = 4
         self._assert_approved_booking_is_valid()
 
 
