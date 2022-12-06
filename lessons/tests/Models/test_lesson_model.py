@@ -84,14 +84,6 @@ class LessonModelTestCase(TestCase):
         self.lessonRequest1.total_lessons_count = self.lessonRequest2.total_lessons_count
         self._assert_lesson_request_is_valid()
 
-    def test_total_lessons_count_cannot_be_negative(self):
-        self.lessonRequest1.total_lessons_count = -10
-        self._assert_lesson_request_is_invalid()
-    
-    def test_total_lessons_count_cannot_be_zero(self):
-        self.lessonRequest1.total_lessons_count = 0
-        self._assert_lesson_request_is_invalid()
-
 
     def test_duration_cannot_be_blank(self):
         self.lessonRequest1.duration = None
@@ -130,8 +122,8 @@ class LessonModelTestCase(TestCase):
         self.lessonRequest1.interval = 0
         self._assert_lesson_request_is_invalid()
 
-    def test_interval_can_equal_to_8(self):
-        self.lessonRequest1.duration = 8
+    def test_interval_can_equal_to_3(self):
+        self.lessonRequest1.interval = 3
         self._assert_lesson_request_is_valid()
 
     

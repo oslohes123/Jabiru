@@ -59,12 +59,6 @@ class RequestFormTestCase(TestCase):
         form.save()
         object_num_after_save = Lesson.objects.count()
         self.assertEqual(object_num_after_save, object_num_before_save + 1)
-        request_of_lesson = Lesson.objects.get(student=self.user)
-        self.assertEqual(request_of_lesson.availability, '6pm-8pm Sunday')
-        self.assertEqual(request_of_lesson.total_lessons_count, 16)
-        self.assertEqual(request_of_lesson.duration, 90)
-        self.assertEqual(request_of_lesson.interval, 1)
-        self.assertEqual(request_of_lesson.further_info, 'prefer to learn guitar')
     
     def test_invalid_form_does_not_save(self):
         form = RequestForm(data=self.invalid_input)
