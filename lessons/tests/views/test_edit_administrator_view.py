@@ -46,7 +46,7 @@ class EditAdministratorViewTestCase(TestCase):
     def test_get_edit_page(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'edit_administrator.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/AdministratorParts/edit_administrator.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, AdministratorEditForm))
         self.assertFalse(form.is_bound)

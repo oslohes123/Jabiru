@@ -81,8 +81,8 @@ class Command(BaseCommand):
                 day_of_the_week = chosen_date.strftime('%A'),
                 time_of_the_week = chosen_date.time(),
                 total_lessons_count = random.randint(0,5),
-                duration = random.randint(15,90),
-                interval = random.randint(0,1),
+                duration = fake_lesson.durations(),
+                interval = random.randint(1,4),
                 assigned_teacher=fake_lesson.teacher_name(),
                 hourly_rate=random.randint(1,100)
             )
@@ -150,6 +150,9 @@ AVAILABILITY = [
     "From 12:00 to 17:00"
 ]
 
+DURATION=[
+    30,45,60,75,90,105,120
+]
 
 class Provider(BaseProvider):
     def teacher_name(self):
@@ -161,3 +164,5 @@ class Provider(BaseProvider):
     def available_time(self):
         return self.random_element(AVAILABILITY)  # AVAILABILITY being a list of all available times the student can do
 
+    def durations(self):
+        return self.random_element(DURATION) # DURATION a list of the durations for lesson lengths

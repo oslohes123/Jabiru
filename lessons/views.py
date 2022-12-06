@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import LogInForm
 from .forms import SignUpForm, AdministratorSignUpForm, AdministratorEditForm
 from .forms import RequestForm, ApprovedBookingForm, InvoiceForm
-from .models import User, Lesson, ApprovedBooking
+from .models import User, Lesson, ApprovedBooking, Invoice
 from django.views import generic
 from .constants import *
 
@@ -65,11 +65,30 @@ def output_student_dashboard(request):
                   {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
 
 
+
+# TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
+def return_invoice_for_approved(request):
+    print(request.method)
+    if request.method == "POST":
+        query = request.POST
+        approved_booking_object = ApprovedBooking.objects.get(id=query.get('lesson_id'))
+        invoice = Invoice.objects.get(lesson_in_invoice=approved_booking_object)
+        invoice = {
+            "invoice_num": '{0:03}'.format(invoice.pk),
+            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
+            "total_price": invoice.balance_due
+        }
+        return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice})
+    else:
+        messages.add_message(request,messages.ERROR,"You can't go here")
+        redirect("dashboard")
+
 def output_adult_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     childdata = theUser.children.all()
     return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata, 'childdata': childdata})
+
 
 
 def output_admin_dashboard(request):
@@ -83,6 +102,7 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
+
     ourUser: User = request.user
     if ourUser.role == student:
         return output_student_dashboard(request)
@@ -116,10 +136,10 @@ def make_request(request):
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
             return redirect("dashboard")
-
-    insertForm = RequestForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
-
+        else:
+            messages.add_message(request,messages.ERROR,"The form submitted is not valid try again")
+    form = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
@@ -149,6 +169,7 @@ def edit_unapproved_lessons(request):
                           {'RequestForm': lesson_form, 'lesson_id': lesson_id})
     else:
         return redirect('dashboard')
+
 
 
 @login_required
@@ -212,6 +233,7 @@ def fill_in_approve_request(request):
         return redirect('dashboard')
 
 
+
 def make_invoice(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
@@ -255,6 +277,7 @@ def delete_administrator(request):
         return redirect('view_all_administrators')
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
 def edit_administrator(request):
@@ -279,8 +302,7 @@ def edit_administrator(request):
         return redirect('view_all_administrators')
 
 
-@login_required
-@user_passes_test(lambda u: u.is_director, login_url='/dashboard/')
+
 def fill_edit_administrator(request):
     if request.method == "POST":
         query = request.POST
@@ -291,6 +313,7 @@ def fill_edit_administrator(request):
                       {'form': form, 'email': email})
     else:
         return redirect('view_all_administrators')
+
 
 
 @login_required
@@ -377,6 +400,7 @@ def log_out(request):
     return redirect('home')
 
 
+
 @login_required
 def delete_request(request):
     if request.method == "POST":
@@ -387,3 +411,4 @@ def delete_request(request):
         return redirect('dashboard')
     else:
         return redirect('dashboard')
+

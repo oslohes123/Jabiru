@@ -1,5 +1,5 @@
 <div>
-    <h1 class="my-3">Approved lessons by Administrator</h1>
+    <h1>Approved lessons by Administrator</h1>
     <table class="table table-bordered card-body">
         <thead class="p-5">
         <tr>
@@ -14,12 +14,19 @@
         <tbody class="table-group-divider">
         {% for lesson in approvedLessonData %}
             <tr>
-                <th>{{ lesson.start_date }}</th>
-                <th>{{ lesson.day_of_the_week }}</th>
-                <th>{{ lesson.duration }}</th>
-                <th>{{ lesson.interval }}</th>
-                <th>{{ lesson.assigned_teacher }}</th>
-                <th>${{ lesson.total_price }}</th>
+                <td>{{ lesson.start_date }}</td>
+                <td>{{ lesson.day_of_the_week }}</td>
+                <td>{{ lesson.duration }}</td>
+                <td>{{ lesson.interval }}</td>
+                <td>{{ lesson.teacher }}</td>
+                <td>${{ lesson.total_price }}</td>
+                <td>
+                    <form action="{% url 'return_invoice_for_approved' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="lesson_id" value={{ lesson.id }}>
+                        <input class="btn btn-primary" type="submit" value = "Invoice">
+                    </form>
+                </td>
             </tr>
         {% empty %}
             No lessons approved yet
