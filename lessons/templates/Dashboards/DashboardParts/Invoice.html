@@ -10,8 +10,12 @@
         <p>Invoice number is: {{ invoice.invoice_num }}</p>
         <p>Invoice unique reference number is: {{ invoice.invoice_num }}-{{ invoice.student_ref_num }}</p>
         <p>Total price is: ${{ invoice.total_price }}</p>
-        <p>Contact administrator if you wish to change bookings!
-        <p>
+        <p>Contact administrator if you wish to change bookings!</p>
     </div>
+
+    {% include 'Dashboards/DashboardParts/Tables/transactions_table.html' %}
+
+    <a class="btn btn-primary" href ={% url 'dashboard' %}>Dashboard</a>
+
 
 {% endblock content %}
