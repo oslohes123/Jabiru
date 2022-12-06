@@ -441,3 +441,20 @@ def delete_request(request):
         return redirect('dashboard')
     else:
         return redirect('dashboard')
+
+
+def admin_view_transactions_specific_student(request):
+    return None
+
+
+def admin_view_transactions_of_all(request):
+    transactions = Transaction.objects.all()
+    data = []
+    for i in transactions:
+        data_item = {"transaction": i,
+                     "student": i.invoice.lesson_in_invoice.student.first_name
+                     }
+        data.append(data_item)
+
+    return render(request, "Dashboards/DashboardParts/Tables/admin_view_students_transactions.html",
+                  {'data': data})
