@@ -18,6 +18,7 @@ urlpatterns = [
     path('edit_administrator/', views.edit_administrator, name='edit_administrator'),
     path('fill_edit_administrator/', views.fill_edit_administrator, name='fill_edit_administrator'),
     path('invoice/',views.return_invoice_for_approved,name="return_invoice_for_approved"),
+    path('make_payment/', views.make_payment_approved_lesson, name="make_payment_approved_lesson"),
     path('edit_unapproved_lessons/', views.edit_unapproved_lessons, name='edit_unapproved_lessons'),
     path('fill_edit_unapproved_lessons/', views.fill_edit_unapproved_lessons, name='fill_edit_unapproved_lessons'),
     path('delete_request/', views.delete_request, name='delete_request'),
