@@ -1,21 +1,24 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 import random
-from lessons.models import User, Lesson
+from lessons.models import *
 from lessons.constants import *
-import faker.providers
-
+from faker.providers import BaseProvider,date_time
+from datetime import date
+import calendar
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fake = Faker('en_GB')
+        self.fake.add_provider(date_time)
         Faker.seed(random.randint(0, 999999))
 
     def handle(self, *args, **options):
 
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
+
 
         self.user = User.objects.create_superuser(
             'super@super.com',
@@ -45,7 +48,7 @@ class Command(BaseCommand):
             first_name='Marty',
             last_name='Major',
             password='Password123',
-            role=director
+            role=director,
         )
 
         def setup_user(insert_role):
@@ -55,10 +58,10 @@ class Command(BaseCommand):
                     temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name=temp_profile.get("name").split()[-1],
                 password=self.fake.password(length=12),
-                role=insert_role
+                role = insert_role
             )
 
-        def setup_lesson_for_student(email, info_data):
+        def setup_lesson_for_student(email,info_data):
             self.lesson = Lesson.objects.create_lesson(
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails
@@ -70,6 +73,25 @@ class Command(BaseCommand):
                 approve_status=False
             )
 
+        def setup_approved_lesson_for_student(email):
+            chosen_date = self.fake.date_time_this_month(False,True)
+            self.approved_lesson = ApprovedBooking.objects.create_approvedBooking(
+                student = User.objects.get(email=email),
+                start_date = chosen_date.date(),
+                day_of_the_week = chosen_date.strftime('%A'),
+                time_of_the_week = chosen_date.time(),
+                total_lessons_count = random.randint(0,5),
+                duration = random.randint(15,90),
+                interval = random.randint(0,1),
+                assigned_teacher=fake_lesson.teacher_name(),
+                hourly_rate=random.randint(1,100)
+            )
+
+
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_approved_lesson_for_student("john.doe@example.org")
+        setup_approved_lesson_for_student("john.doe@example.org")
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
@@ -77,14 +99,14 @@ class Command(BaseCommand):
             # For lessons
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
-                assigned_teacher = fake_lesson.teacher_name()
-                info = instrument + ' lesson with ' + assigned_teacher
-                print(temp_profile.get('mail'),info)
-                setup_lesson_for_student(temp_profile.get("mail"),info)
+                teacher = fake_lesson.teacher_name()
+                info = instrument + ' lesson with ' + teacher
+                print(temp_profile.get('mail'))
+                email = temp_profile.get("mail")
+                setup_lesson_for_student(email, info)
+                setup_approved_lesson_for_student(email)
 
 
-        setup_lesson_for_student("john.doe@example.org","Some Info")
-        setup_lesson_for_student("john.doe@example.org","Some Info")
             
 
         for i in range(0, 25):
@@ -129,7 +151,7 @@ AVAILABILITY = [
 ]
 
 
-class Provider(faker.providers.BaseProvider):
+class Provider(BaseProvider):
     def teacher_name(self):
         return self.random_element(TEACHER_NAME)  # TEACHER_NAME being the list of all the teachers
 
@@ -138,3 +160,4 @@ class Provider(faker.providers.BaseProvider):
 
     def available_time(self):
         return self.random_element(AVAILABILITY)  # AVAILABILITY being a list of all available times the student can do
+
