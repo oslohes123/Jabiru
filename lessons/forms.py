@@ -78,7 +78,7 @@ class AdministratorSignUpForm(SignUpForm):
 class AdministratorEditForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name']
 
     password = forms.CharField(
         label='Password',
@@ -95,7 +95,6 @@ class AdministratorEditForm(UserChangeForm):
         super(AdministratorEditForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
-        self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['password'].widget.attrs['class'] = 'form-control'
         self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
 
@@ -164,11 +163,14 @@ class InvoiceForm(forms.ModelForm):
 
         return invoice
 
+
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields= []
-        payment_amount = forms.DecimalField(min_value=0.01, max_digits=9, decimal_places=2, initial=0)
+        fields = []
+
+    payment_amount = forms.DecimalField(initial=0,min_value=0.01,max_digits=9,decimal_places=2)
+
     def __init__(self, *args, **kwargs):
         super(TransactionForm, self).__init__(*args, **kwargs)
         self.fields['payment_amount'].widget.attrs['class'] = 'form-control text-center'
