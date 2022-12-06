@@ -33,6 +33,15 @@
                             <input class = "btn btn-primary" type="submit" value="Approve" />
                         </form></th>
 
+                        <td>
+                        <form method="post" action='{% url 'view_transactions_specific_student' %}'>
+                            {% csrf_token %}
+                            <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                            <input type="hidden" name="student" value={{ lesson.student }} />
+                            <input class = "btn btn-primary" type="submit" value="View invoices and transactions" />
+                        </form>
+                        </td>
+
                         <form action = '{% url 'view_transactions_specific_student' %}' method = "post">
                                {% csrf_token %}
                             <input type="hidden" name="lesson_id" value={{ lesson.id }} />
@@ -41,7 +50,6 @@
 
 
                     {% else %}
-                        <th></th>
                     {% endif %}
                 </tr>
             {% endfor %}
