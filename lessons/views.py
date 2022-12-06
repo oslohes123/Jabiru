@@ -61,9 +61,6 @@ def output_student_dashboard(request):
     lessonsdata = Lesson.objects.filter(student=theUser)
     approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
     lessons_cost = total_lessons_cost(request, theUser.email)
-    
-
-
     data = []
     for i in approvedLessonData:
         data_item = {"lesson": i,
@@ -114,6 +111,9 @@ def make_payment_approved_lesson(request):
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
                 our_invoice.balance_due = our_invoice.balance_due - payment_amount
                 our_invoice.save()
+                messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
+
+
 
             return redirect("dashboard")
     else:
