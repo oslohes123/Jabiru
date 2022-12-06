@@ -8,29 +8,33 @@
             <th>Duration</th>
             <th>Interval</th>
             <th>Teacher</th>
-            <th>Price</th>
+            <th>Total Price</th>
+            <th>Payment remaining</th>
+
         </tr>
         </thead>
         <tbody class="table-group-divider">
-        {% for lesson in approvedLessonData %}
+        {% for item in data %}
             <tr>
-                <td>{{ lesson.start_date }}</td>
-                <td>{{ lesson.day_of_the_week }}</td>
-                <td>{{ lesson.duration }}</td>
-                <td>{{ lesson.interval }}</td>
-                <td>{{ lesson.assigned_teacher }}</td>
-                <td>${{ lesson.total_price }}</td>
+                <td>{{ item.lesson.start_date }}</td>
+                <td>{{ item.lesson.day_of_the_week }}</td>
+                <td>{{ item.lesson.duration }}</td>
+                <td>{{ item.lesson.interval }}</td>
+                <td>{{ item.lesson.assigned_teacher }}</td>
+                <td>${{ item.lesson.total_price }}</td>
+                <td>${{ item.invoice.balance_due }}</td>
+
                 <td>
                     <form action="{% url 'return_invoice_for_approved' %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="lesson_id" value={{ lesson.id }}>
+                        <input type="hidden" name="lesson_id" value={{ item.lesson.id }}>
                         <input class="btn btn-primary" type="submit" value = "Invoice">
                     </form>
                 </td>
                 <td>
                     <form action="{% url 'make_payment_approved_lesson' %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="lesson_id" value={{ lesson.id }}>
+                        <input type="hidden" name="lesson_id" value={{ item.lesson.id }}>
                         <input type="hidden" name="making_payment" value="False">
 
                         <input class="btn btn-primary" type="submit" value = "Make Payment">
