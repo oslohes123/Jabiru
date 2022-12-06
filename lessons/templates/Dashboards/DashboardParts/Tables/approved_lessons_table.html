@@ -18,7 +18,7 @@
                 <td>{{ lesson.day_of_the_week }}</td>
                 <td>{{ lesson.duration }}</td>
                 <td>{{ lesson.interval }}</td>
-                <td>{{ lesson.teacher }}</td>
+                <td>{{ lesson.assigned_teacher }}</td>
                 <td>${{ lesson.total_price }}</td>
                 <td>
                     <form action="{% url 'return_invoice_for_approved' %}" method="post">
