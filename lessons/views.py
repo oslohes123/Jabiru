@@ -136,6 +136,8 @@ def make_request(request):
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
             return redirect("dashboard")
+        else:
+            messages.add_message(request,messages.ERROR,"The form submitted is not valid try again")
     form = RequestForm()
     return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
 
