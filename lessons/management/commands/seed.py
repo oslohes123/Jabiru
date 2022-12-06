@@ -73,23 +73,27 @@ class Command(BaseCommand):
                 approve_status=False
             )
 
-        setup_lesson_for_student("john.doe@example.org", "Some Info")
-        setup_lesson_for_student("john.doe@example.org", "Some Info")
-
         def setup_approved_lesson_for_student(email):
             chosen_date = self.fake.date_time_this_month(False,True)
-            print(chosen_date)
-            # self.approved_lesson = ApprovedBooking.objects.create_approvedBooking(
-            #     student = User.objects.get(email=email),
-            #     start_date = chosen_date,
-            #     day_of_the_week = chosen_date.,
-            #     time_of_the_week =
-            # )
+            self.approved_lesson = ApprovedBooking.objects.create_approvedBooking(
+                student = User.objects.get(email=email),
+                start_date = chosen_date.date(),
+                day_of_the_week = chosen_date.strftime('%A'),
+                time_of_the_week = chosen_date.time(),
+                total_lessons_count = random.randint(0,5),
+                duration = random.randint(15,90),
+                interval = random.randint(0,1),
+                assigned_teacher=fake_lesson.teacher_name(),
+                hourly_rate=random.randint(1,100)
+            )
 
 
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_lesson_for_student("john.doe@example.org", "Some Info")
+        setup_approved_lesson_for_student("john.doe@example.org")
+        setup_approved_lesson_for_student("john.doe@example.org")
 
         for i in range(0, 75):
-            setup_approved_lesson_for_student("")
             temp_profile = self.fake.simple_profile()
             setup_user(student)
             # For lessons
@@ -98,7 +102,9 @@ class Command(BaseCommand):
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
                 print(temp_profile.get('mail'))
-                setup_lesson_for_student(temp_profile.get("mail"), info)
+                email = temp_profile.get("mail")
+                setup_lesson_for_student(email, info)
+                setup_approved_lesson_for_student(email)
 
 
             
