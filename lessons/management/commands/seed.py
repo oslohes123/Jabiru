@@ -90,6 +90,10 @@ class Command(BaseCommand):
                 lesson_in_invoice=self.approved_booking,
                 balance_due=self.approved_booking.total_price()
             )
+            self.transaction = Transaction.objects.create_transaction(
+                invoice=self.invoice,
+                payment_amount=
+            )
 
 
 
