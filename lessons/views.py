@@ -444,7 +444,21 @@ def delete_request(request):
 
 
 def admin_view_transactions_specific_student(request):
-    return None
+    query = request.POST
+    student = query.get("student")
+    lesson_id = query.get("lesson_id")
+    invoice = Invoice.objects.get(lesson_in_invoice=Lesson.objects.get(id=lesson_id))
+    approved_booking_object = ApprovedBooking.objects.get(invoice=invoice)
+    if request.method == "POST":
+        invoice_data = {
+            "invoice_num": '{0:03}'.format(invoice.pk),
+            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
+            "total_price": invoice.balance_due
+        }
+        transactions = Transaction.objects.filter(invoice=invoice)
+        return render(request,"Dashboards/DashboardParts/Invoice.html",{'invoice': invoice_data,'transactions':transactions})
+    else:
+        return redirect("dashboard")
 
 
 def admin_view_transactions_of_all(request):
