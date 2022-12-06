@@ -39,7 +39,7 @@ class DashboardCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/director_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'/view_all_administrators/')
+        self.assertEqual(self.url, '/view_all_administrators/')
 
     def invalid_admins_not_appearing(self):
         self.form_input['email'] = 'bademail'

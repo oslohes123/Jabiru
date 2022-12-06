@@ -41,7 +41,7 @@ class EditAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'http://localhost:8000/edit_administrator/(%3FPjanedoe@example.org%5Cd+)')
+        self.assertEqual(self.url, 'http://localhost:8000/edit_administrator/(%3FPjanedoe@example.org%5Cd+)')
  
     def test_get_edit_page(self):
         response = self.client.get(self.url)

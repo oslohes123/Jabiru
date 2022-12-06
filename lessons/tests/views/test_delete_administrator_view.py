@@ -6,13 +6,13 @@ from lessons.models import User
 class DeleteAdministratorViewTestCase(TestCase):
     """Tests of the deleting administrator view."""
 
-    fixtures = ['lessons/fixtures/user.json',]
+    fixtures = ['lessons/fixtures/user.json']
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
     def setUp(self):
-        self.url = 'http://localhost:8000/delete_administrator/(%3FPjanedoe@example.org%5Cd+)'
+        self.url = 'http://localhost:8000/delete_administrator/'
         self.directorUser = User.objects.get(email='petrapickles@example.org')
         self.directorForm = {
             "email": "petrapickles@example.org",
@@ -27,10 +27,11 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_delete_url(self):
-        self.assertEqual(self.url,'http://localhost:8000/delete_administrator/(%3FPjanedoe@example.org%5Cd+)')
+        self.assertEqual(self.url, 'http://localhost:8000/delete_administrator/')
 
     def test_successful_deletion(self):
         before_count = User.objects.count()
         self.client.post(self.url, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count-1)
+

@@ -28,7 +28,7 @@ class LessonModelTestCase(TestCase):
         self.lessonRequest1 = Lesson.objects.create_lesson(
             student=self.student1,
             availability="6pm-7pm Friday, 10am-11am Saturday",
-            lesson_numbers=8,
+            total_lessons_count=8,
             duration=45,
             interval = 2,
             further_info = "I want to learn piano",
@@ -38,7 +38,7 @@ class LessonModelTestCase(TestCase):
         self.lessonRequest2 = Lesson.objects.create_lesson(
             student=self.student2,
             availability="7pm-9pm Monday",
-            lesson_numbers=4,
+            total_lessons_count=4,
             duration=120,
             interval = 4,
             further_info = "I want to learn violin and be taught by Mr Anderson",
@@ -76,20 +76,20 @@ class LessonModelTestCase(TestCase):
         self._assert_lesson_request_is_invalid()
 
 
-    def test_lesson_numbers_cannot_be_blank(self):
-        self.lessonRequest1.lesson_numbers = None
+    def test_total_lessons_count_cannot_be_blank(self):
+        self.lessonRequest1.total_lessons_count = None
         self._assert_lesson_request_is_invalid()
 
-    def test_lesson_numbers_not_unique(self):
-        self.lessonRequest1.lesson_numbers = self.lessonRequest2.lesson_numbers
+    def test_total_lessons_count_not_unique(self):
+        self.lessonRequest1.total_lessons_count = self.lessonRequest2.total_lessons_count
         self._assert_lesson_request_is_valid()
 
-    def test_lesson_numbers_cannot_be_negative(self):
-        self.lessonRequest1.lesson_numbers = -10
+    def test_total_lessons_count_cannot_be_negative(self):
+        self.lessonRequest1.total_lessons_count = -10
         self._assert_lesson_request_is_invalid()
     
-    def test_lesson_numbers_cannot_be_zero(self):
-        self.lessonRequest1.lesson_numbers = 0
+    def test_total_lessons_count_cannot_be_zero(self):
+        self.lessonRequest1.total_lessons_count = 0
         self._assert_lesson_request_is_invalid()
 
 

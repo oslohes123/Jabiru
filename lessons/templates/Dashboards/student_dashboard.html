@@ -1,7 +1,6 @@
 {% extends 'Dashboards/../base.html' %}
 
 {% block content %}
-
     <div class="row p-3">
         <div class="col-sm-3 card">
             {% include 'partials/greeting_content.html' %}
@@ -16,10 +15,8 @@
         <div class="col-sm-9 card">
             {% include 'Dashboards/DashboardParts/Tables/approved_lessons_table.html' %}
         </div>
-
-
     </div>
-
+    {% include 'partials/messages.html' %}
 {% endblock content %}
 
 

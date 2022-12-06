@@ -8,6 +8,7 @@ class CustomUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             role=role,
+            parent=None
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -19,6 +20,9 @@ class CustomUserManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
+
+
+
 
 class CustomLessonManager(BaseUserManager):
     def create_lesson(self, student, availability,total_lessons_count, duration, interval, further_info, approve_status):
@@ -35,7 +39,7 @@ class CustomLessonManager(BaseUserManager):
         return lesson
 
 class CustomApprovedBookingManager(BaseUserManager):
-    def create_approvedBooking(self, student, start_date, day_of_the_week, time_of_the_week, total_lessons_count, duration, interval, assigned_teacher, hourly_rate, approve_status):
+    def create_approvedBooking(self, student, start_date, day_of_the_week, time_of_the_week, total_lessons_count, duration, interval, assigned_teacher, hourly_rate):
         approvedBooking = self.model(
             student=student,
             start_date=start_date,
@@ -46,17 +50,25 @@ class CustomApprovedBookingManager(BaseUserManager):
             interval=interval,
             assigned_teacher=assigned_teacher,
             hourly_rate=hourly_rate,
-            approve_status=approve_status,
         )
         approvedBooking.save(using=self._db)
         return approvedBooking
 
-
 class CustomInvoiceManager(BaseUserManager):
     def create_invoice(self,lesson_in_invoice,balance_due):
         invoice = self.model(
-            lesson_in_invoice= lesson_in_invoice,
-            balance_due = balance_due
+            lesson_in_invoice=lesson_in_invoice,
+            balance_due=balance_due
         )
         invoice.save(using=self._db)
         return invoice
+
+
+class CustomTransactionManager(BaseUserManager):
+    def create_transaction(self,invoice,payment_amount):
+        transaction = self.model(
+            invoice=invoice,
+            payment_amount=payment_amount,
+        )
+        transaction.save(using=self._db)
+        return transaction

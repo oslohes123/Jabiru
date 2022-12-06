@@ -1,17 +1,19 @@
 {% extends "Dashboards/administrator_dashboard.html" %}
 
 {% block content %}
-    <div class = "m-5">
+    <div>
+        <h1 class="my-3">Lesson requests of {{ student.first_name }} {{ student.last_name }}</h1>
         <table class="table table-bordered card-body">
             <thead class="p-5">
             <tr>
-                <th> Student</th>
-                <th> Availability</th>
-                <th> Lesson numbers</th>
-                <th> Duration</th>
-                <th> Interval</th>
-                <th> Further Information</th>
-                <th> Approve Status</th>
+                <th>Student</th>
+                <th>Availability</th>
+                <th>Lesson numbers</th>
+                <th>Duration</th>
+                <th>Interval</th>
+                <th>Further Information</th>
+                <th>Approve Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             {% for lesson in lessons %}
@@ -23,6 +25,16 @@
                     <td>{{ lesson.interval }}</td>
                     <td>{{ lesson.further_info }}</td>
                     {% include 'partials/is_approved_output.html' %}
+                    {% if lesson.approve_status == False %}
+                        <th><form method="post" action='{% url 'fill_in_approve_request' %}'>
+                            {% csrf_token %}
+                            <input type="hidden" name="lesson_request" value={{ lesson.id }} />
+                            <input type="hidden" name="student" value={{ lesson.student.id }} />
+                            <input class = "btn btn-primary" type="submit" value="Approve" />
+                        </form></th>
+                    {% else %}
+                        <th></th>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

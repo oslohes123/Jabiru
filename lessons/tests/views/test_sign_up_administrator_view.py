@@ -34,7 +34,7 @@ class SignUpAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/director_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'/sign_up_administrator/')
+        self.assertEqual(self.url, '/sign_up_administrator/')
 
     def test_get_sign_up(self):
         response = self.client.get(self.url)
