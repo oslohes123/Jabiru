@@ -5,7 +5,7 @@
 
 
 {% block content %}
-    <h1 class="my-3">Edit your lesson request</h1>
+    <h1 class="my-3">Edit lesson </h1>
     <form action="{% url 'edit_approved_lessons' %}" method="post">
         {% csrf_token %}
         {{ ApprovedBookingForm.as_p }}
