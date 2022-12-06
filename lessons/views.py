@@ -73,17 +73,18 @@ def output_student_dashboard(request):
 
 
 # TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
-def return_invoice_for_approved(request):
+def return_transactions_and_invoice(request):
     if request.method == "POST":
         query = request.POST
         approved_booking_object = ApprovedBooking.objects.get(id=query.get('lesson_id'))
         invoice = Invoice.objects.get(lesson_in_invoice=approved_booking_object)
-        invoice = {
+        invoice_data = {
             "invoice_num": '{0:03}'.format(invoice.pk),
             "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
             "total_price": invoice.balance_due
         }
-        return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice})
+        transactions = Transaction.objects.filter(invoice=invoice)
+        return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice_data,'transactions':transactions})
     else:
         messages.add_message(request, messages.ERROR, "You can't go here")
         redirect("dashboard")
@@ -104,9 +105,12 @@ def make_payment_approved_lesson(request):
             our_invoice = Invoice.objects.get(lesson_in_invoice=approved_booking)
             payment_amount = query.get("payment_amount")
             payment_amount = decimal.Decimal(payment_amount)
-            Transaction.objects.create_transaction(our_invoice, payment_amount)
-            our_invoice.balance_due = our_invoice.balance_due - payment_amount
-            our_invoice.save()
+            if payment_amount > our_invoice.balance_due:
+                messages.add_message(request,messages.ERROR,"You are paying more than what is due")
+            else:
+                Transaction.objects.create_transaction(our_invoice, payment_amount)
+                our_invoice.balance_due = our_invoice.balance_due - payment_amount
+                our_invoice.save()
 
             return redirect("dashboard")
     else:
