@@ -475,11 +475,14 @@ def total_lessons_cost(request,email): #get the total price of each lesson that 
     if student_object.role != student:
         messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
     else:
-        lessons =  ApprovedBooking.objects.filter(student=student_object)
-        #for loop to go through each lesson and getting total price add em all up
-        total_cost = 0 #TODO: change to maybe students actual balance as for now its always going to be 0
-        for i in lessons:
-            total_cost -= i.total_price()
+        lessons = ApprovedBooking.objects.filter(student=student_object)
+        total_cost = 0
+        for lesson in lessons:
+            invoice = Invoice.objects.get(lesson_in_invoice=lesson)
+            #for loop to go through each lesson and getting total price add em all up
+            #TODO: change to maybe students actual balance as for now its always going to be 0
+            total_cost -= invoice.balance_due
+
         return total_cost
 
 @login_required
