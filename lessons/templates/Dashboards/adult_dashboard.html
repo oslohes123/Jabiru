@@ -1,0 +1,55 @@
+{% extends 'Dashboards/../base.html' %}
+
+{% block content %}
+
+    <div class="row px-3 pt-3">
+        <div class="col-sm-3 card">
+            {% include 'partials/greeting_content.html' %}
+            <a class="btn btn-secondary my-1" href="{% url 'make_request' %}">Make a lesson request</a>
+            <a class="btn btn-secondary mb-1" href="{% url 'assign_child' %}">Add child</a>
+            <a class="btn btn-primary mb-3" href= {% url 'log_out' %}>Log out</a>
+        </div>
+
+        <div class="col-sm-9 card">
+            {% include 'Dashboards/DashboardParts/Tables/requested_lessons_table.html' %}
+        </div>
+
+    </div>
+
+    <div class="row px-3">
+        <div class="col-sm-12 card">
+            <h1 class="my-3">Your children</h1>
+            <table class="table table-bordered card-body">
+                <thead class="p-5">
+                <tr>
+                    <th>Name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                {% for child in childdata %}
+                    <tr>
+                        <th>{{ child.first_name }}</th>
+                        <th>{{ child.last_name }}</th>
+                        <th>{{ child.email }}</th>
+
+                        <th><form method="post" action='{% url 'make_request_for_child' %}'>
+                            {% csrf_token %}
+                            <input type="hidden" name="child_id" value={{ child.id }} />
+                            <input class = "btn btn-secondary" type="submit" value="Make a lesson request" />
+                        </form></th>
+                    </tr>
+                {% empty %}
+                    You do not have any registered children
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% include "partials/messages.html" %}
+
+{% endblock content %}
+
+

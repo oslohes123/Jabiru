@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 
@@ -42,7 +42,7 @@ def login_user(request):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                request.session['user_email'] = request.user.email
+                request.session["child_id"] = None
                 return redirect("dashboard")
             else:
                 messages.add_message(request, messages.ERROR, "Invalid credentials try again")
@@ -65,6 +65,13 @@ def output_student_dashboard(request):
                   {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
 
 
+def output_adult_dashboard(request):
+    theUser = request.user
+    lessonsdata = Lesson.objects.filter(student=theUser)
+    childdata = theUser.children.all()
+    return render(request, "Dashboards/adult_dashboard.html", {'lessonsdata': lessonsdata, 'childdata': childdata})
+
+
 def output_admin_dashboard(request):
     return render(request, "Dashboards/administrator_dashboard.html")
 
@@ -76,9 +83,11 @@ def output_director_dashboard(request):
 # Each method should return a render
 @login_required
 def dashboard(request):
-    ourUser = get_user(request, request.session["user_email"])
+    ourUser: User = request.user
     if ourUser.role == student:
         return output_student_dashboard(request)
+    if ourUser.role == adult:
+        return output_adult_dashboard(request)
     elif ourUser.role == administrator:
         return output_admin_dashboard(request)
     elif ourUser.role == director:
@@ -90,18 +99,36 @@ def dashboard(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_student, login_url='/dashboard/')
+@user_passes_test(lambda u: u.is_student_or_adult, login_url='/dashboard/')
 def make_request(request):
+    if request.session["child_id"] is not None:
+        user_to_assign = User.objects.get(id=request.session["child_id"])
+        request.session["child_id"] = None
+    else:
+        user_to_assign = request.user
+
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            Lesson.objects.create_lesson(get_user(request, request.session["user_email"]), data['availability'],
+            Lesson.objects.create_lesson(user_to_assign, data['availability'],
                                          data['total_lessons_count'], data['duration'], data['interval'],
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
-    form = RequestForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': form})
+            return redirect("dashboard")
+
+    insertForm = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
+def make_request_for_child(request):
+    form_input_query_dict = request.POST
+    child_id = form_input_query_dict.get("child_id")
+    request.session["child_id"] = child_id
+    insertForm = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
 
 
 @login_required
@@ -208,6 +235,7 @@ def sign_up_administrator(request):
     else:
         form = AdministratorSignUpForm()
     return render(request, 'Dashboards/DashboardParts/AdministratorParts/sign_up_administrator.html', {'form': form})
+
 
 
 @login_required
@@ -317,6 +345,31 @@ def get_requests(request):  # so far only works if a student email is inputted c
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
+
+
+@login_required
+@user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
+def assign_child(request):
+    theUser = request.user
+    if request.method == "POST":
+        form_input_query_dict = request.POST
+        child_email = form_input_query_dict.get("student_email_input")
+        try:
+            child_object = get_user(request, child_email)
+            if child_object.role != student:
+                messages.add_message(request, messages.ERROR,
+                                     f"Email was not of a student, it was of a {child_object.role}")
+                return render(request, "assign_child.html")
+            else:
+                child_object.parent = theUser
+                child_object.save()
+                messages.add_message(request, messages.SUCCESS,
+                                     f"Your child has been successfully assigned to you")
+                return render(request, "assign_child.html")
+        except:
+            return render(request, "assign_child.html")
+    else:
+        return render(request, "assign_child.html")
 
 
 def log_out(request):
