@@ -72,7 +72,6 @@ def output_student_dashboard(request):
                   {'data': data,'lessonsdata':lessonsdata, 'lessons_cost':lessons_cost})
 
 
-# TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
 def return_transactions_and_invoice(request):
     if request.method == "POST":
         query = request.POST
@@ -81,7 +80,8 @@ def return_transactions_and_invoice(request):
         invoice_data = {
             "invoice_num": '{0:03}'.format(invoice.pk),
             "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
-            "total_price": invoice.balance_due
+            "remaining_balance": total_lessons_cost(request,approved_booking_object.student.email),
+            "total_balance":student_full_cost(request,approved_booking_object.student.email)
         }
         transactions = Transaction.objects.filter(invoice=invoice)
         return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice_data,'transactions':transactions})
@@ -105,7 +105,7 @@ def make_payment_approved_lesson(request):
             our_invoice = Invoice.objects.get(lesson_in_invoice=approved_booking)
             payment_amount = query.get("payment_amount")
             payment_amount = decimal.Decimal(payment_amount)
-            if payment_amount > our_invoice.balance_due:
+            if payment_amount > our_invoice.balance_due*-1:
                 messages.add_message(request,messages.ERROR,"You are paying more than what is due")
             else:
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
@@ -473,12 +473,27 @@ def total_lessons_cost(request,email): #get the total price of each lesson that 
     if student_object.role != student:
         messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
     else:
+        lessons = ApprovedBooking.objects.filter(student=student_object)
+        total_cost = 0
+        for lesson in lessons:
+            invoice = Invoice.objects.get(lesson_in_invoice=lesson)
+            #for loop to go through each lesson and getting total price add em all up
+            #TODO: change to maybe students actual balance as for now its always going to be 0
+            total_cost -= invoice.balance_due
+
+        return total_cost
+
+def student_full_cost(request,email): #get the total price of each lesson that the student has
+    student_object = get_user(request,email)
+    if student_object.role != student:
+        messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
+    else:
         lessons =  ApprovedBooking.objects.filter(student=student_object)
         #for loop to go through each lesson and getting total price add em all up
         total_cost = 0 #TODO: change to maybe students actual balance as for now its always going to be 0
         for i in lessons:
             total_cost -= i.total_price()
-        return total_cost
+        return -1*total_cost
 
 @login_required
 def delete_request(request):
@@ -514,7 +529,8 @@ def admin_view_transactions_specific_student(request):
         invoice_data = {
             "invoice_num": '{0:03}'.format(invoice.pk),
             "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
-            "total_price": invoice.balance_due
+            "remaining_balance": total_lessons_cost(request,student),
+            "total_balance": student_full_cost(request, student)
         }
         transactions = Transaction.objects.filter(invoice=invoice)
         return render(request, "Dashboards/DashboardParts/Invoice.html",

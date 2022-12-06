@@ -163,10 +163,14 @@ class InvoiceForm(forms.ModelForm):
 
         return invoice
 
+
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields=['payment_amount']
+        fields = []
+
+    payment_amount = forms.DecimalField(initial=0,min_value=0.01,max_digits=9,decimal_places=2)
+
     def __init__(self, *args, **kwargs):
         super(TransactionForm, self).__init__(*args, **kwargs)
         self.fields['payment_amount'].widget.attrs['class'] = 'form-control text-center'
