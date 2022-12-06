@@ -1,3 +1,4 @@
+import decimal
 from datetime import date, datetime
 
 from django.contrib import messages
@@ -59,8 +60,16 @@ def output_student_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
+
+    data = []
+    for i in approvedLessonData:
+        data_item = {"lesson": i,
+                     "invoice": Invoice.objects.get(lesson_in_invoice=i)
+                     }
+        data.append(data_item)
+
     return render(request, "Dashboards/student_dashboard.html",
-                  {'lessonsdata': lessonsdata, 'approvedLessonData': approvedLessonData})
+                  {'data': data,'lessonsdata':lessonsdata})
 
 
 # TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
@@ -91,18 +100,17 @@ def make_payment_approved_lesson(request):
                           {'lesson_id': lesson_id, 'form': payment_form})
         else:
             lesson_id = query.get("lesson_id")
-            approved_booking = ApprovedBooking.objects.get(id = lesson_id)
+            approved_booking = ApprovedBooking.objects.get(id=lesson_id)
             our_invoice = Invoice.objects.get(lesson_in_invoice=approved_booking)
             payment_amount = query.get("payment_amount")
-            payment_amount = [Decimal(x.strip(' "')) for x in payment_amount]
-            Transaction.objects.create_transaction(our_invoice,payment_amount)
+            payment_amount = decimal.Decimal(payment_amount)
+            Transaction.objects.create_transaction(our_invoice, payment_amount)
             our_invoice.balance_due = our_invoice.balance_due - payment_amount
+            our_invoice.save()
 
             return redirect("dashboard")
     else:
         return redirect("dashboard")
-
-
 
 
 def output_adult_dashboard(request):
