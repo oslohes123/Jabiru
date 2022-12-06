@@ -5,7 +5,12 @@
 
     {% include 'Dashboards/DashboardParts/student_search_form.html' %}
 
-    <a class = "btn btn-secondary m-3" href={% url 'log_out' %}>Log out</a>
+    <form action='{% url 'view_transactions_all_students' %}' method="post">
+        {% csrf_token %}
+        <input class="btn btn-primary" type="submit" value="View transactions of all students"/>
+    </form>
+
+    <a class="btn btn-secondary m-3" href={% url 'log_out' %}>Log out</a>
     {% include "partials/messages.html" %}
 {% endblock content %}
 
