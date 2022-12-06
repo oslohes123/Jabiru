@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from decimal import Decimal
 from .forms import *
-from .models import User, Lesson, ApprovedBooking, Invoice
+from .models import *
 from django.views import generic
 from .constants import *
 

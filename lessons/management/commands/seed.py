@@ -72,6 +72,7 @@ class Command(BaseCommand):
                 further_info=info_data,
                 approve_status=False
             )
+            
         
         def setup_approved_lessons(email):
             teacher_name = fake_lesson.teacher_name()
@@ -115,9 +116,6 @@ class Command(BaseCommand):
                 email = temp_profile.get("mail")
                 setup_lesson_for_student(email, info)
                 setup_approved_lessons(email)
-
-
-            
 
 
         for i in range(0, 25):
