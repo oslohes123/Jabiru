@@ -86,6 +86,11 @@ class Command(BaseCommand):
                 assigned_teacher=fake_lesson.teacher_name(),
                 hourly_rate=random.randint(1,100)
             )
+            self.invoice =Invoice.objects.create_invoice(
+                lesson_in_invoice=self.approved_lesson,
+                balance_due=self.approved_lesson.total_price()
+            )
+
 
 
         setup_lesson_for_student("john.doe@example.org", "Some Info")

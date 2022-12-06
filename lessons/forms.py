@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.core.validators import RegexValidator
-from .models import User, Lesson, ApprovedBooking, Invoice
+from .models import *
 from lessons.constants import *
 from django.forms.models import modelform_factory
 
@@ -163,3 +163,11 @@ class InvoiceForm(forms.ModelForm):
         invoice = super().save(commit=False)
 
         return invoice
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields=['payment_amount']
+    def __init__(self, *args, **kwargs):
+        super(TransactionForm, self).__init__(*args, **kwargs)
+        self.fields['payment_amount'].widget.attrs['class'] = 'form-control text-center'
