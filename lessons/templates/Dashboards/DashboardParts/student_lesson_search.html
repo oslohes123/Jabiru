@@ -31,13 +31,17 @@
                             <input type="hidden" name="lesson_request" value={{ lesson.id }} />
                             <input type="hidden" name="student" value={{ lesson.student.id }} />
                             <input class = "btn btn-primary" type="submit" value="Approve" />
-                        </form></th>
+                        </form>
 
                         <form action = '{% url 'view_transactions_specific_student' %}' method = "post">
                                {% csrf_token %}
                             <input type="hidden" name="lesson_id" value={{ lesson.id }} />
-                            <input class = "btn btn-primary" type="submit" value="View transactions" />
+                            <input class = "m-2 btn btn-primary" type="submit" value="View transactions" />
                         </form>
+
+
+                        </th>
+
 
 
                     {% else %}
@@ -46,9 +50,10 @@
                 </tr>
             {% endfor %}
         </table>
-    </div>
+      <a class = "btn btn-secondary m-1" href={% url 'dashboard' %}>Back to dashboard</a>
+
     <div>
-        <a class = "btn btn-secondary m-1" href={% url 'dashboard' %}>Back to dashboard</a>
+
     </div>
 
 
