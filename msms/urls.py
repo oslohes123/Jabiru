@@ -25,7 +25,12 @@ urlpatterns = [
     path('make_super_administrator/', views.make_super_administrator, name='make_super_administrator'),
     path('dashboard/search_student_lessons/', views.get_requests, name='get_requests'),
     path('fill_in_approve_request/', views.fill_in_approve_request, name='fill_in_approve_request'),
+    path('approve_request/', views.approve_request, name='approve_request'),
+    path('edit_approved_lessons/', views.edit_approved_lessons, name='edit_approved_lessons'),
+    path('fill_edit_approved_lessons/', views.fill_edit_approved_lessons, name='fill_edit_approved_lessons'),
+    path('delete_approved_lesson/', views.delete_approved_lesson, name='delete_approved_lesson'),
     path('view_transactions/',views.admin_view_transactions_specific_student,name="view_transactions_specific_student"),
     path('view_transactions_all/',views.admin_view_transactions_of_all,name="view_transactions_all_students"),
     path('approve_request/', views.approve_request, name='approve_request')
+
 ]

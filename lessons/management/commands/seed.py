@@ -67,36 +67,36 @@ class Command(BaseCommand):
                 # work on this to be of the students emails
                 availability=fake_lesson.available_time(),
                 total_lessons_count=random.randint(1, 200),
-                duration=random.randint(1, 240),
-                interval=random.randint(1, 8),
+                duration=fake_lesson.duration_time(),
+                interval=fake_lesson.interval_choices(),
                 further_info=info_data,
                 approve_status=False
             )
-
-        def setup_approved_lesson_for_student(email):
-            chosen_date = self.fake.date_time_this_month(False,True)
-            self.approved_lesson = ApprovedBooking.objects.create_approvedBooking(
-                student = User.objects.get(email=email),
-                start_date = chosen_date.date(),
-                day_of_the_week = chosen_date.strftime('%A'),
-                time_of_the_week = chosen_date.time(),
-                total_lessons_count = random.randint(0,5),
-                duration = fake_lesson.durations(),
-                interval = random.randint(1,4),
-                assigned_teacher=fake_lesson.teacher_name(),
-                hourly_rate=random.randint(1,100)
-            )
+        
+        def setup_approved_lessons(email):
+            teacher_name = fake_lesson.teacher_name()
+            self.approved_booking = ApprovedBooking.objects.create_approvedBooking(
+                student=User.objects.get(email=email),
+                start_date=self.fake.future_date(),
+                day_of_the_week=self.fake.day_of_week(),
+                time_of_the_week = self.fake.time(),
+                total_lessons_count=random.randint(1, 200),
+                duration=fake_lesson.duration_time(),
+                interval=fake_lesson.interval_choices(),
+                assigned_teacher=teacher_name,
+                hourly_rate= 10.00 , #done 10 as for now change later 
+                )
             self.invoice =Invoice.objects.create_invoice(
-                lesson_in_invoice=self.approved_lesson,
-                balance_due=self.approved_lesson.total_price()
+                lesson_in_invoice=self.approved_booking,
+                balance_due=self.approved_booking.total_price()
             )
 
 
 
         setup_lesson_for_student("john.doe@example.org", "Some Info")
         setup_lesson_for_student("john.doe@example.org", "Some Info")
-        setup_approved_lesson_for_student("john.doe@example.org")
-        setup_approved_lesson_for_student("john.doe@example.org")
+        setup_approved_lessons("john.doe@example.org")
+        setup_approved_lessons("john.doe@example.org")
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
@@ -106,13 +106,19 @@ class Command(BaseCommand):
                 instrument = fake_lesson.lesson_instrument()
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
+
+                print(temp_profile.get('mail'))
+                setup_lesson_for_student(temp_profile.get("mail"),info)
+                setup_approved_lessons(temp_profile.get("mail"))
+
                 print(temp_profile.get('mail'))
                 email = temp_profile.get("mail")
                 setup_lesson_for_student(email, info)
-                setup_approved_lesson_for_student(email)
+                setup_approved_lessons(email)
 
 
             
+
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
@@ -120,6 +126,12 @@ class Command(BaseCommand):
 
 
 # Lists
+
+INTERVAL =[
+    1,
+    2
+]
+
 
 TEACHER_NAME = [
     "Mr. Guitar",
@@ -168,6 +180,11 @@ class Provider(BaseProvider):
 
     def available_time(self):
         return self.random_element(AVAILABILITY)  # AVAILABILITY being a list of all available times the student can do
+    
+    def duration_time(self):
+        return self.random_element(DURATION)
+    
+    def interval_choices(self):
+        return self.random_element(INTERVAL)
 
-    def durations(self):
-        return self.random_element(DURATION) # DURATION a list of the durations for lesson lengths
+

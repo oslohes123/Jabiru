@@ -1,8 +1,8 @@
 {% extends "Dashboards/administrator_dashboard.html" %}
 
 {% block content %}
-    <div>
         <h1 class="my-3">Lesson requests of {{ student.first_name }} {{ student.last_name }}</h1>
+        <p>Balance of student: {${{lessons_cost}}}</p>
         <table class="table table-bordered card-body">
             <thead class="p-5">
             <tr>

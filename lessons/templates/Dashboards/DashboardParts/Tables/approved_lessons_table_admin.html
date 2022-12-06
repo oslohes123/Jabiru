@@ -1,0 +1,48 @@
+<div>
+    <h1>Approved lessons</h1>
+    <table class="table table-bordered card-body">
+        <thead class="p-5">
+        <tr>
+            <th>Student</th>
+            <th>Start Date</th>
+            <th>Day of the Week</th>
+            <th>Time</th>
+            <th>Total Lessons</th>
+            <th>Duration</th>
+            <th>Interval</th>
+            <th>Teacher</th>
+            <th>Hourly Rate</th>
+            <th>Approve Status</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for lesson in approved_Lesson %}
+            <tr>
+                <th>{{ lesson.student }}</th>
+                <th>{{ lesson.start_date}}</th>
+                <th>{{ lesson.day_of_the_week }}</th>
+                <th>{{ lesson.time_of_the_week }}</th>
+                <th>{{ lesson.total_lessons_count }}</th>
+                <th>{{ lesson.duration }}</th>
+                <th>{{ lesson.interval }}</th>
+                <th>{{ lesson.assigned_teacher }}</th>
+                <th>{{ lesson.hourly_rate }}</th>
+                <td><form action="{% url 'fill_edit_approved_lessons' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-secondary" type="submit" value="Edit">
+                </form></td>
+                <td><form action="{% url 'delete_approved_lesson' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                    <input class="btn btn-primary" type="submit" value="Delete">
+                </form></td>   
+            </tr>
+        {% empty %}
+            You do not have any requested lessons
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>

@@ -6,6 +6,9 @@
             {% include 'partials/greeting_content.html' %}
             <a class="btn btn-secondary my-1" href="{% url 'make_request' %}">Make a lesson request</a>
             <a class="btn btn-primary mb-3" href= {% url 'log_out' %}>Log out</a>
+            <div>
+                <p>Balance: ${{lessons_cost}} </p>
+            </div>
         </div>
 
         <div class="col-sm-9 card">

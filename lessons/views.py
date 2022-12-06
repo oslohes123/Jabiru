@@ -60,7 +60,7 @@ def output_student_dashboard(request):
     theUser = request.user
     lessonsdata = Lesson.objects.filter(student=theUser)
     approvedLessonData = ApprovedBooking.objects.filter(student=theUser)
-
+    lessons_cost = total_lessons_cost(request, theUser.email)
     data = []
     for i in approvedLessonData:
         data_item = {"lesson": i,
@@ -69,7 +69,7 @@ def output_student_dashboard(request):
         data.append(data_item)
 
     return render(request, "Dashboards/student_dashboard.html",
-                  {'data': data,'lessonsdata':lessonsdata})
+                  {'data': data,'lessonsdata':lessonsdata, 'lessons_cost':lessons_cost})
 
 
 # TODO: Arraf replace balance due next to total_price with your function to get the price for the user.
@@ -111,6 +111,9 @@ def make_payment_approved_lesson(request):
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
                 our_invoice.balance_due = our_invoice.balance_due - payment_amount
                 our_invoice.save()
+                messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
+
+
 
             return redirect("dashboard")
     else:
@@ -125,7 +128,10 @@ def output_adult_dashboard(request):
 
 
 def output_admin_dashboard(request):
-    return render(request, "Dashboards/administrator_dashboard.html")
+    lessonsdata = Lesson.objects.all()
+    approved_Lesson = ApprovedBooking.objects.all()
+    return render(request, "Dashboards/administrator_dashboard.html" , {'approved_Lesson':approved_Lesson , 'lessonsdata':lessonsdata})
+
 
 
 def output_director_dashboard(request):
@@ -251,6 +257,7 @@ def approve_request(request):
         return redirect('dashboard')
 
 
+
 @login_required
 @user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_in_approve_request(request):
@@ -265,6 +272,37 @@ def fill_in_approve_request(request):
         form = ApprovedBookingForm(initial=data_dict)
         return render(request, 'Dashboards/DashboardParts/approve_request.html',
                       {'ApprovedBookingForm': form, 'student_id': student_id, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
+@login_required
+def edit_approved_lessons(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        approved_lesson = ApprovedBooking.objects.get(id=lesson_id)
+        form = ApprovedBookingForm(request.POST , instance = approved_lesson)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
+            return redirect('dashboard')
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid details, try again")
+            form = ApprovedBookingForm(instance=approved_lesson)
+            return render(request, 'Dashboards/DashboardParts/edit_approved.html',
+                          {'ApprovedBookingForm': form, 'lesson_id': lesson_id})
+    else:
+        return redirect('dashboard')
+
+@login_required
+def fill_edit_approved_lessons(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_id = query.get("lesson_id")
+        approved_lesson_obj = ApprovedBooking.objects.get(id=lesson_id)
+        form = ApprovedBookingForm(instance=approved_lesson_obj)
+        return render(request, 'Dashboards/DashboardParts/edit_approved.html',
+                      {'ApprovedBookingForm': form, 'lesson_id': lesson_id})
     else:
         return redirect('dashboard')
 
@@ -394,8 +432,9 @@ def get_requests(request):  # so far only works if a student email is inputted c
             messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {user_object.role}")
             return output_admin_dashboard(request)
         else:
+            costs = total_lessons_cost(request, user_object.email)
             lessons = Lesson.objects.filter(student=user_object)
-            context = {"lessons": lessons, "student": user_object}
+            context = {"lessons": lessons, 'lessons_cost':costs,  "student": user_object}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
@@ -431,6 +470,18 @@ def log_out(request):
     return redirect('home')
 
 
+def total_lessons_cost(request,email): #get the total price of each lesson that the student has
+    student_object = get_user(request,email)
+    if student_object.role != student:
+        messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
+    else:
+        lessons =  ApprovedBooking.objects.filter(student=student_object)
+        #for loop to go through each lesson and getting total price add em all up
+        total_cost = 0 #TODO: change to maybe students actual balance as for now its always going to be 0
+        for i in lessons:
+            total_cost -= i.total_price()
+        return total_cost
+
 @login_required
 def delete_request(request):
     if request.method == "POST":
@@ -438,6 +489,18 @@ def delete_request(request):
         lesson_key = query.get("lesson_id")
         lesson = Lesson.objects.get(id=lesson_key)
         lesson.delete()
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+
+@login_required
+def delete_approved_lesson(request):
+    if request.method == "POST":
+        query = request.POST
+        lesson_key = query.get("lesson_id")
+        approved_lesson = ApprovedBooking.objects.get(id=lesson_key)
+        approved_lesson.delete()
         return redirect('dashboard')
     else:
         return redirect('dashboard')
@@ -458,3 +521,4 @@ def admin_view_transactions_of_all(request):
 
     return render(request, "Dashboards/DashboardParts/Tables/admin_view_students_transactions.html",
                   {'data': data})
+
