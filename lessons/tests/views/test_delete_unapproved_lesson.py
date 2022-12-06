@@ -3,16 +3,17 @@ from django.test import TestCase
 from django.urls import reverse
 from lessons.models import User, Lesson
 
+
 class DeleteAdministratorViewTestCase(TestCase):
     """Tests of the deleting unapproved lessons view."""
 
-    fixtures = ['lessons/fixtures/user.json',]
+    fixtures = ['lessons/fixtures/user.json', ]
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
     def setUp(self):
-        self.url = 'http://localhost:8000/delete_lesson/1/'
+        self.url = reverse('delete_request')
         login_url = reverse("login_user")
         self.studentUser = User.objects.get(email='dillyparker@example.org')
         self.studentForm = {
@@ -36,13 +37,13 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/student_dashboard.html')
 
     def test_delete_url(self):
-        self.assertEqual(self.url,'http://localhost:8000/delete_lesson/1/')
+        self.assertEqual(self.url, '/delete_request/')
 
     def test_successful_deletion(self):
         # First make a lesson
-        self.client.post(self.request_url,self.lesson_request_form_input,follow=True)
+        self.client.post(self.request_url, self.lesson_request_form_input, follow=True)
         before_count = Lesson.objects.count()
         # Then delete a lesson
-        self.client.post(self.url, follow=True)
+        self.client.post(self.url, {'lesson_id': 1}, follow=True)
         after_count = Lesson.objects.count()
-        self.assertEqual(after_count, before_count-1)
+        self.assertEqual(after_count, before_count - 1)

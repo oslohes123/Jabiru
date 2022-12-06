@@ -14,6 +14,7 @@ class EditLessonViewTestCase(TestCase):
 
     def setUp(self):
         self.totalLessons = Lesson.objects.count()
+        self.url = reverse('edit_unapproved_lessons')
         self.edit_url = reverse('fill_edit_unapproved_lessons')
         self.request_url = reverse("make_request")
         login_url = reverse("login_user")
@@ -34,6 +35,7 @@ class EditLessonViewTestCase(TestCase):
             "approve_status": False
         }
         self.lesson_edit_form_input = {
+            "lesson_id": 1,
             "id": 1,
             "student": self.studentUser,
             "availability": "I am available on Tuesdays",
@@ -48,29 +50,29 @@ class EditLessonViewTestCase(TestCase):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/student_dashboard.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.edit_url,'/fill_edit_unapproved_lessons/')
+        self.assertEqual(self.edit_url, '/fill_edit_unapproved_lessons/')
 
     def test_make_lesson_request(self):
         lessons_before = Lesson.objects.count()
-        self.client.post(self.request_url,self.lesson_request_form_input,follow=True)
+        self.client.post(self.request_url, self.lesson_request_form_input, follow=True)
         lessons_after = Lesson.objects.count()
         self.assertEqual(lessons_before + 1, lessons_after)
 
     def test_get_edit_page(self):
-        self.client.post(self.request_url,self.lesson_request_form_input,follow=True)
-        response = self.client.post(self.edit_url, follow=True)
+        self.client.post(self.request_url, self.lesson_request_form_input, follow=True)
+        response = self.client.post(self.edit_url, {'lesson_id': 1}, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/make_request.html')
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/edit_request.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, RequestForm))
 
     def test_edit_lesson(self):
         self.client.post(self.request_url,self.lesson_request_form_input,follow=True)
         before_count = User.objects.count()
-        response = self.client.post(self.edit_url, self.lesson_edit_form_input, follow=True)
+        response = self.client.post(self.url, self.lesson_edit_form_input, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count)
-        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/make_request.html')
+        self.assertTemplateUsed(response, 'Dashboards/student_dashboard.html')
         changedlesson = Lesson.objects.get(id=1)
         self.assertEqual(changedlesson.availability, "I am available on Tuesdays",)
         self.assertEqual(changedlesson.total_lessons_count, 2)

@@ -12,7 +12,7 @@ class DeleteAdministratorViewTestCase(TestCase):
         return '_auth_user_id' in self.client.session.keys()
 
     def setUp(self):
-        self.url = 'http://localhost:8000/delete_administrator/'
+        self.url = reverse('delete_administrator')
         self.directorUser = User.objects.get(email='petrapickles@example.org')
         self.directorForm = {
             "email": "petrapickles@example.org",
@@ -27,11 +27,11 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_delete_url(self):
-        self.assertEqual(self.url, 'http://localhost:8000/delete_administrator/')
+        self.assertEqual(self.url, '/delete_administrator/')
 
     def test_successful_deletion(self):
         before_count = User.objects.count()
-        self.client.post(self.url, follow=True)
+        self.client.post(self.url, {'email': 'janedoe@example.org'}, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count-1)
 

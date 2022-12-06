@@ -78,7 +78,7 @@ class AdministratorSignUpForm(SignUpForm):
 class AdministratorEditForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name']
 
     password = forms.CharField(
         label='Password',
@@ -95,7 +95,6 @@ class AdministratorEditForm(UserChangeForm):
         super(AdministratorEditForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
-        self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['password'].widget.attrs['class'] = 'form-control'
         self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
 

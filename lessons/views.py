@@ -109,7 +109,7 @@ def make_payment_approved_lesson(request):
                 messages.add_message(request,messages.ERROR,"You are paying more than what is due")
             else:
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
-                our_invoice.balance_due = our_invoice.balance_due - payment_amount
+                our_invoice.balance_due = our_invoice.balance_due + payment_amount
                 our_invoice.save()
                 messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
 
@@ -215,8 +215,6 @@ def fill_edit_unapproved_lessons(request):
     if request.method == "POST":
         query = request.POST
         lesson_id = query.get("lesson_id")
-        print("lessssun")
-        print(lesson_id)
         lesson_obj = Lesson.objects.get(id=lesson_id)
         form = RequestForm(instance=lesson_obj)
         return render(request, 'Dashboards/DashboardParts/edit_request.html',
@@ -507,7 +505,22 @@ def delete_approved_lesson(request):
 
 
 def admin_view_transactions_specific_student(request):
-    return None
+    query = request.POST
+    student = query.get("student")
+    lesson_id = query.get("lesson_id")
+    invoice = Invoice.objects.get(lesson_in_invoice=ApprovedBooking.objects.get(id=lesson_id))
+    approved_booking_object = ApprovedBooking.objects.get(invoice=invoice)
+    if request.method == "POST":
+        invoice_data = {
+            "invoice_num": '{0:03}'.format(invoice.pk),
+            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
+            "total_price": invoice.balance_due
+        }
+        transactions = Transaction.objects.filter(invoice=invoice)
+        return render(request, "Dashboards/DashboardParts/Invoice.html",
+                      {'invoice': invoice_data, 'transactions': transactions})
+    else:
+        return redirect("dashboard")
 
 
 def admin_view_transactions_of_all(request):
