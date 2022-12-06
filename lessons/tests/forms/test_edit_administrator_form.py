@@ -10,7 +10,6 @@ class EditAdministratorFormTestCase(TestCase):
         self.form_input = {
             'first_name': 'Name',
             'last_name': 'Lastname',
-            'email': 'namelastname@example.org',
             'password': 'Password123!',
             'confirm_password': 'Password123!',
         }
@@ -24,9 +23,6 @@ class EditAdministratorFormTestCase(TestCase):
         form = AdministratorEditForm()
         self.assertIn('first_name', form.fields)
         self.assertIn('last_name', form.fields)
-        self.assertIn('email', form.fields)
-        email_field = form.fields['email']
-        self.assertTrue(isinstance(email_field, forms.EmailField))
 
         self.assertIn('password', form.fields)
         pass_widget = form.fields['password'].widget
@@ -37,7 +33,7 @@ class EditAdministratorFormTestCase(TestCase):
         self.assertTrue(isinstance(confirm_pass_widget, forms.PasswordInput))
 
     def test_form_uses_model_validation(self):
-        self.form_input['email'] = 'bademail'
+        self.form_input['password'] = 'badbadpassword'
         form = AdministratorEditForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 

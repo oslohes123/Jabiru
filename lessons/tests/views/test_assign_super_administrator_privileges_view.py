@@ -14,7 +14,7 @@ class AssignSuperAdministratorViewTestCase(TestCase):
         return '_auth_user_id' in self.client.session.keys()
 
     def setUp(self):
-        self.url = 'http://localhost:8000/make_super_administrator/(%3FPjanedoe@example.org%5Cd+)'
+        self.url = reverse('make_super_administrator')
         self.directorUser = User.objects.get(email='petrapickles@example.org')
         self.directorForm = {
             "email": "petrapickles@example.org",
@@ -30,13 +30,13 @@ class AssignSuperAdministratorViewTestCase(TestCase):
         self.assertTemplateUsed(self.administrator_list, 'Dashboards/DashboardParts/AdministratorParts/view_all_administrators.html')
 
     def test_sign_up_url(self):
-        self.assertEqual(self.url,'http://localhost:8000/make_super_administrator/(%3FPjanedoe@example.org%5Cd+)')
+        self.assertEqual(self.url, '/make_super_administrator/')
 
     def test_assign_super_administrator(self):
         adminUser = User.objects.get(email='janedoe@example.org')
         self.assertEqual(adminUser.role, 'Administrator')
         before_count = User.objects.count()
-        response = self.client.post(self.url, follow=True)
+        response = self.client.post(self.url, {'email': 'janedoe@example.org'}, follow=True)
         response_url = reverse('view_all_administrators')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         after_count = User.objects.count()

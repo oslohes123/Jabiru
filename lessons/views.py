@@ -215,8 +215,6 @@ def fill_edit_unapproved_lessons(request):
     if request.method == "POST":
         query = request.POST
         lesson_id = query.get("lesson_id")
-        print("lessssun")
-        print(lesson_id)
         lesson_obj = Lesson.objects.get(id=lesson_id)
         form = RequestForm(instance=lesson_obj)
         return render(request, 'Dashboards/DashboardParts/edit_request.html',
