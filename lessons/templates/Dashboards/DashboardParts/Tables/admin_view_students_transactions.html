@@ -6,7 +6,7 @@
 
 {% block content %}
 <div>
-    <h1>Transactions for all students</h1>
+    <h1 class="my-3">Transactions for all students</h1>
     <table class="table table-bordered card-body">
         <thead class="p-5">
         <tr>
@@ -27,7 +27,7 @@
         {% endfor %}
         </tbody>
     </table>
-    <a class = "btn btn-primary" href={% url 'dashboard' %}>Dashboard</a>
+    <a class = "btn btn-primary mb-3" href={% url 'dashboard' %}>Dashboard</a>
 
 </div>
 

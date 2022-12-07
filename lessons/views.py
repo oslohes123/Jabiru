@@ -268,7 +268,6 @@ def approve_request(request):
             Invoice.objects.create_invoice(lesson_in_invoice=approved_lesson, balance_due=approved_lesson.total_price())
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
             lesson_obj.delete()
-            lesson_obj.save()
             return redirect("dashboard")
         else:
             messages.add_message(request, messages.ERROR, "Invalid details, try again")
@@ -527,6 +526,8 @@ def delete_request(request):
         lesson_key = query.get("lesson_id")
         lesson = Lesson.objects.get(id=lesson_key)
         lesson.delete()
+        messages.add_message(request, messages.SUCCESS,
+                             f"Deleted successfully")
         return redirect('dashboard')
     else:
         return redirect('dashboard')
@@ -540,6 +541,8 @@ def delete_approved_lesson(request):
         lesson_key = query.get("lesson_id")
         approved_lesson = ApprovedBooking.objects.get(id=lesson_key)
         approved_lesson.delete()
+        messages.add_message(request, messages.SUCCESS,
+                             f"Deleted successfully")
         return redirect('dashboard')
     else:
         return redirect('dashboard')
