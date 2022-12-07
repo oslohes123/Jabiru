@@ -16,6 +16,7 @@ The deployed version of the application can be found at [Website](https://abbasb
 
 
 [Website Admin Dashboard](https://abbasbinvakas.pythonanywhere.com/admin)
+
 SuperUser credentials
 - Email: super@super.com
 - Password: Password123
