@@ -135,7 +135,9 @@ def output_admin_dashboard(request):
 
 
 def output_director_dashboard(request):
-    return render(request, "Dashboards/director_dashboard.html")
+    lessonsdata = Lesson.objects.all()
+    approved_Lesson = ApprovedBooking.objects.all()
+    return render(request, "Dashboards/director_dashboard.html",{'approved_Lesson':approved_Lesson , 'lessonsdata': lessonsdata})
 
 
 # Each method should return a render
