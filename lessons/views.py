@@ -105,11 +105,11 @@ def make_payment_approved_lesson(request):
             our_invoice = Invoice.objects.get(lesson_in_invoice=approved_booking)
             payment_amount = query.get("payment_amount")
             payment_amount = decimal.Decimal(payment_amount)
-            if payment_amount > our_invoice.balance_due*-1:
+            if payment_amount > our_invoice.balance_due:
                 messages.add_message(request,messages.ERROR,"You are paying more than what is due")
             else:
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
-                our_invoice.balance_due = our_invoice.balance_due + payment_amount
+                our_invoice.balance_due = our_invoice.balance_due - payment_amount
                 our_invoice.save()
                 messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
 
