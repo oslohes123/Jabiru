@@ -3,7 +3,7 @@ from lessons.models import User,Lesson,ApprovedBooking,Invoice
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        User.objects.all().delete()
+        User.objects.filter(is_superuser=False).delete()
         Lesson.objects.all().delete()
         ApprovedBooking.objects.all().delete()
         Invoice.objects.all().delete()

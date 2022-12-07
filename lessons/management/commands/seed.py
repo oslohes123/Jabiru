@@ -20,14 +20,6 @@ class Command(BaseCommand):
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
 
-        self.user = User.objects.create_superuser(
-            'super@super.com',
-            first_name='Super',
-            last_name='Duper',
-            password='Password123',
-            role=director
-        )
-
         self.user = User.objects.create_user(
             'john.doe@example.org',
             first_name='John',
