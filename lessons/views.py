@@ -72,7 +72,7 @@ def output_student_dashboard(request):
                   {'data': data, 'lessonsdata': lessonsdata, 'lessons_cost': lessons_cost})
 
 
-@login_required
+
 def create_invoice_data(invoice, approved_booking_object):
     invoice_data = {
         "invoice_num": '{0:03}'.format(invoice.pk),
