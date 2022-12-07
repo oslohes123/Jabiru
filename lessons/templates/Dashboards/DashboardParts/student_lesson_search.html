@@ -36,6 +36,7 @@
                         <form action = '{% url 'view_transactions_specific_student' %}' method = "post">
                                {% csrf_token %}
                             <input type="hidden" name="lesson_id" value={{ lesson.id }} />
+                            <input type="hidden" name="student" value={{ lesson.student }} />
                             <input class = "m-2 btn btn-primary" type="submit" value="View transactions" />
                         </form>
 

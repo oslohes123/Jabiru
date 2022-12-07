@@ -19,7 +19,7 @@
         {% for item in data %}
             <tr>
                 <td>{{ item.student }}</td>
-                <td>{{ item.transaction.pk}}</td>
+                <td>{{ item.transaction.invoice.pk}}</td>
                 <td>{{ item.transaction.payment_amount }}</td>
             </tr>
         {% empty %}
