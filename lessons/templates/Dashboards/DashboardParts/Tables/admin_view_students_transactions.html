@@ -10,7 +10,7 @@
     <table class="table table-bordered card-body">
         <thead class="p-5">
         <tr>
-            <th>student Email</th>
+            <th>Student Email</th>
             <th>Invoice Number</th>
             <th>Payment Amount</th>
         </tr>
@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ item.student.email }}</td>
                 <td>{{ item.transaction.invoice.pk}}</td>
-                <td>{{ item.transaction.payment_amount }}</td>
+                <td>${{ item.transaction.payment_amount }}</td>
             </tr>
         {% empty %}
             No transactions have been made
