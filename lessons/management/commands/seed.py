@@ -35,6 +35,15 @@ class Command(BaseCommand):
             password='Password123',
             role=student
         )
+
+        self.parent_user = User.objects.create_user(
+            'parent@parent.com',
+            first_name="Parent_first_name",
+            last_name="parent_last_name",
+            password="Password123",
+            role=adult
+        )
+
         self.user = User.objects.create_user(
             'petra.pickles@example.org',
             first_name='Petra',
@@ -104,7 +113,12 @@ class Command(BaseCommand):
 
         for i in range(0, 75):
             temp_profile = self.fake.simple_profile()
-            setup_user(student)
+            role = fake_lesson.role_choice()
+            setup_user(role)
+            if role != adult and bool(random.getrandbits(1)):
+                self.user.parent = self.parent_user
+                self.user.save()
+
             # For lessons
             if bool(random.getrandbits(1)):
                 instrument = fake_lesson.lesson_instrument()
@@ -166,6 +180,10 @@ DURATION = [
     30, 45, 60, 75, 90, 105, 120
 ]
 
+ROLE = [
+    student, adult
+]
+
 
 class Provider(BaseProvider):
     def teacher_name(self):
@@ -182,3 +200,6 @@ class Provider(BaseProvider):
 
     def interval_choices(self):
         return self.random_element(INTERVAL)
+
+    def role_choice(self):
+        return self.random_element(ROLE)

@@ -246,7 +246,7 @@ def approve_request(request):
                                                                              data['hourly_rate'])
             Invoice.objects.create_invoice(lesson_in_invoice=approved_lesson, balance_due=approved_lesson.total_price())
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully approved")
-            lesson_obj.approve_status = True
+            lesson_obj.delete()
             lesson_obj.save()
             return redirect("dashboard")
         else:
