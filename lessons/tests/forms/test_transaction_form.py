@@ -9,13 +9,16 @@ class TransactionFormTestCase(TestCase):
 
     def setUp(self):
         self.form_input = {
-            'payment_amount': 10
+            'payment_amount': 10.2
         }
 
     def test_form_contains_required_fields(self):
         form = TransactionForm()
         self.assertIn('payment_amount', form.fields)
 
+    def test_valid_data(self):
+        form = TransactionForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
 
     def test_payment_amount_cannot_more_than_two_decimals(self):
         self.form_input['payment_amount'] = 0.007
