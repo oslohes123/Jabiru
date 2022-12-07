@@ -554,7 +554,7 @@ def admin_view_transactions_of_all(request):
     data = []
     for i in transactions:
         data_item = {"transaction": i,
-                     "student": i.invoice.lesson_in_invoice.student.first_name
+                     "student": i.invoice.lesson_in_invoice.student
                      }
         data.append(data_item)
     return render(request, "Dashboards/DashboardParts/Tables/admin_view_students_transactions.html",

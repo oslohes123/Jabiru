@@ -10,7 +10,7 @@
     <table class="table table-bordered card-body">
         <thead class="p-5">
         <tr>
-            <th>Student Name</th>
+            <th>student Email</th>
             <th>Invoice Number</th>
             <th>Payment Amount</th>
         </tr>
@@ -18,7 +18,7 @@
         <tbody class="table-group-divider">
         {% for item in data %}
             <tr>
-                <td>{{ item.student }}</td>
+                <td>{{ item.student.email }}</td>
                 <td>{{ item.transaction.invoice.pk}}</td>
                 <td>{{ item.transaction.payment_amount }}</td>
             </tr>
