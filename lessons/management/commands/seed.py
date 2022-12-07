@@ -3,9 +3,10 @@ from faker import Faker
 import random
 from lessons.models import *
 from lessons.constants import *
-from faker.providers import BaseProvider,date_time
+from faker.providers import BaseProvider, date_time
 from datetime import date
 import calendar
+
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -18,7 +19,6 @@ class Command(BaseCommand):
 
         fake_lesson = Faker()
         fake_lesson.add_provider(Provider)
-
 
         self.user = User.objects.create_superuser(
             'super@super.com',
@@ -58,10 +58,10 @@ class Command(BaseCommand):
                     temp_profile.get("name").split()) == 3 else temp_profile.get("name").split()[0],
                 last_name=temp_profile.get("name").split()[-1],
                 password=self.fake.password(length=12),
-                role = insert_role
+                role=insert_role
             )
 
-        def setup_lesson_for_student(email,info_data):
+        def setup_lesson_for_student(email, info_data):
             self.lesson = Lesson.objects.create_lesson(
                 student=User.objects.get(email=email),
                 # work on this to be of the students emails
@@ -72,30 +72,30 @@ class Command(BaseCommand):
                 further_info=info_data,
                 approve_status=False
             )
-        
+
         def setup_approved_lessons(email):
             teacher_name = fake_lesson.teacher_name()
             self.approved_booking = ApprovedBooking.objects.create_approvedBooking(
                 student=User.objects.get(email=email),
                 start_date=self.fake.future_date(),
                 day_of_the_week=self.fake.day_of_week(),
-                time_of_the_week = self.fake.time(),
+                time_of_the_week=self.fake.time(),
                 total_lessons_count=random.randint(1, 200),
                 duration=fake_lesson.duration_time(),
                 interval=fake_lesson.interval_choices(),
                 assigned_teacher=teacher_name,
-                hourly_rate= 10.00 , #done 10 as for now change later 
-                )
-            self.invoice =Invoice.objects.create_invoice(
+                hourly_rate=10.00,  # done 10 as for now change later
+            )
+            self.invoice = Invoice.objects.create_invoice(
                 lesson_in_invoice=self.approved_booking,
                 balance_due=self.approved_booking.total_price()
             )
             self.transaction = Transaction.objects.create_transaction(
                 invoice=self.invoice,
-                payment_amount=
+                payment_amount=random.uniform(1, self.invoice.balance_due)
             )
-
-
+            self.invoice.balance_due = self.invoice.balance_due - self.transaction.payment_amount
+            self.invoice.save()
 
         setup_lesson_for_student("john.doe@example.org", "Some Info")
         setup_lesson_for_student("john.doe@example.org", "Some Info")
@@ -111,18 +111,10 @@ class Command(BaseCommand):
                 teacher = fake_lesson.teacher_name()
                 info = instrument + ' lesson with ' + teacher
 
-                print(temp_profile.get('mail'))
-                setup_lesson_for_student(temp_profile.get("mail"),info)
-                setup_approved_lessons(temp_profile.get("mail"))
-
-                print(temp_profile.get('mail'))
                 email = temp_profile.get("mail")
+                print(email)
                 setup_lesson_for_student(email, info)
                 setup_approved_lessons(email)
-
-
-            
-
 
         for i in range(0, 25):
             temp_profile = self.fake.simple_profile()
@@ -131,11 +123,10 @@ class Command(BaseCommand):
 
 # Lists
 
-INTERVAL =[
+INTERVAL = [
     1,
     2
 ]
-
 
 TEACHER_NAME = [
     "Mr. Guitar",
@@ -171,9 +162,10 @@ AVAILABILITY = [
     "From 12:00 to 17:00"
 ]
 
-DURATION=[
-    30,45,60,75,90,105,120
+DURATION = [
+    30, 45, 60, 75, 90, 105, 120
 ]
+
 
 class Provider(BaseProvider):
     def teacher_name(self):
@@ -184,11 +176,9 @@ class Provider(BaseProvider):
 
     def available_time(self):
         return self.random_element(AVAILABILITY)  # AVAILABILITY being a list of all available times the student can do
-    
+
     def duration_time(self):
         return self.random_element(DURATION)
-    
+
     def interval_choices(self):
         return self.random_element(INTERVAL)
-
-
