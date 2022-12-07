@@ -57,6 +57,7 @@ class EditLessonViewTestCase(TestCase):
 
         self.lesson_edit_approved_form_input = {
             "id": 1,
+            "lesson_id": 1,
             'student': self.studentUser,
             "start_date": datetime.date(2023,3,17),
             "day_of_the_week": "Monday",
@@ -91,5 +92,34 @@ class EditLessonViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'Dashboards/DashboardParts/edit_approved.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, ApprovedBookingForm))
-
-        
+    
+    def test_edit_approve_lesson(self):
+        self.client.post(self.request_url,self.lesson_approved_form_input,follow=True)
+        before_count = ApprovedBooking.objects.count()
+        response = self.client.post(self.url, self.lesson_edit_approved_form_input, follow=True)
+        after_count = ApprovedBooking.objects.count()
+        self.assertEqual(after_count, before_count)
+        self.assertTemplateUsed(response, 'Dashboards/administrator_dashboard.html')
+        changedlesson = ApprovedBooking.objects.get(id=1)
+        self.assertEqual(changedlesson.student, self.studentUser)
+        self.assertEqual(changedlesson.start_date, datetime.date(2023,3,17))
+        self.assertEqual(changedlesson.day_of_the_week, "Monday")
+        self.assertEqual(changedlesson.time_of_the_week, datetime.time(17,30,0))
+        self.assertEqual(changedlesson.total_lessons_count, 15)
+        self.assertEqual(changedlesson.duration, 75)
+        self.assertEqual(changedlesson.interval, 3)
+        self.assertEqual(changedlesson.assigned_teacher, "Mr Allen Bowman")
+        self.assertEqual(changedlesson.hourly_rate, 22.50)
+        self.assertTrue(self._is_logged_in())
+    
+    def test_unsuccessful_approved_edit(self):
+        self.lesson_approved_form_input['total_lessons_count'] = 'non_numericals_not_allowed'
+        before_count = ApprovedBooking.objects.count()
+        response = self.client.post(self.request_url, self.lesson_approved_form_input, follow=True)
+        after_count = ApprovedBooking.objects.count()
+        self.assertEqual(after_count, before_count)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'Dashboards/DashboardParts/approve_request.html')
+        form = response.context['form']
+        self.assertTrue(isinstance(form, ApprovedBookingForm))
+        self.assertTrue(self._is_logged_in())
