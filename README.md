@@ -1,4 +1,4 @@
-# Team *<enter team name here>* Small Group project
+# Team Jabiru Small Group project
 
 ## Team members
 The members of the team are:
