@@ -95,7 +95,7 @@ class Invoice(models.Model):
     objects = CustomInvoiceManager()
 
     def invoice_ref_num(self):
-        return f'{self.lesson_in_invoice.student.id}-{self.id}'
+        return f'{self.id}-{self.lesson_in_invoice.student.id}'
 
 class Transaction(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE,blank=False)
