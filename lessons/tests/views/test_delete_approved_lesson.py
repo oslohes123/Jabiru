@@ -2,6 +2,8 @@
 from django.test import TestCase
 from django.urls import reverse
 from lessons.models import User, ApprovedBooking
+from lessons.forms import ApprovedBookingForm
+import datetime
 
 class DeleteAdministratorViewTestCase(TestCase):
     """Tests of the deleting approved lessons view."""
@@ -19,7 +21,6 @@ class DeleteAdministratorViewTestCase(TestCase):
             "email": "janedoe@example.org",
             "password": "Password123%",
         }
-        print(self.adminUser)
 
         self.studentUser = User.objects.get(email='dillyparker@example.org')
         
@@ -28,18 +29,18 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.dashboard = self.client.post(login_url, self.adminForm, follow=True)
         self.lesson_approved_form_input = {
             "id": 1,
-            "student": self.studentUser,
-            "start_date": "2022-12-06",
-            "day_of_the_week": "Monday" ,
-            "time_of_the_week": "13:00" ,
-            "total_lessons_count": 4,
-            "duration": 45,
-            "interval": 2,
-            "assigned_teacher": "Mr White",
-            "hourly_rate": 30.00
+            #'student': self.studentUser,
+            "start_date": datetime.date(2023,3,16),
+            "day_of_the_week": "Wednesday",
+            "time_of_the_week": datetime.time(16,30,0),
+            "total_lessons_count": 14,
+            "duration": 75,
+            "interval": 3,
+            "assigned_teacher": "Mr Allen Bowman",
+            "hourly_rate": 22.50
         }
         self.request_url = reverse("approve_request")
-
+    
     def test_start_from_dashboard(self):
         self.assertTemplateUsed(self.dashboard, 'Dashboards/administrator_dashboard.html')
 
@@ -48,7 +49,8 @@ class DeleteAdministratorViewTestCase(TestCase):
 
     def test_successful_deletion(self):
         # First make a lesson
-        self.client.post(self.request_url, self.lesson_approved_form_input, follow=True)
+        form = ApprovedBookingForm(data=self.lesson_approved_form_input)
+        form.save()
         before_count = ApprovedBooking.objects.count()
         # Then delete a lesson
         self.client.post(self.url, {'lesson_id': 1}, follow=True)
