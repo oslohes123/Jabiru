@@ -52,6 +52,33 @@ class Command(BaseCommand):
             role=director,
         )
 
+        def partially_paid():
+            self.transaction = Transaction.objects.create_transaction(
+                invoice=self.invoice,
+                payment_amount=random.uniform(1, self.invoice.balance_due-1)
+            )
+
+        def fully_paid():
+            self.transaction = Transaction.objects.create_transaction(
+                invoice=self.invoice,
+                payment_amount=self.invoice.balance_due
+            )
+
+        def unpaid():
+            self.transaction = Transaction.objects.create_transaction(
+                invoice=self.invoice,
+                payment_amount=0.00
+            )
+
+        def overpaid():
+            self.transaction = Transaction.objects.create_transaction(
+                invoice=self.invoice,
+                payment_amount=random.uniform(self.invoice.balance_due+1,self.invoice.balance_due * 2 )
+            )
+
+
+
+
         def setup_user(insert_role):
             self.user = User.objects.create_user(
                 temp_profile.get("mail"),
@@ -91,10 +118,20 @@ class Command(BaseCommand):
                 lesson_in_invoice=self.approved_booking,
                 balance_due=self.approved_booking.total_price()
             )
-            self.transaction = Transaction.objects.create_transaction(
-                invoice=self.invoice,
-                payment_amount=random.uniform(1, self.invoice.balance_due)
-            )
+
+            choice = random.randint(1, 4)
+            if choice == 1:
+                partially_paid()
+            elif choice == 2:
+                unpaid()
+            elif choice == 3:
+                fully_paid()
+            elif choice == 4:
+                overpaid()
+
+
+
+
             self.invoice.balance_due = self.invoice.balance_due - self.transaction.payment_amount
             self.invoice.save()
 
