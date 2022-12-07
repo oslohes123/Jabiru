@@ -25,7 +25,6 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            request.session['user_email'] = request.user.email
             return redirect("dashboard")
     else:
         form = SignUpForm()
@@ -41,7 +40,6 @@ def login_user(request):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                request.session["child_id"] = None
                 return redirect("dashboard")
             else:
                 messages.add_message(request, messages.ERROR, "Invalid credentials try again")
@@ -70,7 +68,6 @@ def output_student_dashboard(request):
 
     return render(request, "Dashboards/student_dashboard.html",
                   {'data': data, 'lessonsdata': lessonsdata, 'lessons_cost': lessons_cost})
-
 
 
 def create_invoice_data(invoice, approved_booking_object):
@@ -168,17 +165,11 @@ def dashboard(request):
 @login_required
 @user_passes_test(lambda u: u.is_student_or_adult, login_url='/dashboard/')
 def make_request(request):
-    if request.session["child_id"] is not None:
-        user_to_assign = User.objects.get(id=request.session["child_id"])
-        request.session["child_id"] = None
-    else:
-        user_to_assign = request.user
-
     if request.method == "POST":
         form = RequestForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            Lesson.objects.create_lesson(user_to_assign, data['availability'],
+            Lesson.objects.create_lesson(request.user, data['availability'],
                                          data['total_lessons_count'], data['duration'], data['interval'],
                                          data['further_info'], False)
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
@@ -192,11 +183,34 @@ def make_request(request):
 @login_required
 @user_passes_test(lambda u: u.is_adult, login_url='/dashboard/')
 def make_request_for_child(request):
-    form_input_query_dict = request.POST
-    child_id = form_input_query_dict.get("child_id")
-    request.session["child_id"] = child_id
-    insertForm = RequestForm()
-    return render(request, 'Dashboards/DashboardParts/make_request.html', {'RequestForm': insertForm})
+    if request.method == "POST":
+        query = request.POST
+        child_id = query.get("child_id")
+        child_obj = User.objects.get(id=child_id)
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            Lesson.objects.create_lesson(child_obj, data['availability'],
+                                         data['total_lessons_count'], data['duration'], data['interval'],
+                                         data['further_info'], False)
+            messages.add_message(request, messages.SUCCESS, "The lesson has been successfully saved")
+            return redirect("dashboard")
+        else:
+            messages.add_message(request, messages.ERROR, "The form submitted is not valid try again")
+    form = RequestForm()
+    return render(request, 'Dashboards/DashboardParts/make_request_for_child.html', {'RequestForm': form})
+
+
+@login_required
+def fill_make_request_for_child(request):
+    if request.method == "POST":
+        query = request.POST
+        child_id = query.get("child_id")
+        form = RequestForm()
+        return render(request, 'Dashboards/DashboardParts/make_request_for_child.html', {'RequestForm': form,
+                                                                                         'child_id': child_id})
+    else:
+        return redirect('dashboard')
 
 
 @login_required

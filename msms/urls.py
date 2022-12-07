@@ -14,6 +14,7 @@ urlpatterns = [
     path('view_all_administrators/', views.view_all_administrators, name='view_all_administrators'),
     path('dashboard/assign_child/', views.assign_child, name='assign_child'),
     path('make_request_for_child/', views.make_request_for_child, name='make_request_for_child'),
+    path('fill_make_request_for_child/', views.fill_make_request_for_child, name='fill_make_request_for_child'),
     path('delete_administrator/', views.delete_administrator, name='delete_administrator'),
     path('edit_administrator/', views.edit_administrator, name='edit_administrator'),
     path('fill_edit_administrator/', views.fill_edit_administrator, name='fill_edit_administrator'),

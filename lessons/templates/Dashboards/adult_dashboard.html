@@ -35,7 +35,7 @@
                         <th>{{ child.last_name }}</th>
                         <th>{{ child.email }}</th>
 
-                        <th><form method="post" action='{% url 'make_request_for_child' %}'>
+                        <th><form action='{% url 'fill_make_request_for_child' %}' method="post">
                             {% csrf_token %}
                             <input type="hidden" name="child_id" value={{ child.id }} />
                             <input class = "btn btn-secondary" type="submit" value="Make a lesson request" />
