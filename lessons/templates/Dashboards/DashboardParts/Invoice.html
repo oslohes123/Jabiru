@@ -9,8 +9,9 @@
         <h2>Invoice</h2>
         <p>Invoice number is: {{ invoice.invoice_num }}</p>
         <p>Invoice unique reference number is: {{ invoice.student_ref_num }}-{{ invoice.invoice_num }}</p>
-        <p>Total paid by student in total lessons ${{ invoice.total_balance }}</p>
-        <p>Remaining balance: ${{ invoice.remaining_balance }}</p>
+        <p>Total for this lesson: ${{ invoice.total_balance }}</p>
+        <p>Remaining amount owed: ${{ invoice.remaining_balance }}</p>
+        <p>Total paid so far ${{ invoice.total_paid }}</p>
         <p>Contact administrator if you wish to change bookings!</p>
     </div>
 

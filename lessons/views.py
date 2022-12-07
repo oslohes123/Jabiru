@@ -69,7 +69,18 @@ def output_student_dashboard(request):
         data.append(data_item)
 
     return render(request, "Dashboards/student_dashboard.html",
-                  {'data': data,'lessonsdata':lessonsdata, 'lessons_cost':lessons_cost})
+                  {'data': data, 'lessonsdata': lessonsdata, 'lessons_cost': lessons_cost})
+
+
+def create_invoice_data(invoice, approved_booking_object):
+    invoice_data = {
+        "invoice_num": '{0:03}'.format(invoice.pk),
+        "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
+        "remaining_balance": invoice.balance_due,
+        "total_balance": approved_booking_object.total_price(),
+        "total_paid": approved_booking_object.total_price() - invoice.balance_due,
+    }
+    return invoice_data
 
 
 def return_transactions_and_invoice(request):
@@ -77,14 +88,10 @@ def return_transactions_and_invoice(request):
         query = request.POST
         approved_booking_object = ApprovedBooking.objects.get(id=query.get('lesson_id'))
         invoice = Invoice.objects.get(lesson_in_invoice=approved_booking_object)
-        invoice_data = {
-            "invoice_num": '{0:03}'.format(invoice.pk),
-            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
-            "remaining_balance": total_lessons_cost(request,approved_booking_object.student.email),
-            "total_balance":student_full_cost(request,approved_booking_object.student.email)
-        }
+        invoice_data = create_invoice_data(invoice, approved_booking_object)
         transactions = Transaction.objects.filter(invoice=invoice)
-        return render(request, "Dashboards/DashboardParts/Invoice.html", {'invoice': invoice_data,'transactions':transactions})
+        return render(request, "Dashboards/DashboardParts/Invoice.html",
+                      {'invoice': invoice_data, 'transactions': transactions})
     else:
         messages.add_message(request, messages.ERROR, "You can't go here")
         redirect("dashboard")
@@ -106,14 +113,12 @@ def make_payment_approved_lesson(request):
             payment_amount = query.get("payment_amount")
             payment_amount = decimal.Decimal(payment_amount)
             if payment_amount > our_invoice.balance_due:
-                messages.add_message(request,messages.ERROR,"You are paying more than what is due")
+                messages.add_message(request, messages.ERROR, "You are paying more than what is due")
             else:
                 Transaction.objects.create_transaction(our_invoice, payment_amount)
                 our_invoice.balance_due = our_invoice.balance_due - payment_amount
                 our_invoice.save()
-                messages.add_message(request,messages.SUCCESS,f"You have successfully paid ${payment_amount}")
-
-
+                messages.add_message(request, messages.SUCCESS, f"You have successfully paid ${payment_amount}")
 
             return redirect("dashboard")
     else:
@@ -130,17 +135,17 @@ def output_adult_dashboard(request):
 def output_admin_dashboard(request):
     lessonsdata = Lesson.objects.all()
     approved_Lesson = ApprovedBooking.objects.all()
-    return render(request, "Dashboards/administrator_dashboard.html" , {'approved_Lesson':approved_Lesson , 'lessonsdata':lessonsdata})
-
+    return render(request, "Dashboards/administrator_dashboard.html",
+                  {'approved_Lesson': approved_Lesson, 'lessonsdata': lessonsdata})
 
 
 def output_director_dashboard(request):
     lessonsdata = Lesson.objects.all()
     approved_Lesson = ApprovedBooking.objects.all()
-    return render(request, "Dashboards/director_dashboard.html",{'approved_Lesson':approved_Lesson , 'lessonsdata': lessonsdata})
+    return render(request, "Dashboards/director_dashboard.html",
+                  {'approved_Lesson': approved_Lesson, 'lessonsdata': lessonsdata})
 
 
-# Each method should return a render
 @login_required
 def dashboard(request):
     ourUser: User = request.user
@@ -257,7 +262,6 @@ def approve_request(request):
         return redirect('dashboard')
 
 
-
 @login_required
 @user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_in_approve_request(request):
@@ -275,13 +279,15 @@ def fill_in_approve_request(request):
     else:
         return redirect('dashboard')
 
+
 @login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def edit_approved_lessons(request):
     if request.method == "POST":
         query = request.POST
         lesson_id = query.get("lesson_id")
         approved_lesson = ApprovedBooking.objects.get(id=lesson_id)
-        form = ApprovedBookingForm(request.POST , instance = approved_lesson)
+        form = ApprovedBookingForm(request.POST, instance=approved_lesson)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "The lesson has been successfully edited")
@@ -294,7 +300,9 @@ def edit_approved_lessons(request):
     else:
         return redirect('dashboard')
 
+
 @login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def fill_edit_approved_lessons(request):
     if request.method == "POST":
         query = request.POST
@@ -423,7 +431,7 @@ def get_user(request, email):
 
 @login_required
 @user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
-def get_requests(request):  # so far only works if a student email is inputted correctly
+def get_requests(request):
     student_lesson = request.POST
     student_email_query = student_lesson.get("student_email_input")
     try:
@@ -434,7 +442,7 @@ def get_requests(request):  # so far only works if a student email is inputted c
         else:
             costs = total_lessons_cost(request, user_object.email)
             lessons = Lesson.objects.filter(student=user_object)
-            context = {"lessons": lessons, 'lessons_cost':costs,  "student": user_object}
+            context = {"lessons": lessons, 'lessons_cost': costs, "student": user_object}
             return render(request, "Dashboards/DashboardParts/student_lesson_search.html", context=context)
     except:
         return output_admin_dashboard(request)
@@ -470,8 +478,8 @@ def log_out(request):
     return redirect('home')
 
 
-def total_lessons_cost(request,email): #get the total price of each lesson that the student has
-    student_object = get_user(request,email)
+def total_lessons_cost(request, email):  # get the total price of each lesson that the student has
+    student_object = get_user(request, email)
     if student_object.role != student:
         messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
     else:
@@ -479,23 +487,22 @@ def total_lessons_cost(request,email): #get the total price of each lesson that 
         total_cost = 0
         for lesson in lessons:
             invoice = Invoice.objects.get(lesson_in_invoice=lesson)
-            #for loop to go through each lesson and getting total price add em all up
-            #TODO: change to maybe students actual balance as for now its always going to be 0
             total_cost -= invoice.balance_due
 
         return total_cost
 
-def student_full_cost(request,email): #get the total price of each lesson that the student has
-    student_object = get_user(request,email)
+
+def student_full_cost(request, email):  # get the total price of each lesson that the student has
+    student_object = get_user(request, email)
     if student_object.role != student:
         messages.add_message(request, messages.ERROR, f"Email was not of a student, it was of a {student_object.role}")
     else:
-        lessons =  ApprovedBooking.objects.filter(student=student_object)
-        #for loop to go through each lesson and getting total price add em all up
-        total_cost = 0 #TODO: change to maybe students actual balance as for now its always going to be 0
+        lessons = ApprovedBooking.objects.filter(student=student_object)
+        total_cost = 0
         for i in lessons:
             total_cost -= i.total_price()
-        return -1*total_cost
+        return -1 * total_cost
+
 
 @login_required
 def delete_request(request):
@@ -510,6 +517,7 @@ def delete_request(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def delete_approved_lesson(request):
     if request.method == "POST":
         query = request.POST
@@ -521,19 +529,15 @@ def delete_approved_lesson(request):
         return redirect('dashboard')
 
 
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def admin_view_transactions_specific_student(request):
     query = request.POST
-    student = query.get("student")
     lesson_id = query.get("lesson_id")
     invoice = Invoice.objects.get(lesson_in_invoice=ApprovedBooking.objects.get(id=lesson_id))
     approved_booking_object = ApprovedBooking.objects.get(invoice=invoice)
     if request.method == "POST":
-        invoice_data = {
-            "invoice_num": '{0:03}'.format(invoice.pk),
-            "student_ref_num": '{0:03}'.format(approved_booking_object.student.pk),
-            "remaining_balance": total_lessons_cost(request,student),
-            "total_balance": student_full_cost(request, student)
-        }
+        invoice_data = create_invoice_data(invoice, approved_booking_object)
         transactions = Transaction.objects.filter(invoice=invoice)
         return render(request, "Dashboards/DashboardParts/Invoice.html",
                       {'invoice': invoice_data, 'transactions': transactions})
@@ -541,6 +545,8 @@ def admin_view_transactions_specific_student(request):
         return redirect("dashboard")
 
 
+@login_required
+@user_passes_test(lambda u: u.is_director_or_administrator, login_url='/dashboard/')
 def admin_view_transactions_of_all(request):
     transactions = Transaction.objects.all()
     data = []
@@ -549,7 +555,5 @@ def admin_view_transactions_of_all(request):
                      "student": i.invoice.lesson_in_invoice.student.first_name
                      }
         data.append(data_item)
-
     return render(request, "Dashboards/DashboardParts/Tables/admin_view_students_transactions.html",
                   {'data': data})
-
