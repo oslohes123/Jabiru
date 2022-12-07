@@ -29,7 +29,7 @@ class DeleteAdministratorViewTestCase(TestCase):
         self.dashboard = self.client.post(login_url, self.adminForm, follow=True)
         self.lesson_approved_form_input = {
             "id": 1,
-            #'student': self.studentUser,
+            'student': self.studentUser,
             "start_date": datetime.date(2023,3,16),
             "day_of_the_week": "Wednesday",
             "time_of_the_week": datetime.time(16,30,0),
@@ -39,6 +39,8 @@ class DeleteAdministratorViewTestCase(TestCase):
             "assigned_teacher": "Mr Allen Bowman",
             "hourly_rate": 22.50
         }
+
+
         self.request_url = reverse("approve_request")
     
     def test_start_from_dashboard(self):
@@ -51,6 +53,7 @@ class DeleteAdministratorViewTestCase(TestCase):
         # First make a lesson
         form = ApprovedBookingForm(data=self.lesson_approved_form_input)
         form.save()
+
         before_count = ApprovedBooking.objects.count()
         # Then delete a lesson
         self.client.post(self.url, {'lesson_id': 1}, follow=True)
