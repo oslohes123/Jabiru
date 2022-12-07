@@ -8,7 +8,7 @@ import datetime
 class EditLessonViewTestCase(TestCase):
     """Tests of the editing an approved lesson."""
 
-    fixtures = ['lessons/fixtures/user.json',]
+    fixtures = ['lessons/fixtures/user.json', 'lessons/fixtures/lesson.json']
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
@@ -27,8 +27,23 @@ class EditLessonViewTestCase(TestCase):
         
         self.dashboard = self.client.post(login_url, self.adminForm, follow=True)
 
+        self.lesson_request_form_input = {
+            "id": 1,
+            "lesson_id": 1,
+            "student_id": self.studentUser.id,
+            "student": self.studentUser,
+            "availability": "I am available on Wednesdays",
+            "total_lessons_count": 4,
+            "duration": 45,
+            "interval": 2,
+            "further_info": "Piano lessons",
+            "approve_status": False
+        }
+
         self.lesson_approved_form_input = {
             "id": 1,
+            "lesson_id": 1,
+            "student_id": self.studentUser.id,
             'student': self.studentUser,
             "start_date": datetime.date(2023,3,16),
             "day_of_the_week": "Wednesday",
@@ -68,7 +83,9 @@ class EditLessonViewTestCase(TestCase):
         self.assertEqual(lessons_before + 1, lessons_after)
     
     def test_get_edit_approve_lesson_page(self):
-        self.client.post(self.request_url, self.lesson_approved_form_input, follow=True)
+        self.client.post(self.request_url, self.lesson_request_form_input, follow=True)
+        form = ApprovedBookingForm(data=self.lesson_approved_form_input)
+        form.save()
         response = self.client.post(self.edit_url, {'lesson_id': 1}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'Dashboards/DashboardParts/edit_approved.html')
